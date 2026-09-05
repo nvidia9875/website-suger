@@ -29,6 +29,8 @@ html:lang(th) .filter-label { font-family: var(--th); letter-spacing: 0.08em; }
 .chip-face { padding: 4px 14px 4px 4px; }
 .chip-face img { width: 30px; height: 30px; object-fit: cover; border-radius: 50%; }
 .chip-face .chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, #ddd); border: 1px solid rgba(86, 82, 82, 0.25); flex-shrink: 0; }
+.chip-oshi { font-size: 11px; color: var(--oshi, var(--ink-soft)); margin-left: -3px; }
+.chip[aria-pressed="true"] .chip-oshi { color: var(--paper); }
 
 .items-status { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 18px; display: flex; align-items: baseline; gap: 12px; }
 .items-status small { font-family: var(--en); font-weight: 600; font-size: 11px; color: var(--ink-soft); letter-spacing: 0.1em; }
@@ -55,19 +57,12 @@ html:lang(th) .bonus-threshold small { font-family: var(--th); }
 .guide-list dd a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
 .sec-guide { padding-bottom: clamp(48px, 7vw, 96px); }
 
-/* ---------- ダイアログ共通 ---------- */
+/* ---------- ダイアログ共通（閉じるボタン .icon-close は site.css） ---------- */
 .product-dialog, .cart-drawer { border: 1px solid var(--hairline); padding: 0; background: var(--card); color: var(--ink); }
 .product-dialog::backdrop, .cart-drawer::backdrop { background: rgba(86, 82, 82, 0.45); backdrop-filter: blur(2px); }
-.icon-close {
-  border: 1px solid var(--hairline); background: var(--card); color: var(--ink);
-  width: 36px; height: 36px; font-size: 18px; line-height: 1; cursor: pointer;
-  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
-}
-.icon-close:hover { background: var(--ink); color: var(--paper); }
 
 /* ---------- 商品ダイアログ ---------- */
 .product-dialog { width: min(900px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); margin: auto; overflow-y: auto; }
-.pd-close-form { position: sticky; top: 12px; height: 0; text-align: right; z-index: 5; padding-right: 12px; }
 .pd-body { display: grid; grid-template-columns: 1fr 1fr; }
 .pd-media { padding: 24px 0 24px 24px; }
 .pd-media img { width: 100%; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--hairline-soft); }
@@ -90,7 +85,6 @@ html:lang(ja) .pd-variants-label, html:lang(th) .pd-variants-label { font-family
 .pd-variant[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .pd-variant small { font-weight: 500; color: var(--ink-soft); }
 .pd-variant[aria-pressed="true"] small { color: var(--paper); opacity: 0.75; }
-.vc { width: 9px; height: 9px; border-radius: 50%; background: var(--vc, #ddd); border: 1px solid rgba(86, 82, 82, 0.28); flex-shrink: 0; }
 /* 写真つきバリアントチップ（メンバー系商品） */
 .pd-variants.is-photo { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
 .pd-photo {

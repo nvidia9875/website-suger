@@ -30,13 +30,17 @@
       return '<button type="button" class="chip" data-cat="' + c.key + '" aria-pressed="' + (c.key === state.cat) + '">' +
         esc(SNLang.t("goods.cat." + c.key)) + "<small>" + count + "</small></button>";
     }).join("");
+    var oshi = SNOshi.get();
     $("#member-chips").innerHTML =
       '<button type="button" class="chip" data-member="" aria-pressed="' + (state.member === null) + '">' + esc(SNLang.t("goods.allMembers")) + "</button>" +
       SN.members.map(function (m) {
         var col = SN.colorOf(m);
-        return '<button type="button" class="chip chip-face" data-member="' + m.id + '" aria-pressed="' + (m.id === state.member) + '" data-color="' + col.hex + '">' +
+        var isOshi = m.id === oshi;
+        return '<button type="button" class="chip chip-face' + (isOshi ? " is-oshi" : "") + '" data-member="' + m.id + '" aria-pressed="' + (m.id === state.member) + '" data-color="' + col.hex + '"' +
+          (isOshi ? ' title="' + esc(SNLang.t("oshi.isOshi")) + '"' : "") + ">" +
           '<img src="assets/img/' + m.face + '" alt=""' + imgAttr(m.face) + ' loading="lazy">' +
-          esc(SN.memberShort(m, lang)) + '<span class="chip-dot" aria-hidden="true"></span></button>';
+          esc(SN.memberShort(m, lang)) + (isOshi ? '<span class="chip-oshi" aria-hidden="true">♡</span>' : "") +
+          '<span class="chip-dot" aria-hidden="true"></span></button>';
       }).join("");
     applyColors($("#member-chips"), "--c");
 
@@ -83,7 +87,9 @@
     var p = GoodsUtil.product(id);
     if (!p) return;
     var pre = variantKey ? GoodsUtil.variant(id, variantKey) : null;
-    if (!pre && state.member) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, state.member); }) || null;
+    /* 指定が無ければ、絞り込み中のメンバー → 推し の順でそのバリアントを初期選択 */
+    var pick = state.member || SNOshi.get();
+    if (!pre && pick) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick); }) || null;
     current = { product: p, variant: pre || p.variants[0], qty: 1, opener: opener || null };
     renderDialog();
     if (!dialog.open) dialog.showModal();
@@ -250,13 +256,7 @@
       (earned.length ? '<div class="meter-earned">' + esc(SNLang.t("goods.meterEarned")) + ": " + earned.join("") + "</div>" : "");
     $("#cd-meter .meter-fill").style.width = Math.max(0, Math.min(100, pct)) + "%";
   }
-
-  /* CSP（style-src 'self'）のもとでは HTML の style 属性が効かないので、色は data-color から CSSOM で当てる */
-  function applyColors(root, prop) {
-    root.querySelectorAll("[data-color]").forEach(function (el) {
-      if (/^#[0-9a-f]{6}$/i.test(el.dataset.color)) el.style.setProperty(prop, el.dataset.color);
-    });
-  }
+  var applyColors = SNSite.applyColors;
 
   function syncHeaderCart() {
     $("#cart-count").textContent = cart.count();

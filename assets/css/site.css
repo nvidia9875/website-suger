@@ -71,6 +71,8 @@ button { font-family: inherit; color: inherit; }
   background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--hairline-soft);
+  /* 推しカラーのリボン。未設定なら透明 */
+  border-top: 3px solid var(--oshi, transparent);
 }
 .head-logo { display: block; width: 124px; aspect-ratio: 2 / 1; flex-shrink: 0; }
 .head-nav { display: flex; gap: 22px; }
@@ -80,7 +82,7 @@ button { font-family: inherit; color: inherit; }
   transition: border-color var(--dur) var(--ease);
   white-space: nowrap;
 }
-.head-nav a:hover, .head-nav a[aria-current="page"] { border-bottom-color: var(--ink); }
+.head-nav a:hover, .head-nav a[aria-current="page"] { border-bottom-color: var(--oshi, var(--ink)); }
 .head-tools { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .lang { display: flex; gap: 2px; border: 1px solid var(--hairline); }
 .lang button {
@@ -137,10 +139,10 @@ button { font-family: inherit; color: inherit; }
 html:lang(th) .sec-title small { font-family: var(--th); }
 .sec-more {
   font-family: var(--en); font-weight: 600; font-size: 12px; letter-spacing: 0.16em;
-  text-decoration: none; border-bottom: 1.5px solid var(--ink); padding-bottom: 3px;
+  text-decoration: none; border-bottom: 1.5px solid var(--oshi, var(--ink)); padding-bottom: 3px;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.sec-more:hover { color: var(--ink-soft); border-color: var(--ink-soft); }
+.sec-more:hover { color: var(--ink-soft); border-color: var(--oshi, var(--ink-soft)); }
 .sec-lead { font-size: 13px; font-weight: 500; color: var(--ink-soft); margin: -8px 0 20px; max-width: 60ch; }
 
 /* ---------- ボタン ---------- */
@@ -174,7 +176,7 @@ html:lang(th) .sec-title small { font-family: var(--th); }
 .goods-price { font-family: var(--en); font-weight: 600; font-size: 15px; font-variant-numeric: tabular-nums; margin-top: auto; padding-top: 10px; }
 .goods-cta {
   display: inline-block; margin-top: 8px; font-family: var(--en); font-weight: 600; font-size: 10.5px; letter-spacing: 0.2em;
-  border-bottom: 1.5px solid var(--ink); padding-bottom: 2px; align-self: flex-start;
+  border-bottom: 1.5px solid var(--oshi, var(--ink)); padding-bottom: 2px; align-self: flex-start;
 }
 html:lang(ja) .goods-cta, html:lang(th) .goods-cta { font-family: inherit; letter-spacing: 0.12em; font-size: 11.5px; }
 
@@ -193,6 +195,61 @@ html:lang(ja) .goods-cta, html:lang(th) .goods-cta { font-family: inherit; lette
 .foot-nav a { font-size: 12px; color: var(--ink-soft); text-decoration: none; }
 .foot-nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .foot-copy { font-family: var(--en); font-weight: 500; font-size: 10.5px; letter-spacing: 0.14em; color: var(--ink-soft); margin-top: 20px; }
+
+/* ---------- 推しカラー
+   --oshi（濃色・AA）と --oshi-soft（本来の色）は oshi.js が <html> に当てる。
+   未設定なら変数が無いので、var(--oshi, …) は第2引数（モノトーン）に落ちる。文字色はグレーのまま ---------- */
+.oshi-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--hairline); background: transparent; padding: 3px 12px 3px 3px; cursor: pointer;
+  font-family: var(--en); font-weight: 600; font-size: 11px; letter-spacing: 0.14em; color: var(--ink);
+  transition: border-color var(--dur) var(--ease);
+}
+.oshi-btn:hover { border-color: var(--ink); }
+html[data-oshi] .oshi-btn { border-color: var(--oshi); }
+.oshi-btn-face {
+  width: 26px; height: 26px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+  display: grid; place-items: center; color: var(--ink-soft);
+  background: var(--oshi-soft, transparent); border: 1px solid var(--hairline);
+}
+.oshi-btn-face img { width: 100%; height: 100%; object-fit: cover; }
+.oshi-btn-face svg { width: 14px; height: 14px; }
+html:lang(ja) .oshi-btn-label, html:lang(th) .oshi-btn-label { font-family: inherit; letter-spacing: 0.08em; font-size: 12px; }
+
+.vc { width: 9px; height: 9px; border-radius: 50%; background: var(--vc, #ddd); border: 1px solid rgba(86, 82, 82, 0.28); flex-shrink: 0; display: inline-block; }
+
+/* ダイアログ共通の閉じるボタン（グッズ・推し） */
+.dialog-close, .pd-close-form { position: sticky; top: 12px; height: 0; text-align: right; z-index: 5; padding-right: 12px; }
+.icon-close {
+  border: 1px solid var(--hairline); background: var(--card); color: var(--ink);
+  width: 36px; height: 36px; font-size: 18px; line-height: 1; cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.icon-close:hover { background: var(--ink); color: var(--paper); }
+
+.oshi-dialog {
+  border: 1px solid var(--hairline); padding: 0; background: var(--card); color: var(--ink);
+  width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); margin: auto; overflow-y: auto;
+}
+.oshi-dialog::backdrop { background: rgba(86, 82, 82, 0.45); backdrop-filter: blur(2px); }
+.oshi-body { padding: 28px 28px 26px; }
+.oshi-eyebrow { font-family: var(--en); font-weight: 600; font-size: 10.5px; letter-spacing: 0.3em; color: var(--ink-soft); }
+.oshi-body h2 { font-weight: 700; font-size: 20px; letter-spacing: 0.06em; margin-top: 6px; }
+.oshi-hint { font-size: 12.5px; color: var(--ink-soft); margin-top: 8px; max-width: 46ch; line-height: 1.8; }
+.oshi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+.oshi-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 8px 12px; border: 1px solid var(--hairline); background: var(--card); color: var(--ink); cursor: pointer;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.oshi-opt img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--vc, var(--hairline)); }
+.oshi-opt-name { font-weight: 700; font-size: 13px; letter-spacing: 0.04em; }
+.oshi-opt-color { display: inline-flex; align-items: center; gap: 6px; font-family: var(--en); font-weight: 600; font-size: 10px; letter-spacing: 0.18em; color: var(--ink-soft); }
+.oshi-opt:hover { border-color: var(--ink); }
+.oshi-opt[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.oshi-foot { display: flex; justify-content: flex-end; margin-top: 18px; }
+.oshi-foot .btn { padding: 10px 20px; font-size: 12.5px; }
+.oshi-foot .btn[hidden] { display: none; }
 
 /* ---------- トースト ---------- */
 .toast {
@@ -245,6 +302,10 @@ html:lang(ja) .goods-cta, html:lang(th) .goods-cta { font-family: inherit; lette
   .lang button { padding: 5px 8px; }
   .cart-open { padding: 5px 9px; gap: 6px; }
   .cart-open .cart-open-label { display: none; }
+  .oshi-btn-label { display: none; }
+  .oshi-btn { padding-right: 3px; }
+  .oshi-grid { grid-template-columns: repeat(2, 1fr); }
+  .oshi-body { padding: 22px 18px; }
   .goods { grid-template-columns: 1fr 1fr; gap: 10px; }
   .goods-card { padding: 10px; }
   .foot-logo { width: 154px; }

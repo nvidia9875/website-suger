@@ -8,14 +8,16 @@
   function renderMembers() {
     var el = document.getElementById("members-list");
     if (!el) return;
-    var lang = SNLang.current;
+    var lang = SNLang.current, oshi = SNOshi.get();
     el.innerHTML = SN.members.map(function (m, i) {
       var names = SN.memberNames(m, lang);
+      var isOshi = m.id === oshi;
       return (
-        '<li><a href="member.html?m=' + m.id + '">' +
+        '<li><a href="member.html?m=' + m.id + '"' + (isOshi ? ' class="is-oshi"' : "") + ">" +
         '<span class="mem-photo"><img src="assets/img/' + m.img + '" alt="' + esc(m.name) + '"' + imgAttr(m.img) + ' loading="lazy"></span>' +
         '<span class="mem-body">' +
-        '<span class="mem-no">MEMBER ' + String(i + 1).padStart(2, "0") + "</span>" +
+        '<span class="mem-no">MEMBER ' + String(i + 1).padStart(2, "0") +
+        (isOshi ? '<span class="mem-oshi">♡ ' + esc(SNLang.t("oshi.isOshi")) + "</span>" : "") + "</span>" +
         '<span class="mem-name">' + esc(names.main) + "</span>" +
         '<span class="mem-kana">' + esc(names.sub) + "</span>" +
         '<span class="mem-foot"><span class="mem-enter">' + esc(SNLang.t("solo.enter")) + "</span></span>" +
@@ -83,6 +85,15 @@
       '<p><span class="k">' + esc(SNLang.t("form.mail")) + '</span><a href="' + url("mailto:" + c.email) + '">' + esc(c.email) + "</a></p>" +
       '<p><span class="k">' + esc(SNLang.t("form.tel")) + '</span><a href="' + url("tel:" + c.tel.replace(/[^\d+]/g, "")) + '">' + esc(c.tel) + "</a><small>" + esc(SN.pick(c.hours, SNLang.current)) + "</small></p>" +
       "<p><small>" + esc(SNLang.t("form.orderHint")) + "</small></p>";
+  }
+
+  /* TimeTree の枠色を推しカラー（未設定ならグレー）に。src が変わるときだけ差し替えて、無駄な再読込を避ける */
+  function setTimetree() {
+    var tt = document.getElementById("timetree");
+    if (!tt) return;
+    var m = SNOshi.member();
+    var src = SN.timetreeUrl(m ? SN.colorOf(m).ui : "565252");
+    if (tt.getAttribute("src") !== src) tt.setAttribute("src", src);
   }
 
   function setupVideo() {
@@ -217,6 +228,17 @@
       '<a href="' + url(m.sns.instagram) + '" target="_blank" rel="noopener">INSTAGRAM</a>' +
       '<a href="' + url(m.sns.tiktok) + '" target="_blank" rel="noopener">TIKTOK</a>';
 
+    /* 推し: ヒーローに is-oshi を付け、トグルボタンの状態を更新 */
+    var isOshi = SNOshi.get() === m.id;
+    document.querySelector(".solo-hero").classList.toggle("is-oshi", isOshi);
+    var toggle = document.getElementById("oshi-toggle");
+    if (toggle) {
+      toggle.setAttribute("aria-pressed", String(isOshi));
+      toggle.innerHTML = isOshi
+        ? '<span aria-hidden="true">♡</span> ' + esc(SNLang.t("oshi.isOshi"))
+        : esc(SNLang.fmt("oshi.set", { name: names.main }));
+    }
+
     var img = document.getElementById("solo-img");
     if (img.getAttribute("data-member") !== m.id) {
       img.src = "assets/img/" + m.img;
@@ -262,6 +284,23 @@
       '<a href="member.html?m=' + next.id + '"><span class="sn-dir">' + esc(SNLang.t("solo.next")) + ' →</span><span class="sn-name">' + esc(SN.memberNames(next, lang).main) + "</span></a>";
   }
 
+  /* メンバーページの「推しにする」トグル */
+  function setupOshiToggle() {
+    var btn = document.getElementById("oshi-toggle");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var m = currentMember();
+      var names = SN.memberNames(m, SNLang.current);
+      if (SNOshi.get() === m.id) {
+        SNOshi.set(null);
+        SNSite.toast(SNLang.t("oshi.cleared"));
+      } else {
+        SNOshi.set(m.id);
+        SNSite.toast(SNLang.fmt("oshi.done", { name: names.main }));
+      }
+    });
+  }
+
   function setupShare() {
     var btn = document.getElementById("share-btn");
     if (!btn) return;
@@ -287,16 +326,16 @@
       renderGoodsPick();
       renderTypes();
       renderContactInfo();
+      setTimetree();
     } else {
       renderSolo();
     }
   }
 
   SNSite.boot(renderAll, function () {
-    var tt = document.getElementById("timetree");
-    if (tt) tt.src = SN.timetreeUrl("565252");
     setupVideo();
     setupForm();
     setupShare();
+    setupOshiToggle();
   });
 })();

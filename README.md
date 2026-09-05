@@ -33,6 +33,7 @@ sugarnote/
 │   │   ├── goods-data.js 商品データ（Shopify バリアント ID・価格・説明・特典）
 │   │   ├── i18n.js       3言語の UI 辞書と言語切替（SNLang）
 │   │   ├── site.js       共通部品（フッター SNS・モバイルメニュー・トースト・商品カード・起動）
+│   │   ├── oshi.js       推しカラー（選択ダイアログ・保存・CSS 変数の適用）
 │   │   ├── home.js       トップ・メンバーページの描画とフォーム
 │   │   ├── cart.js       カート（localStorage）と Shopify チェックアウト URL
 │   │   ├── goods.js      グッズページの描画
@@ -49,7 +50,7 @@ sugarnote/
 └── docs/                 引き継ぎ資料・検証スクリーンショット（公開されない）
 ```
 
-読み込み順は `data.js → goods-data.js → i18n.js → site.js → (home.js | goods.js | page.js)`。全ページ同じです。
+読み込み順は `data.js → goods-data.js → i18n.js → site.js → oshi.js → (home.js | goods.js | page.js)`。全ページ同じです。
 外部スクリプトは読み込んでいません（フォントも自前ホスト）。外部と通信するのは TimeTree と YouTube の埋め込みだけです。
 
 ## ローカルで見る
@@ -70,6 +71,18 @@ python3 -m http.server 8000
 - 角丸・影は使わない。区切りは 1px のヘアライン
 - トークンは `assets/css/site.css` の `:root` にまとめてある
 - **HTML の `style` 属性・インライン `<script>`・`onclick` は使えない**（CSP で禁止している）。色や幅を動的に変えるときは JS から `el.style.setProperty()` で当てる（`goods.js` の `applyColors` を参照）
+
+## 推しカラー
+
+ヘッダーの「推し」ボタン、またはメンバーページの「◯◯を推しにする」で推しを1人選ぶと、サイトのアクセントがその子のメンバーカラーになります。**文字色はグレーのまま**で、色が付くのは次の場所だけです。
+
+- ヘッダー上端の 3px のリボン、ナビの現在地の下線
+- VIEW ALL / くわしく見る / LISTEN などの下線
+- トップのメンバーカードの枠と「♡ MY OSHI」タグ、メンバーページの番号と写真の縁
+- グッズ: メンバーチップの ♡、商品ダイアログで推しのバリアントを初期選択
+- TimeTree の枠色
+
+仕組み: `assets/js/oshi.js` が `localStorage`（キー `sn-oshi`、メンバー id）に保存し、`<html>` に `data-oshi` と CSS 変数 `--oshi`（AA を満たす濃色）/ `--oshi-soft`（本来の色）を当てる。CSS は `var(--oshi, var(--ink))` のように書き、未設定ならモノトーンに落ちる。変更は `sn:oshi` イベントで各ページに伝わる。選択ダイアログは JS が組み立てるので HTML には無い。この端末にだけ保存され、どこにも送られません。
 
 ## コンテンツの更新
 
@@ -178,4 +191,5 @@ Playwright で 320 / 768 / 1024 / 1440 px を確認。結果は `docs/verify/` �
 - グッズ: 絞り込み（カテゴリ × メンバー）→ 商品ダイアログ → カート → チェックアウト URL `https://www.sugarnote.store/cart/47393203257580:2` の生成を確認
 - 言語切替 JP / EN / TH でヘッダー・チップ・カート・フッターが追従
 - モバイルメニュー、`?p=&v=` の商品ディープリンク、お問い合わせフォームの検証（必須・メール形式・同意）と確認画面
+- 推しカラー（同日）: メンバーページのトグル → ヘッダー・トップのカード・グッズの初期選択・TimeTree の枠色に反映、解除で完全にモノトーンへ戻る、320 幅でもはみ出しなし。White 担当（里莉穂）は濃色 `#6E6B78` の線で見える。スクリーンショットは `docs/verify/oshi-*.jpeg`
 - セキュリティ（同日）: CSP 適用後も全ページでコンソールエラー 0。`?m=<img onerror>` 等の注入は無視される。localStorage に細工したカート（文字列・負数・小数・存在しない商品）は 1〜99 の整数と実在バリアントだけに正規化される。外部通信は TimeTree と YouTube の iframe のみ

@@ -33,6 +33,12 @@ const SN_I18N = {
       mail: "メール", tel: "お電話",
     },
     foot: { terms: "利用規約", privacy: "プライバシーポリシー", legal: "特定商取引法に基づく表記", company: "運営会社", backHome: "トップへ戻る", copyright: "© 2026 SugarNote Official. All Rights Reserved." },
+    oshi: {
+      label: "推し", choose: "推しをえらぶ",
+      hint: "推しを選ぶと、サイトの下線やリボンがその子のメンバーカラーになります。この端末にだけ保存されます。",
+      set: "{name}を推しにする", unset: "推しを解除", isOshi: "MY OSHI", none: "未設定",
+      done: "{name}を推しに設定しました", cleared: "推しを解除しました", close: "閉じる",
+    },
     solo: {
       share: "このページをシェア", shareCopied: "コピーしました！SNSに貼ってね",
       twins: "双子", enter: "詳しく見る →", allMembers: "全員を見る",
@@ -89,6 +95,12 @@ const SN_I18N = {
       mail: "Email", tel: "Phone",
     },
     foot: { terms: "Terms of Use", privacy: "Privacy Policy", legal: "Legal Notice", company: "About Us", backHome: "Back to top", copyright: "© 2026 SugarNote Official. All Rights Reserved." },
+    oshi: {
+      label: "Oshi", choose: "Choose your oshi",
+      hint: "Pick your oshi and the site's underlines and ribbon take her member color. Saved on this device only.",
+      set: "Make {name} my oshi", unset: "Clear oshi", isOshi: "MY OSHI", none: "Not set",
+      done: "{name} is now your oshi", cleared: "Oshi cleared", close: "Close",
+    },
     solo: {
       share: "Share this page", shareCopied: "Copied! Paste it on your SNS",
       twins: "Twins", enter: "VIEW PROFILE →", allMembers: "All members",
@@ -145,6 +157,12 @@ const SN_I18N = {
       mail: "อีเมล", tel: "โทรศัพท์",
     },
     foot: { terms: "ข้อกำหนดการใช้งาน", privacy: "นโยบายความเป็นส่วนตัว", legal: "ข้อมูลตามกฎหมายการค้า", company: "เกี่ยวกับเรา", backHome: "กลับหน้าแรก", copyright: "© 2026 SugarNote Official. All Rights Reserved." },
+    oshi: {
+      label: "โอชิ", choose: "เลือกโอชิของคุณ",
+      hint: "เลือกโอชิแล้วเส้นใต้และริบบิ้นของเว็บไซต์จะเปลี่ยนเป็นสีประจำตัวของเธอ บันทึกไว้ในอุปกรณ์นี้เท่านั้น",
+      set: "ตั้ง {name} เป็นโอชิ", unset: "ยกเลิกโอชิ", isOshi: "MY OSHI", none: "ยังไม่ได้ตั้ง",
+      done: "ตั้ง {name} เป็นโอชิแล้ว", cleared: "ยกเลิกโอชิแล้ว", close: "ปิด",
+    },
     solo: {
       share: "แชร์หน้านี้", shareCopied: "คัดลอกแล้ว! นำไปแปะบน SNS ได้เลย",
       twins: "ฝาแฝด", enter: "ดูโปรไฟล์ →", allMembers: "สมาชิกทั้งหมด",

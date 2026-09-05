@@ -98,17 +98,27 @@ const SNSite = (function () {
     return "";
   }
 
+  /* CSP（style-src 'self'）のもとでは HTML の style 属性が効かないので、色は data-color から CSSOM で当てる */
+  function applyColors(root, prop) {
+    root.querySelectorAll("[data-color]").forEach(function (el) {
+      if (/^#[0-9a-f]{6}$/i.test(el.dataset.color)) el.style.setProperty(prop, el.dataset.color);
+    });
+  }
+
   /* ---------- 起動: 保存言語の復元（SNLang.init）が sn:lang を発火するので先に購読する ---------- */
   function boot(renderAll, setup) {
     document.addEventListener("DOMContentLoaded", function () {
       renderFoot();
       setupMenu();
+      /* const 宣言のグローバルは window のプロパティにならないので typeof で確認する */
+      if (typeof SNOshi !== "undefined") SNOshi.mount();
       if (setup) setup();
       document.addEventListener("sn:lang", renderAll);
+      document.addEventListener("sn:oshi", renderAll);
       renderAll();
       SNLang.init();
     });
   }
 
-  return { esc: esc, url: url, dot: dot, imgAttr: imgAttr, reduceMotion: reduceMotion, toast: toast, goodsCard: goodsCard, cardNote: cardNote, boot: boot };
+  return { esc: esc, url: url, dot: dot, imgAttr: imgAttr, reduceMotion: reduceMotion, toast: toast, goodsCard: goodsCard, cardNote: cardNote, applyColors: applyColors, boot: boot };
 })();
