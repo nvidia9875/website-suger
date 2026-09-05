@@ -123,6 +123,8 @@
 
 ## 10. URL・連絡先
 
+- **このサイトのリポジトリ**: https://github.com/nvidia9875/website-suger （public、main ブランチ、Pages の Source は GitHub Actions）
+- **このサイトの公開 URL（レビュー用）**: https://nvidia9875.github.io/website-suger/ （docs / tools / README は 404 になることを確認済み）
 - 現行公式サイト: https://sugarnote.jp （FLAP の Vercel。ムームードメイン管理）
 - 現行ストア: https://www.sugarnote.store （Shopify。南さんが構築）
 - 公開サンプル: https://nvidia9875.github.io/web-sample/ （本体）/ https://nvidia9875.github.io/sugernote-goods/ （旧グッズ案）

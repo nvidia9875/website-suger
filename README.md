@@ -3,6 +3,7 @@
 公式サイトとオフィシャルグッズを **1つのサイト** にまとめたソースです。
 静的 HTML / CSS / JS だけで動き、ビルド不要。決済だけ Shopify（sugarnote.store）のチェックアウトに渡します。
 
+- リポジトリ: https://github.com/nvidia9875/website-suger / 公開 URL: https://nvidia9875.github.io/website-suger/
 - デザイン: 提案16案のうち採用された O案「ソロルーム」（モノトーン #565252）
 - 言語: JP / EN / TH（UI 文言のみ。商品名・説明と法務ページは日本語）
 - 引き継ぎ資料: [docs/HANDOVER.md](docs/HANDOVER.md)
