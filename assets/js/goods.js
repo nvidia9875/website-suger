@@ -1,79 +1,114 @@
 /* SugarNote 公式サイト — グッズページ（goods.html）
- * 絞り込み（カテゴリ × メンバー）/ 一覧 / 商品ダイアログ / カート → Shopify チェックアウト
- * URL: ?c=<category> ?m=<memberId> で絞り込み、?p=<productId>&v=<variantKey> で商品を開く
+ * 推しの棚（選んだメンバーごとに全アイテムをまとめる）/ カテゴリ絞り込みの全アイテム / 商品ダイアログ / カート → Shopify チェックアウト
+ * URL: ?c=<category> でカテゴリ、?m=<memberId> でそのメンバーを推しに追加して棚を出す、?p=<productId>&v=<variantKey> で商品を開く
  */
 (function () {
   "use strict";
-  var esc = SNSite.esc, imgAttr = SNSite.imgAttr, toast = SNSite.toast;
+  var esc = SNSite.esc, imgAttr = SNSite.imgAttr, toast = SNSite.toast, applyColors = SNSite.applyColors;
   var $ = function (sel) { return document.querySelector(sel); };
   var cart = SNCart("sn-cart");
 
   var params = new URLSearchParams(location.search);
   var state = {
     cat: GOODS.categories.some(function (c) { return c.key === params.get("c"); }) ? params.get("c") : "all",
-    member: SN.member(params.get("m")) ? params.get("m") : null,
   };
 
   function syncUrl() {
-    var q = new URLSearchParams();
-    if (state.cat !== "all") q.set("c", state.cat);
-    if (state.member) q.set("m", state.member);
+    var q = new URLSearchParams(location.search);
+    q.delete("m");
+    if (state.cat !== "all") q.set("c", state.cat); else q.delete("c");
     var s = q.toString();
     history.replaceState(null, "", location.pathname + (s ? "?" + s : "") + location.hash);
   }
 
-  /* ---------- 絞り込みチップ ---------- */
+  /* ---------- 推しの棚 ---------- */
+  function renderOshiChips() {
+    var lang = SNLang.current, ids = SNOshi.list();
+    var row = $("#oshi-chips");
+    row.innerHTML = SN.members.map(function (m) {
+      var col = SN.colorOf(m), on = ids.indexOf(m.id) >= 0;
+      return '<button type="button" class="chip chip-face" data-oshi="' + m.id + '" aria-pressed="' + on + '" data-color="' + col.hex + '">' +
+        '<img src="assets/img/' + m.face + '" alt=""' + imgAttr(m.face) + ' loading="lazy">' +
+        esc(SN.memberShort(m, lang)) + '<span class="chip-dot" aria-hidden="true"></span></button>';
+    }).join("");
+    applyColors(row, "--c");
+    row.querySelectorAll("[data-oshi]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var m = SN.member(b.dataset.oshi);
+        var added = SNOshi.toggle(m.id);
+        toast(SNLang.fmt(added ? "oshi.added" : "oshi.removed", { name: SN.memberShort(m, SNLang.current) }));
+        if (added) {
+          var shelf = document.getElementById("shelf-" + m.id);
+          if (shelf) shelf.scrollIntoView({ behavior: SNSite.reduceMotion() ? "auto" : "smooth", block: "start" });
+        }
+      });
+    });
+  }
+
+  function renderShelves() {
+    var lang = SNLang.current, ids = SNOshi.list();
+    var box = $("#shelves");
+    if (!ids.length) {
+      box.innerHTML = '<p class="shelf-empty">' + esc(SNLang.t("goods.shelfEmpty")) + "</p>";
+      return;
+    }
+    box.innerHTML = ids.map(function (id) {
+      var m = SN.member(id), col = SN.colorOf(m);
+      var rows = GoodsUtil.productsFor(id);
+      return '<section class="shelf" id="shelf-' + m.id + '" aria-labelledby="shelf-h-' + m.id + '">' +
+        '<header class="shelf-head" data-color="' + col.hex + '">' +
+        '<img class="shelf-face" src="assets/img/' + m.face + '" alt=""' + imgAttr(m.face) + ' loading="lazy">' +
+        '<h3 id="shelf-h-' + m.id + '">' + esc(SNLang.fmt("goods.forMember", { name: SN.memberShort(m, lang) })) + "</h3>" +
+        '<span class="shelf-count">' + esc(SNLang.fmt("goods.countItems", { n: rows.length })) + "</span>" +
+        '<button type="button" class="shelf-remove" data-remove-oshi="' + m.id + '">' + esc(SNLang.t("oshi.unsetOne")) + "</button>" +
+        "</header>" +
+        '<ol class="goods goods-shelf">' +
+        rows.map(function (r) { return SNSite.goodsCard(r.product, r.variant, { quickAdd: true }); }).join("") +
+        "</ol></section>";
+    }).join("");
+    applyColors(box, "--vc");
+    box.querySelectorAll(".goods-card").forEach(function (card) {
+      card.addEventListener("click", function () { openProduct(card.dataset.product, card.dataset.variant, card); });
+    });
+    box.querySelectorAll("[data-add]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.dataset.add.split(":");
+        var p = GoodsUtil.product(k[0]), v = GoodsUtil.variant(k[0], k[1]);
+        if (!p || !v) return;
+        cart.add(p.id, v.key, 1);
+        toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + v.label + "）" : ""));
+      });
+    });
+    box.querySelectorAll("[data-remove-oshi]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var m = SN.member(b.dataset.removeOshi);
+        SNOshi.toggle(m.id);
+        toast(SNLang.fmt("oshi.removed", { name: SN.memberShort(m, SNLang.current) }));
+      });
+    });
+  }
+
+  /* ---------- 全アイテム（カテゴリ絞り込み） ---------- */
   function renderFilters() {
-    var lang = SNLang.current;
     $("#cat-chips").innerHTML = GOODS.categories.map(function (c) {
       var count = GoodsUtil.byCategory(c.key).length;
       return '<button type="button" class="chip" data-cat="' + c.key + '" aria-pressed="' + (c.key === state.cat) + '">' +
         esc(SNLang.t("goods.cat." + c.key)) + "<small>" + count + "</small></button>";
     }).join("");
-    var oshi = SNOshi.get();
-    $("#member-chips").innerHTML =
-      '<button type="button" class="chip" data-member="" aria-pressed="' + (state.member === null) + '">' + esc(SNLang.t("goods.allMembers")) + "</button>" +
-      SN.members.map(function (m) {
-        var col = SN.colorOf(m);
-        var isOshi = m.id === oshi;
-        return '<button type="button" class="chip chip-face' + (isOshi ? " is-oshi" : "") + '" data-member="' + m.id + '" aria-pressed="' + (m.id === state.member) + '" data-color="' + col.hex + '"' +
-          (isOshi ? ' title="' + esc(SNLang.t("oshi.isOshi")) + '"' : "") + ">" +
-          '<img src="assets/img/' + m.face + '" alt=""' + imgAttr(m.face) + ' loading="lazy">' +
-          esc(SN.memberShort(m, lang)) + (isOshi ? '<span class="chip-oshi" aria-hidden="true">♡</span>' : "") +
-          '<span class="chip-dot" aria-hidden="true"></span></button>';
-      }).join("");
-    applyColors($("#member-chips"), "--c");
-
     document.querySelectorAll("[data-cat]").forEach(function (b) {
       b.addEventListener("click", function () { state.cat = b.dataset.cat; syncUrl(); renderFilters(); renderItems(); });
     });
-    document.querySelectorAll("[data-member]").forEach(function (b) {
-      b.addEventListener("click", function () { state.member = b.dataset.member || null; syncUrl(); renderFilters(); renderItems(); });
-    });
-  }
-
-  /* ---------- 一覧 ---------- */
-  function currentRows() {
-    var products = GoodsUtil.byCategory(state.cat);
-    if (!state.member) return products.map(function (p) { return { product: p, variant: null }; });
-    var forMember = GoodsUtil.productsFor(state.member);
-    return forMember.filter(function (r) { return products.indexOf(r.product) >= 0; });
   }
 
   function renderItems() {
-    var rows = currentRows();
-    var status = $("#items-status");
-    var label = state.member
-      ? SNLang.fmt("goods.forMember", { name: SN.memberShort(SN.member(state.member), SNLang.current) })
-      : SNLang.t("goods.cat." + state.cat);
-    status.innerHTML = esc(label) + "<small>" + esc(SNLang.fmt("goods.countItems", { n: rows.length })) + "</small>";
-
+    var products = GoodsUtil.byCategory(state.cat);
+    $("#items-status").innerHTML = esc(SNLang.t("goods.cat." + state.cat)) + "<small>" + esc(SNLang.fmt("goods.countItems", { n: products.length })) + "</small>";
     var grid = $("#items-grid");
-    if (!rows.length) {
+    if (!products.length) {
       grid.innerHTML = '<li class="items-empty">' + esc(SNLang.t("goods.noItems")) + "</li>";
       return;
     }
-    grid.innerHTML = rows.map(function (r) { return SNSite.goodsCard(r.product, r.variant); }).join("");
+    grid.innerHTML = products.map(function (p) { return SNSite.goodsCard(p, null); }).join("");
     grid.querySelectorAll(".goods-card").forEach(function (card) {
       card.addEventListener("click", function () { openProduct(card.dataset.product, card.dataset.variant, card); });
     });
@@ -87,8 +122,8 @@
     var p = GoodsUtil.product(id);
     if (!p) return;
     var pre = variantKey ? GoodsUtil.variant(id, variantKey) : null;
-    /* 指定が無ければ、絞り込み中のメンバー → 推し の順でそのバリアントを初期選択 */
-    var pick = state.member || SNOshi.get();
+    /* 指定が無ければ、最後に選んだ推しのバリアントを初期選択 */
+    var pick = SNOshi.get();
     if (!pre && pick) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick); }) || null;
     current = { product: p, variant: pre || p.variants[0], qty: 1, opener: opener || null };
     renderDialog();
@@ -256,7 +291,6 @@
       (earned.length ? '<div class="meter-earned">' + esc(SNLang.t("goods.meterEarned")) + ": " + earned.join("") + "</div>" : "");
     $("#cd-meter .meter-fill").style.width = Math.max(0, Math.min(100, pct)) + "%";
   }
-  var applyColors = SNSite.applyColors;
 
   function syncHeaderCart() {
     $("#cart-count").textContent = cart.count();
@@ -272,6 +306,8 @@
 
   /* ---------- 起動 ---------- */
   function renderAll() {
+    renderOshiChips();
+    renderShelves();
     renderFilters();
     renderItems();
     renderBonus();
@@ -281,10 +317,21 @@
   }
 
   SNSite.boot(renderAll, function () {
-    /* ?p=<productId>&v=<variantKey> で商品を開いた状態にする（URLはそのまま残す） */
+    /* ?m=<memberId>: メンバーページの「◯◯のグッズをすべて見る」から。その子を推しに追加して棚を出す */
+    var m = SN.member(params.get("m"));
+    if (m) {
+      if (!SNOshi.has(m.id)) {
+        SNOshi.add(m.id);
+        document.addEventListener("sn:lang", function once() {
+          document.removeEventListener("sn:lang", once);
+          toast(SNLang.fmt("oshi.added", { name: SN.memberShort(m, SNLang.current) }));
+        });
+      }
+      syncUrl();
+    }
+    /* ?p=<productId>&v=<variantKey> で商品を開いた状態にする（言語復元の後に開く） */
     var p = params.get("p");
     if (p && GoodsUtil.product(p)) {
-      /* 言語復元の後に開く（初回の sn:lang を待つ） */
       document.addEventListener("sn:lang", function once() {
         document.removeEventListener("sn:lang", once);
         openProduct(p, params.get("v"));

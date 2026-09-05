@@ -25,9 +25,9 @@
 .mem-body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px; }
 .mem-no { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-family: var(--en); font-weight: 600; font-size: 11px; letter-spacing: 0.26em; color: var(--ink-soft); }
 /* 推しのカード: 枠線とタグだけがメンバーカラーになる */
-.mem-oshi { font-size: 9.5px; letter-spacing: 0.2em; color: var(--oshi, var(--ink)); white-space: nowrap; }
-.members a.is-oshi { border-color: var(--oshi); box-shadow: inset 0 0 0 1px var(--oshi); }
-.members a.is-oshi:hover { border-color: var(--oshi); }
+.mem-oshi { font-size: 9.5px; letter-spacing: 0.2em; color: var(--own, var(--ink)); white-space: nowrap; }
+.members a.is-oshi { border-color: var(--own, var(--ink)); box-shadow: inset 0 0 0 1px var(--own, var(--ink)); }
+.members a.is-oshi:hover { border-color: var(--own, var(--ink)); }
 .mem-name { font-weight: 700; font-size: clamp(19px, 2vw, 23px); letter-spacing: 0.08em; margin-top: 8px; }
 .mem-kana { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; color: var(--ink-soft); margin-top: 5px; margin-bottom: 18px; }
 .mem-foot { display: flex; align-items: center; justify-content: flex-end; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--hairline-soft); }
@@ -140,9 +140,9 @@
 }
 .solo-sns a:hover { background: var(--ink); color: var(--paper); }
 .solo-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 12%; border: 1px solid var(--hairline-soft); }
-/* 推しのページ: 番号と写真の縁だけがメンバーカラーになる */
-.solo-hero.is-oshi .solo-no { color: var(--oshi); opacity: 1; }
-.solo-hero.is-oshi .solo-photo img { border: 2px solid var(--oshi); }
+/* 推しのページ: 番号と写真の縁だけがその子のメンバーカラーになる（--own は home.js が当てる） */
+.solo-hero.is-oshi .solo-no { color: var(--own, var(--oshi)); opacity: 1; }
+.solo-hero.is-oshi .solo-photo img { border: 2px solid var(--own, var(--oshi)); }
 .solo-share { margin-top: 16px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
 .oshi-toggle {
   display: inline-flex; align-items: center; gap: 6px;
@@ -152,8 +152,8 @@
   transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
 }
 .oshi-toggle:hover { border-color: var(--ink); }
-.oshi-toggle[aria-pressed="true"] { border-color: var(--oshi); background: color-mix(in srgb, var(--oshi-soft) 30%, var(--card)); }
-.oshi-toggle[aria-pressed="true"] span { color: var(--oshi); }
+.oshi-toggle[aria-pressed="true"] { border-color: var(--own, var(--oshi)); }
+.oshi-toggle[aria-pressed="true"] span { color: var(--own, var(--oshi)); }
 .share-btn {
   display: inline-flex; align-items: baseline; gap: 8px;
   font-family: var(--base); font-weight: 600; font-size: 12px; letter-spacing: 0.04em;

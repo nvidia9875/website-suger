@@ -8,12 +8,12 @@
   function renderMembers() {
     var el = document.getElementById("members-list");
     if (!el) return;
-    var lang = SNLang.current, oshi = SNOshi.get();
+    var lang = SNLang.current, oshi = SNOshi.list();
     el.innerHTML = SN.members.map(function (m, i) {
       var names = SN.memberNames(m, lang);
-      var isOshi = m.id === oshi;
+      var isOshi = oshi.indexOf(m.id) >= 0;
       return (
-        '<li><a href="member.html?m=' + m.id + '"' + (isOshi ? ' class="is-oshi"' : "") + ">" +
+        '<li><a href="member.html?m=' + m.id + '"' + (isOshi ? ' class="is-oshi" data-color="' + SN.colorOf(m).ui + '"' : "") + ">" +
         '<span class="mem-photo"><img src="assets/img/' + m.img + '" alt="' + esc(m.name) + '"' + imgAttr(m.img) + ' loading="lazy"></span>' +
         '<span class="mem-body">' +
         '<span class="mem-no">MEMBER ' + String(i + 1).padStart(2, "0") +
@@ -24,6 +24,7 @@
         "</span></a></li>"
       );
     }).join("");
+    SNSite.applyColors(el, "--own");
   }
 
   function renderNews() {
@@ -228,8 +229,11 @@
       '<a href="' + url(m.sns.instagram) + '" target="_blank" rel="noopener">INSTAGRAM</a>' +
       '<a href="' + url(m.sns.tiktok) + '" target="_blank" rel="noopener">TIKTOK</a>';
 
-    /* 推し: ヒーローに is-oshi を付け、トグルボタンの状態を更新 */
-    var isOshi = SNOshi.get() === m.id;
+    /* 推し: ヒーローに is-oshi を付け、トグルボタンの状態を更新。色は最後に選んだ推しに追従するので、
+       この子が推しでも別の子の色になることがある（is-oshi の装飾は --oshi ではなくこの子の色を使う） */
+    var own = SN.colorOf(m);
+    document.querySelector(".solo-hero").style.setProperty("--own", own.ui);
+    var isOshi = SNOshi.has(m.id);
     document.querySelector(".solo-hero").classList.toggle("is-oshi", isOshi);
     var toggle = document.getElementById("oshi-toggle");
     if (toggle) {
@@ -291,13 +295,8 @@
     btn.addEventListener("click", function () {
       var m = currentMember();
       var names = SN.memberNames(m, SNLang.current);
-      if (SNOshi.get() === m.id) {
-        SNOshi.set(null);
-        SNSite.toast(SNLang.t("oshi.cleared"));
-      } else {
-        SNOshi.set(m.id);
-        SNSite.toast(SNLang.fmt("oshi.done", { name: names.main }));
-      }
+      var added = SNOshi.toggle(m.id);
+      SNSite.toast(SNLang.fmt(added ? "oshi.added" : "oshi.removed", { name: names.main }));
     });
   }
 

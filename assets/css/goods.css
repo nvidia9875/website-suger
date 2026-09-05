@@ -10,6 +10,25 @@
 .goods-ja-only { font-size: 12px; color: var(--ink-soft); margin-top: -10px; margin-bottom: 20px; }
 .goods-ja-only:empty { display: none; }
 
+/* ---------- 推しの棚 ---------- */
+.sec-shelves { padding-top: clamp(28px, 4vw, 48px); }
+.chips-oshi { margin-bottom: 26px; }
+.shelves { display: grid; gap: clamp(30px, 4vw, 48px); }
+.shelf-empty {
+  border: 1px dashed var(--hairline); padding: 34px 20px; text-align: center;
+  font-size: 13px; color: var(--ink-soft);
+}
+.shelf-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+/* 顔写真の縁だけがその子のメンバーカラー（--vc は goods.js が当てる） */
+.shelf-face { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--vc, var(--hairline)); }
+.shelf-head h3 { font-weight: 700; font-size: 17px; letter-spacing: 0.06em; }
+.shelf-count { font-family: var(--en); font-weight: 600; font-size: 11px; letter-spacing: 0.12em; color: var(--ink-soft); }
+.shelf-remove {
+  margin-left: auto; border: 0; background: none; color: var(--ink-soft); cursor: pointer;
+  font-size: 11.5px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; padding: 4px 0;
+}
+.shelf-remove:hover { color: var(--ink); }
+
 /* ---------- 絞り込み ---------- */
 .filters { display: grid; gap: 18px; padding: 22px 0 26px; border-top: 1px solid var(--hairline-soft); border-bottom: 1px solid var(--hairline-soft); margin-bottom: 26px; }
 .filter-group { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: start; }

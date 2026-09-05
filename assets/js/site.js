@@ -84,8 +84,14 @@ const SNSite = (function () {
       '<span class="goods-price">' + GoodsUtil.yen(variant ? variant.price : product.price) + (product.priceMax && !variant ? "〜" : "") + "</span>" +
       '<span class="goods-cta">' + esc(SNLang.t("goods.detail")) + "</span>";
     if (opts.href) return '<li><a class="goods-card" href="' + url(opts.href) + '">' + inner + "</a></li>";
-    return '<li><button type="button" class="goods-card" data-product="' + product.id + '"' +
-      (variant ? ' data-variant="' + variant.key + '"' : "") + ' aria-haspopup="dialog">' + inner + "</button></li>";
+    var btn = '<button type="button" class="goods-card" data-product="' + product.id + '"' +
+      (variant ? ' data-variant="' + variant.key + '"' : "") + ' aria-haspopup="dialog">' + inner + "</button>";
+    /* quickAdd: 推しの棚用。カードの下に「カートへ」を兄弟要素として置く（button の入れ子を避ける） */
+    if (opts.quickAdd && variant) {
+      return '<li class="has-add">' + btn +
+        '<button type="button" class="goods-add" data-add="' + product.id + ":" + variant.key + '">' + esc(SNLang.t("goods.addCartShort")) + "</button></li>";
+    }
+    return "<li>" + btn + "</li>";
   }
   /* カードの補足行: メンバー指定時はそのバリアント名、それ以外は商品の性格（選べる / サイズ / ランダム / 限定） */
   function cardNote(p, v) {

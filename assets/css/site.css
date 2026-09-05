@@ -179,6 +179,17 @@ html:lang(th) .sec-title small { font-family: var(--th); }
   border-bottom: 1.5px solid var(--oshi, var(--ink)); padding-bottom: 2px; align-self: flex-start;
 }
 html:lang(ja) .goods-cta, html:lang(th) .goods-cta { font-family: inherit; letter-spacing: 0.12em; font-size: 11.5px; }
+/* 推しの棚のカード: 枠は li が持ち、カードの下に「カートへ」が並ぶ */
+.goods > li.has-add { flex-direction: column; background: var(--card); border: 1px solid var(--hairline-soft); transition: border-color var(--dur) var(--ease); }
+.goods > li.has-add:hover { border-color: var(--ink); }
+.has-add .goods-card { border: 0; flex: 1; }
+.goods-add {
+  margin: 0 14px 14px; padding: 9px 12px; cursor: pointer;
+  font-family: var(--base); font-weight: 600; font-size: 12px; letter-spacing: 0.08em;
+  background: transparent; color: var(--ink); border: 1.5px solid var(--ink);
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.goods-add:hover { background: var(--ink); color: var(--paper); }
 
 /* ---------- フッター ---------- */
 .foot { margin-top: clamp(64px, 9vw, 120px); border-top: 1px solid var(--hairline); }
@@ -214,6 +225,8 @@ html[data-oshi] .oshi-btn { border-color: var(--oshi); }
 }
 .oshi-btn-face img { width: 100%; height: 100%; object-fit: cover; }
 .oshi-btn-face svg { width: 14px; height: 14px; }
+.oshi-btn-count { font-size: 10px; color: var(--ink-soft); letter-spacing: 0.04em; }
+.oshi-btn-count[hidden] { display: none; }
 html:lang(ja) .oshi-btn-label, html:lang(th) .oshi-btn-label { font-family: inherit; letter-spacing: 0.08em; font-size: 12px; }
 
 .vc { width: 9px; height: 9px; border-radius: 50%; background: var(--vc, #ddd); border: 1px solid rgba(86, 82, 82, 0.28); flex-shrink: 0; display: inline-block; }
@@ -247,7 +260,7 @@ html:lang(ja) .oshi-btn-label, html:lang(th) .oshi-btn-label { font-family: inhe
 .oshi-opt-color { display: inline-flex; align-items: center; gap: 6px; font-family: var(--en); font-weight: 600; font-size: 10px; letter-spacing: 0.18em; color: var(--ink-soft); }
 .oshi-opt:hover { border-color: var(--ink); }
 .oshi-opt[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
-.oshi-foot { display: flex; justify-content: flex-end; margin-top: 18px; }
+.oshi-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 .oshi-foot .btn { padding: 10px 20px; font-size: 12.5px; }
 .oshi-foot .btn[hidden] { display: none; }
 

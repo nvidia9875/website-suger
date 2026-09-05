@@ -35,9 +35,9 @@ const SN_I18N = {
     foot: { terms: "利用規約", privacy: "プライバシーポリシー", legal: "特定商取引法に基づく表記", company: "運営会社", backHome: "トップへ戻る", copyright: "© 2026 SugarNote Official. All Rights Reserved." },
     oshi: {
       label: "推し", choose: "推しをえらぶ",
-      hint: "推しを選ぶと、サイトの下線やリボンがその子のメンバーカラーになります。この端末にだけ保存されます。",
-      set: "{name}を推しにする", unset: "推しを解除", isOshi: "MY OSHI", none: "未設定",
-      done: "{name}を推しに設定しました", cleared: "推しを解除しました", close: "閉じる",
+      hint: "複数選べます。選んだ子のグッズはグッズページの上にまとまり、最後に選んだ子の色がサイトの下線やリボンになります。この端末にだけ保存されます。",
+      set: "{name}を推しにする", unset: "推しをすべて解除", unsetOne: "棚から外す", isOshi: "MY OSHI", none: "未設定",
+      added: "{name}を推しに追加しました", removed: "{name}を推しから外しました", cleared: "推しを解除しました", close: "閉じる",
     },
     solo: {
       share: "このページをシェア", shareCopied: "コピーしました！SNSに貼ってね",
@@ -48,6 +48,8 @@ const SN_I18N = {
     goods: {
       lead: "SugarNote のオフィシャルグッズ。お支払いは Shopify の安全なチェックアウトで行われます。",
       jaOnly: "",
+      shelf: "推しの棚", shelfHint: "推しを選ぶと、その子のグッズがここにまとまります（複数OK）。",
+      shelfEmpty: "推しを選ぶと、その子のグッズがここにまとまります。", allItems: "すべてのアイテム", addCartShort: "カートへ",
       category: "CATEGORY", member: "MEMBER", allMembers: "ALL",
       cat: { all: "すべて", bromide: "ブロマイド", tcard: "トレカ", poster: "ポスター", acryl: "アクスタ・アクキー", tshirt: "Tシャツ" },
       countItems: "{n}点", forMember: "{name}のグッズ", noItems: "該当する商品はありません。",
@@ -97,9 +99,9 @@ const SN_I18N = {
     foot: { terms: "Terms of Use", privacy: "Privacy Policy", legal: "Legal Notice", company: "About Us", backHome: "Back to top", copyright: "© 2026 SugarNote Official. All Rights Reserved." },
     oshi: {
       label: "Oshi", choose: "Choose your oshi",
-      hint: "Pick your oshi and the site's underlines and ribbon take her member color. Saved on this device only.",
-      set: "Make {name} my oshi", unset: "Clear oshi", isOshi: "MY OSHI", none: "Not set",
-      done: "{name} is now your oshi", cleared: "Oshi cleared", close: "Close",
+      hint: "Pick as many as you like. Their goods gather at the top of the GOODS page, and the last one you pick colors the site's underlines and ribbon. Saved on this device only.",
+      set: "Make {name} my oshi", unset: "Clear all", unsetOne: "Remove shelf", isOshi: "MY OSHI", none: "Not set",
+      added: "{name} added to your oshi", removed: "{name} removed from your oshi", cleared: "Oshi cleared", close: "Close",
     },
     solo: {
       share: "Share this page", shareCopied: "Copied! Paste it on your SNS",
@@ -110,6 +112,8 @@ const SN_I18N = {
     goods: {
       lead: "Official SugarNote merchandise. Payment is handled by Shopify's secure checkout.",
       jaOnly: "Product names and descriptions are in Japanese.",
+      shelf: "Oshi shelves", shelfHint: "Pick your oshi and her goods gather here (pick as many as you like).",
+      shelfEmpty: "Pick your oshi and her goods will gather here.", allItems: "All items", addCartShort: "Add",
       category: "CATEGORY", member: "MEMBER", allMembers: "ALL",
       cat: { all: "All", bromide: "Bromide photos", tcard: "Trading cards", poster: "Posters", acryl: "Acrylic stands & keychains", tshirt: "T-shirts" },
       countItems: "{n} items", forMember: "Goods for {name}", noItems: "No items match.",
@@ -159,9 +163,9 @@ const SN_I18N = {
     foot: { terms: "ข้อกำหนดการใช้งาน", privacy: "นโยบายความเป็นส่วนตัว", legal: "ข้อมูลตามกฎหมายการค้า", company: "เกี่ยวกับเรา", backHome: "กลับหน้าแรก", copyright: "© 2026 SugarNote Official. All Rights Reserved." },
     oshi: {
       label: "โอชิ", choose: "เลือกโอชิของคุณ",
-      hint: "เลือกโอชิแล้วเส้นใต้และริบบิ้นของเว็บไซต์จะเปลี่ยนเป็นสีประจำตัวของเธอ บันทึกไว้ในอุปกรณ์นี้เท่านั้น",
-      set: "ตั้ง {name} เป็นโอชิ", unset: "ยกเลิกโอชิ", isOshi: "MY OSHI", none: "ยังไม่ได้ตั้ง",
-      done: "ตั้ง {name} เป็นโอชิแล้ว", cleared: "ยกเลิกโอชิแล้ว", close: "ปิด",
+      hint: "เลือกได้หลายคน สินค้าของโอชิจะรวมอยู่ด้านบนของหน้าสินค้า และสีของคนที่เลือกล่าสุดจะเป็นสีเส้นใต้และริบบิ้นของเว็บไซต์ บันทึกไว้ในอุปกรณ์นี้เท่านั้น",
+      set: "ตั้ง {name} เป็นโอชิ", unset: "ยกเลิกทั้งหมด", unsetOne: "เอาออกจากชั้น", isOshi: "MY OSHI", none: "ยังไม่ได้ตั้ง",
+      added: "เพิ่ม {name} เป็นโอชิแล้ว", removed: "เอา {name} ออกจากโอชิแล้ว", cleared: "ยกเลิกโอชิแล้ว", close: "ปิด",
     },
     solo: {
       share: "แชร์หน้านี้", shareCopied: "คัดลอกแล้ว! นำไปแปะบน SNS ได้เลย",
@@ -172,6 +176,8 @@ const SN_I18N = {
     goods: {
       lead: "สินค้าออฟิเชียลของ SugarNote ชำระเงินผ่านระบบเช็กเอาต์ที่ปลอดภัยของ Shopify",
       jaOnly: "ชื่อและรายละเอียดสินค้าเป็นภาษาญี่ปุ่น",
+      shelf: "ชั้นโอชิ", shelfHint: "เลือกโอชิแล้วสินค้าของเธอจะมารวมกันที่นี่ (เลือกได้หลายคน)",
+      shelfEmpty: "เลือกโอชิแล้วสินค้าของเธอจะมารวมกันที่นี่", allItems: "สินค้าทั้งหมด", addCartShort: "ใส่ตะกร้า",
       category: "หมวดหมู่", member: "สมาชิก", allMembers: "ทั้งหมด",
       cat: { all: "ทั้งหมด", bromide: "โบรไมด์", tcard: "การ์ดสะสม", poster: "โปสเตอร์", acryl: "อะคริลิกสแตนด์ & พวงกุญแจ", tshirt: "เสื้อยืด" },
       countItems: "{n} รายการ", forMember: "สินค้าของ {name}", noItems: "ไม่มีสินค้าที่ตรงกัน",
