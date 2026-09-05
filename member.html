@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; frame-src https://www.youtube-nocookie.com https://timetreeapp.com; connect-src 'self' https://api.web3forms.com; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>MEMBER | SugarNote Official Website</title>
+<meta name="description" content="SugarNote メンバープロフィール。">
+<!-- 公開時に外す: 検索避け（README「公開前チェック」） -->
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4F3F1">
+<link rel="icon" href="assets/img/logo-heart.png">
+<link rel="stylesheet" href="assets/css/fonts.css?v=1">
+<link rel="stylesheet" href="assets/css/site.css?v=1">
+<link rel="stylesheet" href="assets/css/home.css?v=1">
+</head>
+<body data-page="solo">
+<a class="skip" href="#main">本文へスキップ</a>
+
+<header class="head">
+  <a class="head-logo" href="index.html" aria-label="SugarNote">
+    <img class="logo-mark" src="assets/img/logo-ribbon.png" alt="SugarNote" width="800" height="800">
+  </a>
+  <button type="button" class="head-menu" id="menu-btn" aria-expanded="false" aria-controls="head-nav" data-i18n-attr="aria-label:menu.label">MENU</button>
+  <nav class="head-nav" id="head-nav" aria-label="サイトナビゲーション">
+    <a href="index.html#concept" data-i18n="nav.concept">CONCEPT</a>
+    <a href="index.html#members" data-i18n="nav.member" aria-current="page">MEMBER</a>
+    <a href="index.html#news" data-i18n="nav.information">INFORMATION</a>
+    <a href="index.html#schedule" data-i18n="nav.schedule">SCHEDULE</a>
+    <a href="goods.html" data-i18n="nav.goods">GOODS</a>
+    <a href="index.html#contact" data-i18n="nav.contact">CONTACT</a>
+  </nav>
+  <div class="head-tools">
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang-switch="ja">JP</button>
+      <button type="button" data-lang-switch="en">EN</button>
+      <button type="button" data-lang-switch="th">TH</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="solo-hero" aria-labelledby="solo-name">
+    <div class="solo-in">
+      <div class="solo-body">
+        <p class="solo-no" id="solo-no" aria-hidden="true"></p>
+        <p class="solo-kana" id="solo-kana"></p>
+        <h1 class="solo-name" id="solo-name"></h1>
+        <p class="solo-roman" id="solo-roman"></p>
+        <div class="solo-sns" id="solo-sns"></div>
+        <p class="solo-share">
+          <button type="button" class="share-btn" id="share-btn"><span data-i18n="solo.share">このページをシェア</span> <em>#SugarNote</em></button>
+          <span class="share-done" id="share-done" role="status" aria-live="polite"></span>
+        </p>
+      </div>
+      <figure class="solo-photo">
+        <img id="solo-img" src="assets/img/member-hinata.jpg" alt="" width="1214" height="1700" fetchpriority="high">
+      </figure>
+    </div>
+  </section>
+
+  <section class="solo-data" aria-labelledby="h-data">
+    <h2 class="solo-label" id="h-data" data-i18n="sub.profile">メンバープロフィール</h2>
+    <ul class="data-rows" id="data-rows"></ul>
+  </section>
+
+  <section class="solo-data solo-memo" aria-labelledby="h-memo">
+    <h2 class="solo-label" id="h-memo">MEMO</h2>
+    <ul class="memo-list" id="memo-list"></ul>
+  </section>
+
+  <section class="solo-goods" aria-labelledby="h-hergoods">
+    <h2 class="solo-label" id="h-hergoods" data-i18n="solo.herGoods">GOODS</h2>
+    <p class="solo-goods-lead" id="her-goods-lead"></p>
+    <ol class="goods goods-solo" id="her-goods"></ol>
+    <a class="solo-goods-more" id="her-goods-more" href="goods.html"></a>
+  </section>
+
+  <nav class="solo-next" id="solo-next" aria-label="ほかのメンバーへ"></nav>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <p class="foot-logo">
+      <img class="logo-mark" src="assets/img/logo-ribbon.png" alt="SugarNote" width="800" height="800" loading="lazy">
+    </p>
+    <ul class="foot-sns" id="foot-sns" role="list"></ul>
+    <nav class="foot-nav" aria-label="フッターナビゲーション">
+      <a href="index.html" data-i18n="foot.backHome">トップへ戻る</a>
+      <a href="terms.html" data-i18n="foot.terms">利用規約</a>
+      <a href="privacy.html" data-i18n="foot.privacy">プライバシーポリシー</a>
+      <a href="legal.html" data-i18n="foot.legal">特定商取引法に基づく表記</a>
+      <a href="https://flapinc.jp/" target="_blank" rel="noopener" data-i18n="foot.company">運営会社</a>
+    </nav>
+    <p class="foot-copy" data-i18n="foot.copyright">© 2026 SugarNote Official. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/data.js?v=1" defer></script>
+<script src="assets/js/goods-data.js?v=1" defer></script>
+<script src="assets/js/i18n.js?v=1" defer></script>
+<script src="assets/js/site.js?v=1" defer></script>
+<script src="assets/js/home.js?v=1" defer></script>
+</body>
+</html>
