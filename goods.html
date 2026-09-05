@@ -19,7 +19,7 @@
 <link rel="icon" href="assets/img/logo-heart.png">
 <link rel="stylesheet" href="assets/css/fonts.css?v=1">
 <link rel="stylesheet" href="assets/css/site.css?v=3">
-<link rel="stylesheet" href="assets/css/goods.css?v=3">
+<link rel="stylesheet" href="assets/css/goods.css?v=4">
 </head>
 <body data-page="goods">
 <a class="skip" href="#main">本文へスキップ</a>
@@ -43,7 +43,6 @@
       <strong id="cart-total-mini">¥0</strong>
       <span class="cart-count" id="cart-count" data-i18n-attr="aria-label:goods.cartCount">0</span>
     </button>
-    <button type="button" class="oshi-btn" id="oshi-btn" aria-haspopup="dialog" aria-controls="oshi-dialog"><span class="oshi-btn-face" id="oshi-btn-face" aria-hidden="true"></span><span class="oshi-btn-label" data-i18n="oshi.label">推し</span><span class="oshi-btn-count" id="oshi-btn-count" hidden></span></button>
     <div class="lang" role="group" aria-label="Language">
       <button type="button" data-lang-switch="ja">JP</button>
       <button type="button" data-lang-switch="en">EN</button>
@@ -65,9 +64,9 @@
   <!-- 推しの棚: 選んだメンバーごとに全アイテムをまとめる（複数OK） -->
   <section class="sec sec-shelves" id="oshi" aria-labelledby="h-oshi">
     <header class="sec-head">
-      <h2 class="sec-title" id="h-oshi">MY OSHI<small data-i18n="goods.shelf">推しの棚</small></h2>
+      <h2 class="sec-title" id="h-oshi" data-i18n="goods.shelf">推しの棚</h2>
     </header>
-    <p class="sec-lead" data-i18n="goods.shelfHint">推しを選ぶと、その子のグッズがここにまとまります（複数OK）。</p>
+    <p class="sec-lead" data-i18n="goods.shelfHint">推しを選ぶと、その子のグッズがここにまとまります（複数OK）</p>
     <div class="chips chips-oshi" id="oshi-chips" role="group" data-i18n-attr="aria-label:oshi.choose" aria-label="推しをえらぶ"></div>
     <div class="shelves" id="shelves" aria-live="polite"></div>
   </section>
@@ -149,9 +148,9 @@
 
 <script src="assets/js/data.js?v=1" defer></script>
 <script src="assets/js/goods-data.js?v=1" defer></script>
-<script src="assets/js/i18n.js?v=3" defer></script>
+<script src="assets/js/i18n.js?v=4" defer></script>
 <script src="assets/js/site.js?v=3" defer></script>
-<script src="assets/js/oshi.js?v=2" defer></script>
+<script src="assets/js/oshi.js?v=3" defer></script>
 <script src="assets/js/cart.js?v=1" defer></script>
 <script src="assets/js/goods.js?v=3" defer></script>
 </body>

@@ -48,7 +48,7 @@ const SN_I18N = {
     goods: {
       lead: "SugarNote のオフィシャルグッズ。お支払いは Shopify の安全なチェックアウトで行われます。",
       jaOnly: "",
-      shelf: "推しの棚", shelfHint: "推しを選ぶと、その子のグッズがここにまとまります（複数OK）。",
+      shelf: "推しの棚", shelfHint: "推しを選ぶと、その子のグッズがここにまとまります（複数OK）",
       shelfEmpty: "推しを選ぶと、その子のグッズがここにまとまります。", allItems: "すべてのアイテム", addCartShort: "カートへ",
       category: "CATEGORY", member: "MEMBER", allMembers: "ALL",
       cat: { all: "すべて", bromide: "ブロマイド", tcard: "トレカ", poster: "ポスター", acryl: "アクスタ・アクキー", tshirt: "Tシャツ" },

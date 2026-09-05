@@ -162,11 +162,14 @@ const SNOshi = (function () {
     d.showModal();
   }
 
-  /* ---------- 起動（SNSite.boot から呼ばれる） ---------- */
+  /* ---------- 起動（SNSite.boot から呼ばれる）
+     ヘッダーの推しボタン（#oshi-btn）は現在どのページにも置いていない。置けばダイアログも有効になる ---------- */
   function mount() {
     var btn = document.getElementById("oshi-btn");
-    if (btn) btn.addEventListener("click", open);
-    ensureDialog();
+    if (btn) {
+      btn.addEventListener("click", open);
+      ensureDialog();
+    }
     document.addEventListener("sn:lang", apply);
     apply();
   }
