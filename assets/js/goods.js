@@ -27,11 +27,16 @@
     var row = $("#oshi-chips");
     row.innerHTML = SN.members.map(function (m) {
       var col = SN.colorOf(m), on = ids.indexOf(m.id) >= 0;
-      return '<button type="button" class="chip chip-face" data-oshi="' + m.id + '" aria-pressed="' + on + '" data-color="' + col.hex + '">' +
-        '<img src="assets/img/' + m.face + '" alt=""' + imgAttr(m.face) + ' loading="lazy">' +
-        esc(SN.memberShort(m, lang)) + '<span class="chip-dot" aria-hidden="true"></span></button>';
+      return '<button type="button" class="oshi-tile" data-oshi="' + m.id + '" aria-pressed="' + on + '" data-color="' + col.hex + '" data-ui="' + col.ui + '">' +
+        '<span class="oshi-tile-face"><img src="assets/img/' + m.face + '" alt=""' + imgAttr(m.face) + ' loading="lazy">' +
+        '<span class="oshi-tile-mark" aria-hidden="true">♡</span></span>' +
+        '<span class="oshi-tile-name">' + esc(SN.memberShort(m, lang)) + "</span>" +
+        "</button>";
     }).join("");
-    applyColors(row, "--c");
+    applyColors(row, "--vc");
+    row.querySelectorAll("[data-ui]").forEach(function (el) {
+      if (/^#[0-9a-f]{6}$/i.test(el.dataset.ui)) el.style.setProperty("--ui", el.dataset.ui);
+    });
     row.querySelectorAll("[data-oshi]").forEach(function (b) {
       b.addEventListener("click", function () {
         var m = SN.member(b.dataset.oshi);
