@@ -1,16 +1,21 @@
-"""SugarNote グッズ画像の書き出し。
+"""SugarNote グッズ画像の書き出し（共通ヘルパー）。
+
+レシピは別ファイル:
+    tools/run_build.py         2026-08「グッズまとめ」（初回。アー写・顔写真もここで作る）
+    tools/run_build_online.py  2026-09「オンライン商品写真」（現行の商品画像・ブロマイド掲載画像）
 
 使い方:
-    GOODS_SRC=/path/to/グッズまとめ python3 tools/run_build.py out
-    cp out/*.jpg assets/img/
+    GOODS_SRC=/path/to/素材フォルダ python3 tools/run_build_online.py out
+    cp out/*.webp assets/img/goods/
 
-入力: グッズまとめ/（透過PNG のアクスタ・アクキー・Tシャツ、JPEG のアー写）
-出力: 1:1 の JPEG — サイトの .item-thumb / .pd-media が aspect-ratio:1 + cover のため
-      例外は group-main / group-sp（3:2 のトップビジュアル）と member-*（円形の顔写真）
+入力: 透過PNG の商品画像 / JPEG の写真
+出力: 保存形式は出力ファイル名の拡張子で決まる（.webp / .jpg）。
+      商品画像は 1:1 — サイトの .goods-img / .pd-media が aspect-ratio:1 + cover のため。
+      例外は group-* / member-*（トップの群像・円形の顔写真）と gallery-*（元の縦横比のまま）。
 
-提供ZIPのファイル名は Shift-JIS のことがあるため、展開時は cp932 で decode すること。
+提供ZIPのファイル名は Shift-JIS のことがあるため、展開は `ditto -x -k`（macOS）か cp932 で decode する。
 """
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
 import os, sys
 
 # 素材フォルダ（提供ZIPを展開したパス）。環境変数 GOODS_SRC で差し替え可
@@ -52,6 +57,26 @@ def trim(im):
     return im.crop(box) if box else im
 
 
+def cutout_white(src, tol=14, feather=0.6):
+    """白背景のまま届いた素材を切り抜く（外周からのフラッドフィル）。
+
+    商品自体が白いときに中まで抜けないよう、しきい値は低め。
+    本来は切り抜き済みPNGを支給してもらうのが正で、これは暫定の当て物。
+    """
+    im = (src if isinstance(src, Image.Image) else Image.open(src)).convert("RGB")
+    w, h = im.size
+    work = im.copy()
+    seeds = [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1),
+             (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)]
+    for s in seeds:
+        ImageDraw.floodfill(work, s, (255, 0, 255), thresh=tol)
+    filled = ImageChops.difference(work, Image.new("RGB", (w, h), (255, 0, 255))).convert("L")
+    mask = filled.point(lambda v: 0 if v == 0 else 255).filter(ImageFilter.GaussianBlur(feather))
+    out = im.convert("RGBA")
+    out.putalpha(mask)
+    return out
+
+
 def contact_shadow(canvas, x0, y0, w, h):
     """接地影。アクスタ・Tシャツを板に置いたように見せる。"""
     s = Image.new("L", canvas.size, 0)
@@ -65,7 +90,7 @@ def contact_shadow(canvas, x0, y0, w, h):
 
 def place(src_png, out_name, fill=0.80, center_y=0.50, shadow=True, size=SIZE, bg=None):
     """透過PNG を正方形キャンバスに配置して JPEG 書き出し。"""
-    art = trim(Image.open(src_png))
+    art = trim(src_png if isinstance(src_png, Image.Image) else Image.open(src_png))
     canvas = bg.copy() if bg else make_bg(size)
     limit = size * fill
     scale = min(limit / art.width, limit / art.height)
@@ -80,7 +105,7 @@ def place(src_png, out_name, fill=0.80, center_y=0.50, shadow=True, size=SIZE, b
 
 def grid(src_pngs, out_name, cols=3, fill=0.90, gap=0.035, size=SIZE, shadow=True):
     """複数の透過PNG を格子状に並べて 1 枚の正方形に（アクスタ 6 種の全体像用）。"""
-    arts = [trim(Image.open(p)) for p in src_pngs]
+    arts = [trim(p if isinstance(p, Image.Image) else Image.open(p)) for p in src_pngs]
     rows = -(-len(arts) // cols)
     cw = size * fill / cols
     gap_px = size * gap
@@ -122,6 +147,61 @@ def photo_crop(src, out_name, box, size, quality=82):
 
 
 def save(im, name, quality=QUALITY):
+    """出力形式は拡張子で決まる。.webp は method=6（最遅・最小）で書き出す。"""
     p = os.path.join(OUT, name)
-    im.convert("RGB").save(p, "JPEG", quality=quality, optimize=True, progressive=True, subsampling=1)
-    print(f"{name:24s} {im.size[0]}x{im.size[1]}  {os.path.getsize(p)//1024}KB")
+    os.makedirs(os.path.dirname(p), exist_ok=True) if os.path.dirname(p) else None
+    im = im.convert("RGB")
+    if name.lower().endswith(".webp"):
+        im.save(p, "WEBP", quality=quality, method=6)
+    else:
+        im.save(p, "JPEG", quality=quality, optimize=True, progressive=True, subsampling=1)
+    print(f"{name:28s} {im.size[0]}x{im.size[1]}  {os.path.getsize(p)//1024}KB")
+
+
+# ---- SAMPLE 透かし ----
+# 提供素材のうち「まとめ画像」には先方が SAMPLE を入れているが、ブロマイド1枚ずつのJPEGは素のまま。
+# 商品そのもの（＝絵柄）を透かし無しの高解像度で載せると買わずに複製できてしまうため、
+# 掲載用に同じ体裁の透かしを重ねる。
+WM_FONT = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+
+
+def watermark_sample(im, text="SAMPLE", cols=4.2, alpha=62, angle=8):
+    """写真にタイル状の SAMPLE を重ねる（白の淡い塗り＋縁取り。明暗どちらの写真でも読める）。
+
+    回転で四隅が欠けないよう、キャンバスより大きい層に敷きつめてから回して中央を切り出す。
+    """
+    im = im.convert("RGB")
+    w, h = im.size
+    pad = round(max(w, h) * 0.45)
+    lw, lh = w + pad * 2, h + pad * 2
+    layer = Image.new("RGBA", (lw, lh), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    size = max(14, round(w / cols / 4.6))
+    try:
+        font = ImageFont.truetype(WM_FONT, size)
+    except OSError:                      # フォントが無い環境では透かし無しで通す
+        return im
+    step_x = d.textlength(text, font=font) * 1.7
+    step_y = size * 3.2
+    for row, y in enumerate(range(0, lh, max(1, round(step_y)))):
+        offset = step_x / 2 if row % 2 else 0
+        x = offset
+        while x < lw:
+            d.text((x, y), text, font=font, fill=(255, 255, 255, alpha),
+                   stroke_width=max(1, size // 20), stroke_fill=(255, 255, 255, min(255, alpha + 34)))
+            x += step_x
+    layer = layer.rotate(angle, resample=Image.BICUBIC).crop((pad, pad, pad + w, pad + h))
+    im.paste(Image.new("RGB", (w, h), (255, 255, 255)), (0, 0), layer.split()[-1])
+    return im
+
+
+def photo_fit(src, out_name, max_side=1200, quality=80, mark=True):
+    """写真を縦横比そのままで長辺 max_side に収める（ブロマイドの掲載用ギャラリー）。"""
+    im = Image.open(src)
+    im = ImageOps.exif_transpose(im).convert("RGB")
+    scale = min(1.0, max_side / max(im.size))
+    if scale < 1.0:
+        im = im.resize((max(1, round(im.width * scale)), max(1, round(im.height * scale))), Image.LANCZOS)
+    if mark:
+        im = watermark_sample(im)
+    save(im, out_name, quality)

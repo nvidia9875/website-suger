@@ -43,10 +43,10 @@ sugarnote/
 │       ├── member-<id>.jpg             メンバー縦位置アー写
 │       ├── face-<id>.jpg               メンバー顔写真（480 角。絞り込みチップ用）
 │       ├── cd-*.jpg / video-afa.jpg / logo-*.png
-│       └── goods/                      商品画像（すべて 1080×1080 JPEG）
+│       └── goods/                      商品画像（1080×1080 WebP）とブロマイドの絵柄サンプル（*-g1〜8.webp）
 │   └── fonts/            Noto Sans Thai の woff2 3ファイル＋OFL.txt（SIL Open Font License）
 ├── .github/workflows/pages.yml   GitHub Pages へのデプロイ（docs/ tools/ README.md は公開対象から除外）
-├── tools/                商品画像の書き出しスクリプト（Python / Pillow）
+├── tools/                商品画像の書き出しスクリプト（Python / Pillow）。素材は tools/src/（Git 管理外）
 └── docs/                 引き継ぎ資料・検証スクリーンショット（公開されない）
 ```
 
@@ -103,12 +103,32 @@ python3 -m http.server 8000
 
 1. Shopify 管理画面で商品を作る（価格・在庫・配送は Shopify が正）
 2. **バリアント ID** を控える。商品 → バリアントを開いたときの URL 末尾の数字（例 `47393203257580`）。まとめて見るなら `https://www.sugarnote.store/products.json`
-3. 商品画像を 1080×1080 の JPEG にして `assets/img/goods/` に置く（`tools/` で透過 PNG から生成できる）
+3. 商品画像を 1080×1080 の WebP にして `assets/img/goods/` に置く（下の「商品画像の書き出し」）
 4. `goods-data.js` の `products` に追記する。`variants[].sid` にバリアント ID、`price` は Shopify と同じ額
 5. トップの GOODS 欄に出したい商品は `featured` に id を並べる（4点）
 6. HTML の `goods-data.js?v=` を上げる
 
 売り切れ・販売終了は、現状は `products` から外す（または該当 `variants` を消す）ことで対応します。Shopify の在庫を自動で反映する仕組みはまだありません（[docs/HANDOVER.md](docs/HANDOVER.md) の未決事項）。
+
+### 商品画像の書き出し
+
+素材（先方提供の透過PNG・写真）を `tools/src/` に置いて、レシピを走らせる。`tools/src/` と `out/` は Git 管理外。
+
+```bash
+GOODS_SRC="$PWD/tools/src/オンライン商品写真" python3 tools/run_build_online.py out
+cp out/*.webp assets/img/goods/
+```
+
+- `tools/build_images.py` が共通ヘルパー（背景合成・接地影・SAMPLE 透かし・保存）。保存形式は出力ファイル名の拡張子で決まる
+- `tools/run_build.py` は 2026-08「グッズまとめ」用の旧レシピ（アー写・顔写真はこちらで生成）
+- `tools/run_build_online.py` が現行レシピ。2026-09-09 提供「オンライン商品写真（改訂版）」に対応。
+  素材のブロマイドはメンバー別フォルダに分かれていて、フォルダ名の番号がそのまま絵柄番号
+- ブロマイドの絵柄サンプル（`<商品>-g1〜8.webp`）は各メンバーから1枚ずつ＋残りを全員集合で埋めた8枚。
+  枚数配分を変えるときは `run_build_online.py` の `GALLERY` を編集する。
+  写真には先方が SugarNote ロゴの透かしを入れ済みなので、こちら側では重ねない（`photo_fit(..., mark=False)`）
+- `goods-data.js` の `gallery: [{ img, w, h }]` に並べると商品ダイアログの「絵柄サンプル」に出る。
+  `variants[].gallery` を持たせるとそちらが優先される（ひなふうブロマイドはバリアントごとに絵柄が違う）
+- macOS のファイル名は濁点が分解された形（NFD）で返ることがある。名前で突き合わせるときは NFC に正規化する
 
 ### Shopify 連携の仕組み
 
