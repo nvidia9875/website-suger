@@ -153,24 +153,6 @@
     return null;
   }
 
-  /* 絵柄サンプル: ランダム商品の中身を数枚だけ見せる帯。
-     掲載画像には先方が SugarNote ロゴの透かしを入れている（こちらでは重ねない）ので、実物には入らない旨を添える */
-  function galleryHtml(p, v) {
-    var gallery = (v && v.gallery) || p.gallery;
-    if (!gallery || !gallery.length) return "";
-    var label = SNLang.t("goods.gallery");
-    return '<section class="pd-gallery" aria-label="' + esc(label) + '">' +
-      '<p class="pd-variants-label">' + esc(label) + "</p>" +
-      '<ol class="pd-gallery-strip">' +
-      gallery.map(function (g) {
-        return '<li><img src="assets/img/goods/' + g.img + '" alt=""' +
-          ' width="' + g.w + '" height="' + g.h + '" loading="lazy" decoding="async"></li>';
-      }).join("") +
-      "</ol>" +
-      '<p class="pd-gallery-note">' + esc(SNLang.t("goods.galleryNote")) + "</p>" +
-      "</section>";
-  }
-
   function renderDialog() {
     var p = current.product, v = current.variant;
     if (!p) return;
@@ -212,8 +194,7 @@
       '<output id="pd-qty" aria-live="polite">' + current.qty + "</output>" +
       '<button type="button" id="pd-plus" aria-label="' + esc(SNLang.t("goods.qtyPlus")) + '">＋</button></div>' +
       '<button type="button" class="btn" id="pd-add">' + esc(SNLang.t("goods.addCart")) + "</button></div>" +
-      "</div>" +
-      galleryHtml(p, v);
+      "</div>";
     applyColors($("#pd-body"), "--vc");
 
     $("#pd-body").querySelectorAll("[data-variant]").forEach(function (chip) {

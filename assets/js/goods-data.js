@@ -1,6 +1,6 @@
 /* SugarNote 公式サイト — 商品データ（Shopify 連携）
  * 出典: sugarnote.store products.json / 2026-09-09 提供「オンライン商品写真」フォルダ準拠（13点）
- *   商品画像は assets/img/goods/*.webp（1080角）。ブロマイドの gallery は絵柄の掲載サンプル 8枚。
+ *   商品画像は assets/img/goods/*.webp（1080角）。
  *
  * 仕組み: 商品一覧・カートはこのサイトで描画し、決済だけ Shopify のチェックアウトへ渡す。
  *   variants[].sid = Shopify のバリアントID。カートパーマリンク
@@ -56,12 +56,6 @@ const GOODS = {
       contents: ["ランダムブロマイド 3枚入り", "各個人ブロマイド 6種 / ALLメンバーブロマイド 5種＝全35種"],
       notes: ["月城蘭花のブロマイドは含まれておりません", "ランダム封入のため絵柄はお選びいただけません"],
       random: { label: "全35種" },
-      gallery: [
-        { img: "seifuku-g1.webp", w: 1200, h: 848 }, { img: "seifuku-g2.webp", w: 848, h: 1200 },
-        { img: "seifuku-g3.webp", w: 848, h: 1200 }, { img: "seifuku-g4.webp", w: 848, h: 1200 },
-        { img: "seifuku-g5.webp", w: 1200, h: 848 }, { img: "seifuku-g6.webp", w: 1200, h: 848 },
-        { img: "seifuku-g7.webp", w: 1200, h: 848 }, { img: "seifuku-g8.webp", w: 848, h: 1200 }
-      ],
     },
     {
       id: "retro-bromide",
@@ -76,15 +70,9 @@ const GOODS = {
       notes: ["ランダム封入のため絵柄はお選びいただけません"],
       random: { label: "全41種" },
       random: { label: "全35種" },
-      gallery: [
-        { img: "retro-g1.webp", w: 848, h: 1200 }, { img: "retro-g2.webp", w: 848, h: 1200 },
-        { img: "retro-g3.webp", w: 848, h: 1200 }, { img: "retro-g4.webp", w: 848, h: 1200 },
-        { img: "retro-g5.webp", w: 848, h: 1200 }, { img: "retro-g6.webp", w: 848, h: 1200 },
-        { img: "retro-g7.webp", w: 1200, h: 848 }, { img: "retro-g8.webp", w: 1200, h: 848 }
-      ],
     },
     /* TODO(浴衣): Shopify に「浴衣ランダムブロマイド(3枚入り)全41種」が未登録。
-       バリアントIDを sid に入れてコメントを外せばそのまま出せる（画像は yukata-main.webp / yukata-g1〜8.webp を配置済み）
+       バリアントIDを sid に入れてコメントを外せばそのまま出せる（画像は yukata-main.webp を配置済み）
     {
       id: "yukata-bromide",
       name: "浴衣ランダムブロマイド（3枚入り）",
@@ -97,12 +85,6 @@ const GOODS = {
       contents: ["ランダムブロマイド 3枚入り", "各個人ブロマイド 6種 / ALLメンバーブロマイド 5種＝全41種"],
       notes: ["ランダム封入のため絵柄はお選びいただけません"],
       random: { label: "全41種" },
-      gallery: [
-        { img: "yukata-g1.webp", w: 848, h: 1200 }, { img: "yukata-g2.webp", w: 848, h: 1200 },
-        { img: "yukata-g3.webp", w: 848, h: 1200 }, { img: "yukata-g4.webp", w: 848, h: 1200 },
-        { img: "yukata-g5.webp", w: 848, h: 1200 }, { img: "yukata-g6.webp", w: 1200, h: 848 },
-        { img: "yukata-g7.webp", w: 848, h: 1200 }, { img: "yukata-g8.webp", w: 1200, h: 848 }
-      ],
     },
     */
     {
@@ -116,12 +98,6 @@ const GOODS = {
       desc: "SugarNoteダンプラ衣装ランダムブロマイドが登場しました。\nダンスプラクティス動画で着用した衣装姿を、ブロマイドにしました。\nパフォーマンス中とはまた違った表情や、メンバーそれぞれの魅力が詰まった特別な一枚です。\nソロショットから全員集合ショットまで、どの絵柄が届くかは、開けてからのお楽しみです。\nぜひコレクションしてください。",
       contents: ["ランダムブロマイド 3枚入り", "各個人ブロマイド 6種 / ALLメンバーブロマイド 5種＝全35種"],
       notes: ["月城蘭花のブロマイドは含まれておりません", "ランダム封入のため絵柄はお選びいただけません", "数量限定"],
-      gallery: [
-        { img: "danpra-g1.webp", w: 1200, h: 848 }, { img: "danpra-g2.webp", w: 848, h: 1200 },
-        { img: "danpra-g3.webp", w: 848, h: 1200 }, { img: "danpra-g4.webp", w: 848, h: 1200 },
-        { img: "danpra-g5.webp", w: 1200, h: 848 }, { img: "danpra-g6.webp", w: 1200, h: 848 },
-        { img: "danpra-g7.webp", w: 1200, h: 848 }, { img: "danpra-g8.webp", w: 848, h: 1200 }
-      ],
     },
     {
       id: "debut-bromide",
@@ -135,12 +111,6 @@ const GOODS = {
       contents: ["ランダムブロマイド 3枚入り", "絵柄 全13種"],
       notes: ["ランダム封入のため絵柄はお選びいただけません", "数量限定"],
       random: { label: "全13種" },
-      gallery: [
-        { img: "debut-g1.webp", w: 1200, h: 900 }, { img: "debut-g2.webp", w: 1200, h: 900 },
-        { img: "debut-g3.webp", w: 1200, h: 900 }, { img: "debut-g4.webp", w: 1200, h: 900 },
-        { img: "debut-g5.webp", w: 1200, h: 900 }, { img: "debut-g6.webp", w: 1200, h: 800 },
-        { img: "debut-g7.webp", w: 1200, h: 800 }, { img: "debut-g8.webp", w: 1200, h: 800 }
-      ],
     },
     {
       id: "hinafu-bromide",
@@ -149,26 +119,10 @@ const GOODS = {
       category: "ブロマイド", series: "hinafu",
       img: "hinafu-brm-main.webp", price: 1000,
       variantType: "member",
-      /* 買う人ごとに絵柄が違う商品なので、絵柄サンプルはバリアント側に持たせる（gallery は variant が優先） */
       variants: [
-        { key: "fuka",   sid: 48156384657644, label: "坂東 楓夏",   sub: "全6種", price: 1000, img: "hinafu-brm-fuka.webp",
-          gallery: [
-            { img: "hinafu-brm-fuka-g1.webp", w: 848, h: 1200 }, { img: "hinafu-brm-fuka-g2.webp", w: 848, h: 1200 },
-            { img: "hinafu-brm-fuka-g3.webp", w: 1200, h: 848 }, { img: "hinafu-brm-fuka-g4.webp", w: 1200, h: 848 },
-            { img: "hinafu-brm-fuka-g5.webp", w: 848, h: 1200 }, { img: "hinafu-brm-fuka-g6.webp", w: 848, h: 1200 }
-          ], },
-        { key: "hinata", sid: 48156384690412, label: "坂東 日奈多", sub: "全6種", price: 1000, img: "hinafu-brm-hinata.webp",
-          gallery: [
-            { img: "hinafu-brm-hinata-g1.webp", w: 848, h: 1200 }, { img: "hinafu-brm-hinata-g2.webp", w: 848, h: 1200 },
-            { img: "hinafu-brm-hinata-g3.webp", w: 1200, h: 848 }, { img: "hinafu-brm-hinata-g4.webp", w: 1200, h: 848 },
-            { img: "hinafu-brm-hinata-g5.webp", w: 848, h: 1200 }, { img: "hinafu-brm-hinata-g6.webp", w: 848, h: 1200 }
-          ], },
-        { key: "pair",   sid: 48156384723180, label: "ひなふうペア", sub: "ペア全6種", price: 1000, img: "hinafu-brm-pair.webp", chip: "ひなふう", members: ["hinata", "fuka"],
-          gallery: [
-            { img: "hinafu-brm-pair-g1.webp", w: 848, h: 1200 }, { img: "hinafu-brm-pair-g2.webp", w: 848, h: 1200 },
-            { img: "hinafu-brm-pair-g3.webp", w: 1200, h: 848 }, { img: "hinafu-brm-pair-g4.webp", w: 1200, h: 848 },
-            { img: "hinafu-brm-pair-g5.webp", w: 1200, h: 848 }, { img: "hinafu-brm-pair-g6.webp", w: 1200, h: 848 }
-          ], },
+        { key: "fuka",   sid: 48156384657644, label: "坂東 楓夏",   sub: "全6種", price: 1000, img: "hinafu-brm-fuka.webp", },
+        { key: "hinata", sid: 48156384690412, label: "坂東 日奈多", sub: "全6種", price: 1000, img: "hinafu-brm-hinata.webp", },
+        { key: "pair",   sid: 48156384723180, label: "ひなふうペア", sub: "ペア全6種", price: 1000, img: "hinafu-brm-pair.webp", chip: "ひなふう", members: ["hinata", "fuka"], },
       ],
       desc: "「ひなふうらんど Happy Birthday」の開催を記念した、限定ランダムブロマイドです。\nひなたとふうかの特別な生誕衣装で撮影したカットをブロマイドにしました。\nそれぞれの魅力を収めたソロショットから、ひなふうらんどの世界観を感じられるペアショットまでお楽しみいただけます。\nここでしか手に入らない、ひなたとふうかの特別な記念アイテムです。",
       contents: ["ランダムブロマイド 3枚入り", "ひなふうペア 全6種 / ひなた 全6種 / ふうか 全6種（合計18種）"],

@@ -11,7 +11,7 @@
 入力: 透過PNG の商品画像 / JPEG の写真
 出力: 保存形式は出力ファイル名の拡張子で決まる（.webp / .jpg）。
       商品画像は 1:1 — サイトの .goods-img / .pd-media が aspect-ratio:1 + cover のため。
-      例外は group-* / member-*（トップの群像・円形の顔写真）と gallery-*（元の縦横比のまま）。
+      例外は group-* / member-*（トップの群像・円形の顔写真）。
 
 提供ZIPのファイル名は Shift-JIS のことがあるため、展開は `ditto -x -k`（macOS）か cp932 で decode する。
 """

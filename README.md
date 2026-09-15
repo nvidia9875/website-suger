@@ -43,7 +43,7 @@ sugarnote/
 │       ├── member-<id>.jpg             メンバー縦位置アー写
 │       ├── face-<id>.jpg               メンバー顔写真（480 角。絞り込みチップ用）
 │       ├── cd-*.jpg / video-afa.jpg / logo-*.png
-│       └── goods/                      商品画像（1080×1080 WebP）とブロマイドの絵柄サンプル（*-g1〜8.webp）
+│       └── goods/                      商品画像（1080×1080 WebP）
 │   └── fonts/            Noto Sans Thai の woff2 3ファイル＋OFL.txt（SIL Open Font License）
 ├── .github/workflows/pages.yml   GitHub Pages へのデプロイ（docs/ tools/ README.md は公開対象から除外）
 ├── tools/                商品画像の書き出しスクリプト（Python / Pillow）。素材は tools/src/（Git 管理外）
@@ -121,13 +121,7 @@ cp out/*.webp assets/img/goods/
 
 - `tools/build_images.py` が共通ヘルパー（背景合成・接地影・SAMPLE 透かし・保存）。保存形式は出力ファイル名の拡張子で決まる
 - `tools/run_build.py` は 2026-08「グッズまとめ」用の旧レシピ（アー写・顔写真はこちらで生成）
-- `tools/run_build_online.py` が現行レシピ。2026-09-09 提供「オンライン商品写真（改訂版）」に対応。
-  素材のブロマイドはメンバー別フォルダに分かれていて、フォルダ名の番号がそのまま絵柄番号
-- ブロマイドの絵柄サンプル（`<商品>-g1〜8.webp`）は各メンバーから1枚ずつ＋残りを全員集合で埋めた8枚。
-  枚数配分を変えるときは `run_build_online.py` の `GALLERY` を編集する。
-  写真には先方が SugarNote ロゴの透かしを入れ済みなので、こちら側では重ねない（`photo_fit(..., mark=False)`）
-- `goods-data.js` の `gallery: [{ img, w, h }]` に並べると商品ダイアログの「絵柄サンプル」に出る。
-  `variants[].gallery` を持たせるとそちらが優先される（ひなふうブロマイドはバリアントごとに絵柄が違う）
+- `tools/run_build_online.py` が現行レシピ。2026-09-09 提供「オンライン商品写真（改訂版）」に対応
 - macOS のファイル名は濁点が分解された形（NFD）で返ることがある。名前で突き合わせるときは NFC に正規化する
 
 ### Shopify 連携の仕組み
