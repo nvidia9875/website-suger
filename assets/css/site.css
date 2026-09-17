@@ -38,6 +38,7 @@ body {
   letter-spacing: 0.02em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  line-break: strict;
 }
 html:lang(th) body { font-family: var(--th); line-height: 2.05; }
 html:lang(th) .sec-title, html:lang(th) .solo-name, html:lang(th) .mem-name { font-family: var(--th); }
