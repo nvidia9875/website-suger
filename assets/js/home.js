@@ -31,8 +31,10 @@
     var el = document.getElementById("news-list");
     if (!el) return;
     el.innerHTML = SN.news.map(function (n) {
+      /* サイト内の記事ページは同じタブ、外部リンクだけ別タブにする */
+      var ext = /^https?:/i.test(n.url);
       return (
-        '<li><a href="' + url(n.url) + '" target="_blank" rel="noopener">' +
+        '<li><a href="' + url(n.url) + '"' + (ext ? ' target="_blank" rel="noopener"' : "") + ">" +
         '<span class="news-date">' + esc(dot(n.date)) + "</span>" +
         '<span class="news-cat">' + esc(n.category) + "</span>" +
         '<span class="news-title">' + esc(n.title) + "</span>" +

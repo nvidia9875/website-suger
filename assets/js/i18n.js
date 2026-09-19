@@ -11,6 +11,7 @@
  */
 const SN_I18N = {
   ja: {
+    news: { back: "お知らせ一覧へ戻る" },
     nav: { concept: "CONCEPT", member: "MEMBER", information: "INFORMATION", schedule: "SCHEDULE", goods: "GOODS", contact: "CONTACT" },
     menu: { label: "メニュー", open: "MENU", close: "CLOSE" },
     sub: { concept: "コンセプト", member: "メンバー", information: "最新情報", schedule: "スケジュール", profile: "メンバープロフィール", video: "動画コンテンツ", discography: "楽曲情報", goods: "オフィシャルグッズ", contact: "お問い合わせ" },
@@ -75,6 +76,7 @@ const SN_I18N = {
   },
 
   en: {
+    news: { back: "Back to news" },
     nav: { concept: "CONCEPT", member: "MEMBER", information: "INFORMATION", schedule: "SCHEDULE", goods: "GOODS", contact: "CONTACT" },
     menu: { label: "Menu", open: "MENU", close: "CLOSE" },
     sub: { concept: "Concept", member: "Members", information: "Latest News", schedule: "Schedule", profile: "Member Profiles", video: "Video Content", discography: "Music", goods: "Official Merchandise", contact: "Contact Us" },
@@ -139,6 +141,7 @@ const SN_I18N = {
   },
 
   th: {
+    news: { back: "กลับไปหน้าข่าว" },
     nav: { concept: "คอนเซปต์", member: "สมาชิก", information: "ข่าวสาร", schedule: "กำหนดการ", goods: "สินค้า", contact: "ติดต่อ" },
     menu: { label: "เมนู", open: "MENU", close: "CLOSE" },
     sub: { concept: "คอนเซปต์", member: "สมาชิก", information: "ข่าวล่าสุด", schedule: "ตารางกิจกรรม", profile: "โปรไฟล์สมาชิก", video: "คอนเทนต์วิดีโอ", discography: "เพลง", goods: "สินค้าออฟิเชียล", contact: "ติดต่อเรา" },

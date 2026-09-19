@@ -112,13 +112,12 @@ const SN = {
 
   /* お知らせ。url は現行サイトの記事ページ（移行後は自サイトの記事URLへ置換する） */
   news: [
-    { date: "2026-07-08", category: "NEWS", title: "【Dance Practice Video】 ニュアンスブルー", url: "https://sugarnote.jp/ja/information/4fbd778d-badb-4cf9-84ce-c82a2fe29148" },
-    { date: "2026-07-08", category: "RELEASE", title: "『ニュアンスブルー』Release", url: "https://sugarnote.jp/ja/information/e2bab15c-8d71-4282-bf4d-c76bfecf2b72" },
-    { date: "2026-07-07", category: "RELEASE", title: "『who I am』(2026ver) Release", url: "https://sugarnote.jp/ja/information/2c1b6c2f-04b6-4a24-83d8-2c19ab7a86ef" },
-    { date: "2026-07-07", category: "NEWS", title: "【Dance Practice Video】嘘だよ(2026ver)", url: "https://sugarnote.jp/ja/information/b70c2bb8-a093-4d95-bd5d-60008c4571f7" },
-    { date: "2026-07-07", category: "NEWS", title: "【Dance Practice Video】who I am(2026ver)", url: "https://sugarnote.jp/ja/information/fa58bbde-09d9-468a-9a53-98f2a48549fe" },
+    { date: "2026-07-08", category: "NEWS", title: "【Dance Practice Video】 ニュアンスブルー", url: "./ja/information/4fbd778d-badb-4cf9-84ce-c82a2fe29148/" },
+    { date: "2026-07-08", category: "RELEASE", title: "『ニュアンスブルー』Release", url: "./ja/information/e2bab15c-8d71-4282-bf4d-c76bfecf2b72/" },
+    { date: "2026-07-07", category: "RELEASE", title: "『who I am』(2026ver) Release", url: "./ja/information/2c1b6c2f-04b6-4a24-83d8-2c19ab7a86ef/" },
+    { date: "2026-07-07", category: "NEWS", title: "【Dance Practice Video】嘘だよ(2026ver)", url: "./ja/information/b70c2bb8-a093-4d95-bd5d-60008c4571f7/" },
+    { date: "2026-07-07", category: "NEWS", title: "【Dance Practice Video】who I am(2026ver)", url: "./ja/information/fa58bbde-09d9-468a-9a53-98f2a48549fe/" },
   ],
-  newsAllUrl: "https://sugarnote.jp/ja",
 
   discography: [
     { title: "ニュアンスブルー", type: "DIGITAL SINGLE", date: "2026-07-08", cover: null, link: "https://linkco.re/Xvt2eE2u" },

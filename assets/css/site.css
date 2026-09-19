@@ -330,3 +330,16 @@ html:lang(ja) .oshi-btn-label, html:lang(th) .oshi-btn-label { font-family: inhe
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---- お知らせ記事（<lang>/information/<uuid>/）---- */
+.article-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; }
+.article-meta time { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+.article-cat { border: 1px solid var(--hairline); padding: 2px 10px; font-size: 10.5px; letter-spacing: 0.12em; }
+.article-title { font-size: clamp(19px, 2.6vw, 26px); line-height: 1.7; }
+.article-hero { margin-bottom: clamp(18px, 3vw, 28px); }
+.article-hero img { width: 100%; height: auto; border: 1px solid var(--hairline-soft); }
+.article-body p { margin: 0 0 1em; overflow-wrap: anywhere; }
+.article-body p:last-child { margin-bottom: 0; }
+.article-body a { color: var(--ink); text-underline-offset: 3px; }
+.article-back { margin: clamp(22px, 3.4vw, 34px) 0 0; font-size: 13px; }
+.article-back a { text-underline-offset: 3px; }
