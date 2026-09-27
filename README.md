@@ -182,9 +182,9 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 - public リポジトリだと実素材（写真）がネット上に置かれる。private リポジトリから Pages を出すには GitHub の有料プランが要る
 - 変更のたびに Playwright でコンソールエラー 0 を確認する
 
-## 運営会社の表記（LINDO）
+## 運営会社の表記
 
-2026-09 に FLAP entertainment → 株式会社LINDO へ差し替え済み。所在地・電話番号は LINDO の公式サイト（styledbylindo.com）の表記どおりで、旧表記と同じ。
+2026-09 に先方指示で FLAP entertainment → 「LINDO CO., LTD」に差し替えた。ただし LINDO は仲介で、SugarNote の運営会社は別会社の可能性がある。**正式な社名・代表者・所在地・電話番号・受付時間は先方に確認中**で、`legal.html` の該当欄は「確認中」にしてある。リンク先は仮に LINDO の公式サイト（styledbylindo.com）。
 
 - `assets/js/data.js` … `SN.brand.company` / `companyUrl` / `contact.tel`
 - `legal.html` … 販売業者・代表責任者・所在地・電話番号

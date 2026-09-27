@@ -19,11 +19,11 @@ const SN = {
     },
     hashtag: "#SugarNote",
     /* 運営会社・連絡先（変更手順は README を参照） */
-    company: "株式会社LINDO",
+    company: "LINDO CO., LTD",
     companyUrl: "https://styledbylindo.com/",
     contact: {
       email: "info@sugarnote.jp",
-      tel: "03-5308-5822",
+      tel: "",
       hours: { ja: "受付時間 10:00-18:00（土日祝を除く）", en: "10:00–18:00 JST, weekdays", th: "10:00–18:00 (เวลาญี่ปุ่น) วันจันทร์–ศุกร์" },
     },
     sns: {
