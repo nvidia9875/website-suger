@@ -1,0 +1,57 @@
+{%- comment -%}
+  SugarNote 旧ストア → 公式サイト（sugarnote.jp）への転送
+  貼り付け先: オンラインストア > テーマ > コードを編集 > layout/theme.liquid の <head> の直後
+
+  - 決済（カート → チェックアウト）はテーマを通らないため、このコードの影響を受けません
+  - 規約ページ（/policies/）・会員ページ（/account）・データ共有オプトアウト・テーマ編集画面は転送しません
+  - 商品ページは公式サイトの同じ商品へ、それ以外のページはグッズ一覧へ転送します
+{%- endcomment -%}
+{%- liquid
+  assign sn_skip = false
+  if request.design_mode
+    assign sn_skip = true
+  endif
+  if request.path contains '/policies/' or request.path contains '/account' or request.path contains '/pages/data-sharing-opt-out' or request.path contains '/challenge'
+    assign sn_skip = true
+  endif
+
+  assign sn_base = 'https://sugarnote.jp/goods.html'
+  assign sn_to = sn_base
+  if template.name == 'product'
+    case product.handle
+      when 'メンバーカラーアクリルスタンド'
+        assign sn_to = sn_base | append: '?p=stand'
+      when 'sugranote-メンバーキャラクターアクリルキーホルダー'
+        assign sn_to = sn_base | append: '?p=charm'
+      when 'sugranote-オリジナルtシャツ'
+        assign sn_to = sn_base | append: '?p=tshirt'
+      when 'sugarnote衣装ビジュアルポスター'
+        assign sn_to = sn_base | append: '?p=poster'
+      when '制服衣装ランダムブロマイド3枚入り全35種'
+        assign sn_to = sn_base | append: '?p=seifuku-bromide'
+      when 'ダンプラ衣装ランダムブロマイド3枚入り全35種'
+        assign sn_to = sn_base | append: '?p=danpra-bromide'
+      when 'debut-嘘だよmv記念ランダムブロマイド3枚入り全13種'
+        assign sn_to = sn_base | append: '?p=debut-bromide'
+      when 'レトロワンピース衣装ランダムブロマイド3枚入り全41種'
+        assign sn_to = sn_base | append: '?p=retro-bromide'
+      when '浴衣衣装ランダムブロマイド3枚入り全41種'
+        assign sn_to = sn_base | append: '?p=yukata-bromide'
+      when 'ひなふうらんどランダムブロマイド3枚入り各全6種'
+        assign sn_to = sn_base | append: '?p=hinafu-bromide'
+      when 'ひなふうランダムトレーディングカード-3枚入り'
+        assign sn_to = sn_base | append: '?p=hinafu-tcard'
+      when 'ひなふうアクリルスタンド'
+        assign sn_to = sn_base | append: '?p=hinafu-stand'
+      when 'ひなふうアクリルキーホルダー'
+        assign sn_to = sn_base | append: '?p=hinafu-charm'
+      when 'ひなふうらんどtシャツ'
+        assign sn_to = sn_base | append: '?p=hinafu-tshirt'
+    endcase
+  endif
+-%}
+{%- unless sn_skip -%}
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url={{ sn_to }}">
+  <script>location.replace({{ sn_to | json }});</script>
+{%- endunless -%}
