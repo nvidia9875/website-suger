@@ -29,8 +29,8 @@
 .members a.is-oshi:hover { border-color: var(--own, var(--ink)); }
 .mem-name { font-weight: 700; font-size: clamp(19px, 2vw, 23px); letter-spacing: 0.08em; }
 .mem-kana { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; color: var(--ink-soft); margin-top: 5px; margin-bottom: 18px; }
-.mem-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--hairline-soft); }
-.mem-enter { margin-left: auto; font-weight: 600; font-size: 12px; letter-spacing: 0.12em; transition: transform var(--dur) var(--ease); }
+.mem-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px 8px; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--hairline-soft); }
+.mem-enter { margin-left: auto; white-space: nowrap; font-weight: 600; font-size: 12px; letter-spacing: 0.12em; transition: transform var(--dur) var(--ease); }
 .members a:hover .mem-enter { transform: translateX(5px); }
 
 /* ---------- INFORMATION ---------- */

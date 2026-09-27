@@ -58,7 +58,7 @@ const SN = {
       },
       memo: {
         ja: ["ダンス（歴3年）", "趣味：歌うこと / お菓子作り"],
-        en: ["Dance (3 yrs)", "Hobbies: singing / baking sweets"],
+        en: ["Dance (3 yrs)", "Hobbies: singing / making sweets"],
         th: ["เต้น (3 ปี)", "งานอดิเรก: ร้องเพลง / ทำขนม"],
       },
       sns: { x: "https://x.com/SugarNote_ririh?s=20", instagram: "https://www.instagram.com/sugarnote_ririho/", tiktok: "https://www.tiktok.com/@sugarnote_ririho" },
@@ -106,13 +106,13 @@ const SN = {
       twin: "hinata",
       skills: {
         ja: ["ダンス（歴4年）/ バレエ（歴15年）", "表情管理（歌詞を人に伝えることが好きです）"],
-        en: ["Dance (4 yrs) / Ballet (15 yrs)", "Facial expressions (I love conveying lyrics to people)"],
+        en: ["Dance (4 yrs) / Ballet (15 yrs)", "Facial expressions (loves conveying the lyrics to listeners)"],
         th: ["เต้น (4 ปี) / บัลเลต์ (15 ปี)", "การควบคุมสีหน้า (ชอบถ่ายทอดเนื้อเพลงให้ผู้คน)"],
       },
       memo: {
         ja: ["坂東日奈多と双子", "PRODUCE 101 JAPAN THE GIRLS 出身", "趣味：食べること / 寝ること"],
         en: ["Twins with HINATA", "Ex-PRODUCE 101 JAPAN THE GIRLS", "Hobbies: eating / sleeping"],
-        th: ["ฝาแฝดกับฮินาตะ", "อดีต PRODUCE 101 JAPAN THE GIRLS", "งานอดิเรก: กิน / นอน"],
+        th: ["ฝาแฝดกับฮินาตะ", "อดีตผู้เข้าแข่งขัน PRODUCE 101 JAPAN THE GIRLS", "งานอดิเรก: กิน / นอน"],
       },
       sns: { x: "https://x.com/sugarnote_fuka?s=20", instagram: "https://www.instagram.com/sugarnote_fuka/", tiktok: "https://www.tiktok.com/@sugarnote_fuka" },
     },
@@ -140,12 +140,12 @@ const SN = {
       color: "Purple", img: "member-rana.jpg", face: "face-rana.jpg",
       skills: {
         ja: ["韓国語（韓国人のため日本語・韓国語の2カ国語話せます）", "絵を描くこと"],
-        en: ["Korean (she is Korean and speaks both Japanese and Korean)", "Drawing"],
+        en: ["Korean (being Korean, speaks both Japanese and Korean)", "Drawing"],
         th: ["ภาษาเกาหลี (เป็นคนเกาหลี จึงพูดได้ทั้งภาษาญี่ปุ่นและเกาหลี)", "วาดรูป"],
       },
       memo: {
         ja: ["ダンス（歴3年）", "趣味：ゲーム"],
-        en: ["Dance (3 yrs)", "Hobby: video games"],
+        en: ["Dance (3 yrs)", "Hobby: gaming"],
         th: ["เต้น (3 ปี)", "งานอดิเรก: เล่นเกม"],
       },
       sns: { x: "https://x.com/sugarnote_rana", instagram: "https://www.instagram.com/sugarnote_rana/", tiktok: "https://www.tiktok.com/@sugarnote_rana" },
