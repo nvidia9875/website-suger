@@ -145,14 +145,16 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 1. このディレクトリを GitHub リポジトリにして `main` に push
 2. Settings → Pages → Source を **GitHub Actions** にする（`.github/workflows/pages.yml` が動き、`docs/` `tools/` `README.md` を除いたファイルだけを公開する）
 3. Settings → Pages → **Enforce HTTPS** を ON
-4. 独自ドメインにするときは、ルートに `CNAME`（中身は `sugarnote.jp`）を置き、DNS の A / CNAME を GitHub Pages に向ける。**MX と TXT（メール）は触らない**
+4. 独自ドメインは Settings → Pages → Custom domain で設定する（Actions デプロイなので `CNAME` ファイルは不要）。sugarnote.jp の切り替え手順は `docs/CUTOVER-2026-10-01.md`。**MX と TXT（メール）は触らない**
 
 ### 公開前チェック
 
-- [ ] 6つの HTML から `<meta name="robots" content="noindex">` を外し、`robots.txt` を `Allow` にする
+公開当日の作業順は `docs/CUTOVER-2026-10-01.md` が正（切り替え → 動作確認 → 検索避け解除）。
+
+- [ ] （当日・切り替えと動作確認の後）`bash tools/go_live.sh` で本体6ページ・記事15ページの noindex を外し、`robots.txt` を `Allow` にする（転送ページ9つは noindex のまま）
 - [ ] `og:image` / `og:url` が本番 URL になっている（index.html / goods.html）
 - [ ] `SN.contactForm.endpoint` を設定してフォームを本送信にする。Web3Forms 側でドメイン制限（Allowed domains）を sugarnote.jp に設定する
-- [ ] `SN.news[].url` を自サイトの記事 URL に置き換える（現状は現行 sugarnote.jp の記事ページ）
+- [x] `SN.news[].url` を自サイトの記事 URL に置き換える（2026-09-19 済み。旧サイトと同じパスで移設）
 - [ ] 特商法・利用規約・プライバシーの運営会社が正しい（下の「移籍時に差し替える箇所」）
 - [ ] Shopify 側: 旧ストアのトップに移行告知 → 落ち着いたら通常ページを非公開にして sugarnote.jp へ転送（チェックアウトは残す）。**ストアフロントをパスワードで閉じるとカートパーマリンクもパスワード画面に飛ぶ可能性がある**ので、閉じる前に `https://www.sugarnote.store/cart/47393203257580:1` が通ることを必ず確認する
 - [ ] Playwright で全ページのコンソールエラー 0 を確認（CSP 違反はコンソールに出る）
