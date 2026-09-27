@@ -23,15 +23,14 @@
 .mem-photo img { aspect-ratio: 4 / 4.6; object-fit: cover; object-position: center 14%; width: 100%; transition: transform 0.8s var(--ease); }
 .members a:hover .mem-photo img { transform: scale(1.04); }
 .mem-body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px; }
-.mem-no { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-family: var(--en); font-weight: 600; font-size: 11px; letter-spacing: 0.26em; color: var(--ink-soft); }
 /* 推しのカード: 枠線とタグだけがメンバーカラーになる */
-.mem-oshi { font-size: 9.5px; letter-spacing: 0.2em; color: var(--own, var(--ink)); white-space: nowrap; }
+.mem-oshi { font-family: var(--en); font-weight: 600; font-size: 9.5px; letter-spacing: 0.2em; color: var(--own, var(--ink)); white-space: nowrap; }
 .members a.is-oshi { border-color: var(--own, var(--ink)); box-shadow: inset 0 0 0 1px var(--own, var(--ink)); }
 .members a.is-oshi:hover { border-color: var(--own, var(--ink)); }
-.mem-name { font-weight: 700; font-size: clamp(19px, 2vw, 23px); letter-spacing: 0.08em; margin-top: 8px; }
+.mem-name { font-weight: 700; font-size: clamp(19px, 2vw, 23px); letter-spacing: 0.08em; }
 .mem-kana { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; color: var(--ink-soft); margin-top: 5px; margin-bottom: 18px; }
-.mem-foot { display: flex; align-items: center; justify-content: flex-end; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--hairline-soft); }
-.mem-enter { font-weight: 600; font-size: 12px; letter-spacing: 0.12em; transition: transform var(--dur) var(--ease); }
+.mem-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: auto; padding-top: 13px; border-top: 1px solid var(--hairline-soft); }
+.mem-enter { margin-left: auto; font-weight: 600; font-size: 12px; letter-spacing: 0.12em; transition: transform var(--dur) var(--ease); }
 .members a:hover .mem-enter { transform: translateX(5px); }
 
 /* ---------- INFORMATION ---------- */
@@ -128,8 +127,7 @@
   width: min(var(--wrap), 100%); margin: 0 auto; padding: clamp(30px, 5vw, 72px) var(--pad) 0;
   display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(26px, 4.6vw, 64px); align-items: center;
 }
-.solo-no { font-family: var(--en); font-weight: 600; font-size: clamp(56px, 8vw, 110px); line-height: 1; color: var(--ink-soft); opacity: 0.5; }
-.solo-kana { font-size: 12.5px; font-weight: 600; letter-spacing: 0.3em; color: var(--ink-soft); margin-top: 18px; }
+.solo-kana { font-size: 12.5px; font-weight: 600; letter-spacing: 0.3em; color: var(--ink-soft); }
 .solo-name { font-weight: 700; font-size: clamp(38px, 5.6vw, 72px); letter-spacing: 0.06em; line-height: 1.25; margin-top: 4px; overflow-wrap: anywhere; }
 .solo-roman { font-family: var(--en); font-weight: 600; font-size: 13px; letter-spacing: 0.3em; color: var(--ink-soft); margin-top: 12px; }
 .solo-sns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
@@ -140,8 +138,7 @@
 }
 .solo-sns a:hover { background: var(--ink); color: var(--paper); }
 .solo-photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 12%; border: 1px solid var(--hairline-soft); }
-/* 推しのページ: 番号と写真の縁だけがその子のメンバーカラーになる（--own は home.js が当てる） */
-.solo-hero.is-oshi .solo-no { color: var(--own, var(--oshi)); opacity: 1; }
+/* 推しのページ: 写真の縁とトグルだけがその子のメンバーカラーになる（--own は home.js が当てる） */
 .solo-hero.is-oshi .solo-photo img { border: 2px solid var(--own, var(--oshi)); }
 .solo-share { margin-top: 16px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
 .oshi-toggle {

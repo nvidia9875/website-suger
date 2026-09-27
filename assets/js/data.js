@@ -19,8 +19,8 @@ const SN = {
     },
     hashtag: "#SugarNote",
     /* 運営会社・連絡先（変更手順は README を参照） */
-    company: "FLAP entertainment",
-    companyUrl: "https://flapinc.jp/",
+    company: "株式会社LINDO",
+    companyUrl: "https://styledbylindo.com/",
     contact: {
       email: "info@sugarnote.jp",
       tel: "03-5308-5822",
@@ -43,69 +43,111 @@ const SN = {
     Purple: { hex: "#B9A5DC", ui: "#6C50B4" },
   },
 
-  /* 表示順は公式サイトのプロフィール順。img = 縦位置のアー写、face = 正方形の顔写真 */
+  /* 表示順は運営指定の順。img = 縦位置のアー写、face = 正方形の顔写真。
+     skills = 特技（1要素 = 1行）、memo = MEMO 欄の箇条書き */
   members: [
-    {
-      id: "hinata", name: "坂東日奈多", short: "日奈多", kana: "バンドウヒナタ", romaji: "BANDO HINATA", thai: "บันโด ฮินาตะ",
-      birth: "2004-08-31", origin: { ja: "東京都", en: "Tokyo", th: "โตเกียว" },
-      mbti: "ISTP", mbtiLabel: { ja: "巨匠", en: "The Virtuoso", th: "ช่างฝีมือ" },
-      loveType: "LCRO", loveTypeLabel: { ja: "ボス猫", en: "Boss Cat", th: "บอสแคท" },
-      career: { ja: "ダンス歴8年、ボーカル歴なし", en: "8 years dance, no vocal training", th: "เต้น 8 ปี ไม่มีประสบการณ์ร้องเพลง" },
-      color: "Pink", img: "member-hinata.jpg", face: "face-hinata.jpg",
-      twin: "fuka",
-      topics: { ja: ["坂東楓夏と双子"], en: ["Twins with FUKA"], th: ["ฝาแฝดกับฟูกะ"] },
-      sns: { x: "https://x.com/SugarNote_hina?s=20", instagram: "https://www.instagram.com/sugarnote_hina/", tiktok: "https://www.tiktok.com/@sugarnote_hina" },
-    },
-    {
-      id: "airi", name: "西条藍里", short: "藍里", kana: "サイジョウアイリ", romaji: "SAIJO AIRI", thai: "ไซโจ ไอริ",
-      birth: "2003-09-17", origin: { ja: "京都府", en: "Kyoto", th: "เกียวโต" },
-      mbti: "INFJ", mbtiLabel: { ja: "提唱者", en: "The Advocate", th: "นักสนับสนุน" },
-      loveType: "FAPO", loveTypeLabel: { ja: "デビル天使", en: "Devil Angel", th: "ปีศาจแองเจิ้ล" },
-      career: { ja: "ダンス歴2年、ボーカル歴2年", en: "2 years dance, 2 years vocal", th: "เต้น 2 ปี ร้องเพลง 2 ปี" },
-      color: "Blue", img: "member-airi.jpg", face: "face-airi.jpg",
-      topics: { ja: ["元 7+ME LINK / PureGi"], en: ["Ex-7+ME LINK / PureGi"], th: ["อดีต 7+ME LINK / PureGi"] },
-      sns: { x: "https://x.com/sugarnote_airi?s=20", instagram: "https://www.instagram.com/sugarnote_airi/", tiktok: "https://www.tiktok.com/@sugarnote_airi" },
-    },
     {
       id: "ririho", name: "白咲里莉穂", short: "里莉穂", kana: "シロサキリリホ", romaji: "SHIROSAKI RIRIHO", thai: "ชิโรซากิ ริริโฮะ",
       birth: "2007-06-26", origin: { ja: "富山県", en: "Toyama", th: "โทยามะ" },
       mbti: "ESFP", mbtiLabel: { ja: "エンターテイナー", en: "The Entertainer", th: "นักบันเทิง" },
-      loveType: "FCPO", loveTypeLabel: { ja: "恋愛モンスター", en: "Love Monster", th: "มอนสเตอร์รัก" },
-      career: { ja: "ダンス歴1年、ボーカル歴1年", en: "1 year dance, 1 year vocal", th: "เต้น 1 ปี ร้องเพลง 1 ปี" },
       color: "White", img: "member-ririho.jpg", face: "face-ririho.jpg",
-      topics: { ja: ["現役高校生"], en: ["Still in high school"], th: ["นักเรียนมัธยมปลาย"] },
+      skills: {
+        ja: ["ピアノ（歴8年）/ 書道（歴4年）/ フルート（歴3年）"],
+        en: ["Piano (8 yrs) / Calligraphy (4 yrs) / Flute (3 yrs)"],
+        th: ["เปียโน (8 ปี) / เขียนพู่กัน (4 ปี) / ฟลุต (3 ปี)"],
+      },
+      memo: {
+        ja: ["ダンス（歴3年）", "趣味：歌うこと / お菓子作り"],
+        en: ["Dance (3 yrs)", "Hobbies: singing / baking sweets"],
+        th: ["เต้น (3 ปี)", "งานอดิเรก: ร้องเพลง / ทำขนม"],
+      },
       sns: { x: "https://x.com/SugarNote_ririh?s=20", instagram: "https://www.instagram.com/sugarnote_ririho/", tiktok: "https://www.tiktok.com/@sugarnote_ririho" },
     },
     {
       id: "nanako", name: "櫻井那奈子", short: "那奈子", kana: "サクライナナコ", romaji: "SAKURAI NANAKO", thai: "ซากุไร นานาโกะ",
       birth: "2007-01-29", origin: { ja: "東京都", en: "Tokyo", th: "โตเกียว" },
       mbti: "INFP", mbtiLabel: { ja: "仲介者", en: "The Mediator", th: "ผู้ไกล่เกลี่ย" },
-      loveType: "FCRO", loveTypeLabel: { ja: "ロマンスマジシャン", en: "Romance Magician", th: "นักเวทย์โรแมนซ์" },
-      career: { ja: "ダンス歴10年、ボーカル歴1年", en: "10 years dance, 1 year vocal", th: "เต้น 10 ปี ร้องเพลง 1 ปี" },
       color: "Red", img: "member-nanako.jpg", face: "face-nanako.jpg",
-      topics: { ja: ["特技はフィギュアスケート"], en: ["Figure skating"], th: ["สเก็ตลีลา"] },
+      skills: {
+        ja: ["フィギュアスケート（歴14年）", "ダンス（歴9年）", "バレエ（歴3年）"],
+        en: ["Figure skating (14 yrs)", "Dance (9 yrs)", "Ballet (3 yrs)"],
+        th: ["สเก็ตลีลา (14 ปี)", "เต้น (9 ปี)", "บัลเลต์ (3 ปี)"],
+      },
+      memo: {
+        ja: ["趣味：シール探し"],
+        en: ["Hobby: hunting for stickers"],
+        th: ["งานอดิเรก: ตามหาสติกเกอร์"],
+      },
       sns: { x: "https://x.com/SugarNote_nana?s=20", instagram: "https://www.instagram.com/sugarnote_nanako/", tiktok: "https://www.tiktok.com/@sugarnote_nanako" },
+    },
+    {
+      id: "hinata", name: "坂東日奈多", short: "日奈多", kana: "バンドウヒナタ", romaji: "BANDO HINATA", thai: "บันโด ฮินาตะ",
+      birth: "2004-08-31", origin: { ja: "東京都", en: "Tokyo", th: "โตเกียว" },
+      mbti: "ISTP", mbtiLabel: { ja: "巨匠", en: "The Virtuoso", th: "ช่างฝีมือ" },
+      color: "Pink", img: "member-hinata.jpg", face: "face-hinata.jpg",
+      twin: "fuka",
+      skills: {
+        ja: ["ダンス（歴4年）/ バレエ（歴15年）", "ソフトクリームをきれいに巻くこと"],
+        en: ["Dance (4 yrs) / Ballet (15 yrs)", "Swirling soft-serve ice cream perfectly"],
+        th: ["เต้น (4 ปี) / บัลเลต์ (15 ปี)", "บีบซอฟต์ครีมให้เป็นเกลียวสวย"],
+      },
+      memo: {
+        ja: ["坂東楓夏と双子", "趣味：ショッピング"],
+        en: ["Twins with FUKA", "Hobby: shopping"],
+        th: ["ฝาแฝดกับฟูกะ", "งานอดิเรก: ช้อปปิ้ง"],
+      },
+      sns: { x: "https://x.com/SugarNote_hina?s=20", instagram: "https://www.instagram.com/sugarnote_hina/", tiktok: "https://www.tiktok.com/@sugarnote_hina" },
     },
     {
       id: "fuka", name: "坂東楓夏", short: "楓夏", kana: "バンドウフウカ", romaji: "BANDO FUKA", thai: "บันโด ฟูกะ",
       birth: "2004-08-31", origin: { ja: "東京都", en: "Tokyo", th: "โตเกียว" },
       mbti: "ESFP", mbtiLabel: { ja: "エンターテイナー", en: "The Entertainer", th: "นักบันเทิง" },
-      loveType: "FCPO", loveTypeLabel: { ja: "恋愛モンスター", en: "Love Monster", th: "มอนสเตอร์รัก" },
-      career: { ja: "ダンス歴8年、ボーカル歴1年", en: "8 years dance, 1 year vocal", th: "เต้น 8 ปี ร้องเพลง 1 ปี" },
       color: "Yellow", img: "member-fuka.jpg", face: "face-fuka.jpg",
       twin: "hinata",
-      topics: { ja: ["坂東日奈多と双子", "PRODUCE 101 JAPAN THE GIRLS 出身"], en: ["Twins with HINATA", "Ex-PRODUCE 101 JAPAN THE GIRLS"], th: ["ฝาแฝดกับฮินาตะ", "อดีต PRODUCE 101 JAPAN THE GIRLS"] },
+      skills: {
+        ja: ["ダンス（歴4年）/ バレエ（歴15年）", "表情管理（歌詞を人に伝えることが好きです）"],
+        en: ["Dance (4 yrs) / Ballet (15 yrs)", "Facial expressions (I love conveying lyrics to people)"],
+        th: ["เต้น (4 ปี) / บัลเลต์ (15 ปี)", "การควบคุมสีหน้า (ชอบถ่ายทอดเนื้อเพลงให้ผู้คน)"],
+      },
+      memo: {
+        ja: ["坂東日奈多と双子", "PRODUCE 101 JAPAN THE GIRLS 出身", "趣味：食べること / 寝ること"],
+        en: ["Twins with HINATA", "Ex-PRODUCE 101 JAPAN THE GIRLS", "Hobbies: eating / sleeping"],
+        th: ["ฝาแฝดกับฮินาตะ", "อดีต PRODUCE 101 JAPAN THE GIRLS", "งานอดิเรก: กิน / นอน"],
+      },
       sns: { x: "https://x.com/sugarnote_fuka?s=20", instagram: "https://www.instagram.com/sugarnote_fuka/", tiktok: "https://www.tiktok.com/@sugarnote_fuka" },
+    },
+    {
+      id: "airi", name: "西条藍里", short: "藍里", kana: "サイジョウアイリ", romaji: "SAIJO AIRI", thai: "ไซโจ ไอริ",
+      birth: "2003-09-17", origin: { ja: "京都府", en: "Kyoto", th: "เกียวโต" },
+      mbti: "INFJ", mbtiLabel: { ja: "提唱者", en: "The Advocate", th: "นักสนับสนุน" },
+      color: "Blue", img: "member-airi.jpg", face: "face-airi.jpg",
+      skills: {
+        ja: ["早起き"],
+        en: ["Waking up early"],
+        th: ["ตื่นเช้า"],
+      },
+      memo: {
+        ja: ["ダンス（歴2年）", "趣味：水泳"],
+        en: ["Dance (2 yrs)", "Hobby: swimming"],
+        th: ["เต้น (2 ปี)", "งานอดิเรก: ว่ายน้ำ"],
+      },
+      sns: { x: "https://x.com/sugarnote_airi?s=20", instagram: "https://www.instagram.com/sugarnote_airi/", tiktok: "https://www.tiktok.com/@sugarnote_airi" },
     },
     {
       id: "rana", name: "月城蘭花", short: "蘭花", kana: "ツキシロラナ", romaji: "TSUKISHIRO RANA", thai: "สึกิชิโระ ราน่า",
       birth: "2007-11-06", origin: { ja: "東京都", en: "Tokyo", th: "โตเกียว" },
       mbti: "ISFP", mbtiLabel: { ja: "冒険家", en: "The Adventurer", th: "นักผจญภัย" },
-      loveType: "FAPO", loveTypeLabel: { ja: "デビル天使", en: "Devil Angel", th: "ปีศาจแองเจิ้ล" },
-      career: { ja: "ダンス歴3年・ボーカル歴1年", en: "3 years dance, 1 year vocal", th: "เต้น 3 ปี ร้องเพลง 1 ปี" },
       color: "Purple", img: "member-rana.jpg", face: "face-rana.jpg",
-      joined: "2026-05-17",
-      topics: { ja: ["2026.05.17 加入の新メンバー", "最年少"], en: ["Newest member (2026.05.17)", "Youngest"], th: ["สมาชิกใหม่ (17.05.2026)", "อายุน้อยที่สุด"] },
+      skills: {
+        ja: ["韓国語（韓国人のため日本語・韓国語の2カ国語話せます）", "絵を描くこと"],
+        en: ["Korean (she is Korean and speaks both Japanese and Korean)", "Drawing"],
+        th: ["ภาษาเกาหลี (เป็นคนเกาหลี จึงพูดได้ทั้งภาษาญี่ปุ่นและเกาหลี)", "วาดรูป"],
+      },
+      memo: {
+        ja: ["ダンス（歴3年）", "趣味：ゲーム"],
+        en: ["Dance (3 yrs)", "Hobby: video games"],
+        th: ["เต้น (3 ปี)", "งานอดิเรก: เล่นเกม"],
+      },
       sns: { x: "https://x.com/sugarnote_rana", instagram: "https://www.instagram.com/sugarnote_rana/", tiktok: "https://www.tiktok.com/@sugarnote_rana" },
     },
   ],
@@ -120,7 +162,7 @@ const SN = {
   ],
 
   discography: [
-    { title: "ニュアンスブルー", type: "DIGITAL SINGLE", date: "2026-07-08", cover: null, link: "https://linkco.re/Xvt2eE2u" },
+    { title: "ニュアンスブルー", type: "DIGITAL SINGLE", date: "2026-07-08", cover: "cd-03.jpg", link: "https://linkco.re/Xvt2eE2u" },
     { title: "嘘だよ", type: "DIGITAL SINGLE", date: "2026-03-29", cover: "cd-01.jpg", link: "https://linkco.re/4BQpe5ZZ" },
     { title: "who I am", type: "DIGITAL SINGLE", date: "2026-03-29", cover: "cd-02.jpg", link: "https://linkco.re/N5xXM2Ne" },
   ],
@@ -164,6 +206,7 @@ SN.imgSize = {
   "face-rana.jpg": [480, 480],
   "cd-01.jpg": [612, 615],
   "cd-02.jpg": [1200, 1200],
+  "cd-03.jpg": [1200, 1200],
   "video-afa.jpg": [1280, 720],
 };
 

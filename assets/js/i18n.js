@@ -17,7 +17,7 @@ const SN_I18N = {
     sub: { concept: "コンセプト", member: "メンバー", information: "最新情報", schedule: "スケジュール", profile: "メンバープロフィール", video: "動画コンテンツ", discography: "楽曲情報", goods: "オフィシャルグッズ", contact: "お問い合わせ" },
     hero: { tagline: "ピュアが、世界を動かす。", concept: "日本人の持つ精神性を主軸にしたクリエイティブを発信していくアイドルグループ。" },
     act: { viewAll: "VIEW ALL", listen: "LISTEN", openTimetree: "TimeTreeで開く", play: "動画を再生" },
-    prof: { birth: "BIRTH / ORIGIN", exp: "EXPERIENCE", age: "{n}歳" },
+    prof: { birth: "BIRTH / ORIGIN", skills: "SKILLS", age: "{n}歳" },
     sched: { lead: "ライブ・フェス・オンライン特典会の予定はこちらから。" },
     form: {
       name: "お名前", company: "貴社名 / 法人名（任意）", email: "メールアドレス", type: "お問い合わせ種別", message: "お問い合わせ内容",
@@ -82,7 +82,7 @@ const SN_I18N = {
     sub: { concept: "Concept", member: "Members", information: "Latest News", schedule: "Schedule", profile: "Member Profiles", video: "Video Content", discography: "Music", goods: "Official Merchandise", contact: "Contact Us" },
     hero: { tagline: "Purity moves the world.", concept: "An idol group that expresses creativity rooted in the Japanese spirit." },
     act: { viewAll: "VIEW ALL", listen: "LISTEN", openTimetree: "Open in TimeTree", play: "Play video" },
-    prof: { birth: "BIRTH / ORIGIN", exp: "EXPERIENCE", age: "age {n}" },
+    prof: { birth: "BIRTH / ORIGIN", skills: "SKILLS", age: "age {n}" },
     sched: { lead: "Lives, festivals and online photo sessions — check the calendar here." },
     form: {
       name: "Full Name", company: "Company / Organization (optional)", email: "Email Address", type: "Inquiry Type", message: "Message",
@@ -147,7 +147,7 @@ const SN_I18N = {
     sub: { concept: "คอนเซปต์", member: "สมาชิก", information: "ข่าวล่าสุด", schedule: "ตารางกิจกรรม", profile: "โปรไฟล์สมาชิก", video: "คอนเทนต์วิดีโอ", discography: "เพลง", goods: "สินค้าออฟิเชียล", contact: "ติดต่อเรา" },
     hero: { tagline: "ความบริสุทธิ์ขับเคลื่อนโลก", concept: "กลุ่มไอดอลที่สร้างสรรค์ผลงานโดยยึดจิตวิญญาณของชาวญี่ปุ่นเป็นแกนหลัก" },
     act: { viewAll: "ดูทั้งหมด", listen: "ฟัง", openTimetree: "เปิดใน TimeTree", play: "เล่นวิดีโอ" },
-    prof: { birth: "วันเกิด / บ้านเกิด", exp: "ประสบการณ์", age: "อายุ {n} ปี" },
+    prof: { birth: "วันเกิด / บ้านเกิด", skills: "ความสามารถพิเศษ", age: "อายุ {n} ปี" },
     sched: { lead: "เช็คตารางไลฟ์ เฟสติวัล และงานถ่ายรูปออนไลน์ได้ที่นี่" },
     form: {
       name: "ชื่อ-นามสกุล", company: "บริษัท / องค์กร (ถ้ามี)", email: "อีเมล", type: "ประเภทการติดต่อ", message: "ข้อความ",

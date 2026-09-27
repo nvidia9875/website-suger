@@ -9,18 +9,17 @@
     var el = document.getElementById("members-list");
     if (!el) return;
     var lang = SNLang.current, oshi = SNOshi.list();
-    el.innerHTML = SN.members.map(function (m, i) {
+    el.innerHTML = SN.members.map(function (m) {
       var names = SN.memberNames(m, lang);
       var isOshi = oshi.indexOf(m.id) >= 0;
       return (
         '<li><a href="member.html?m=' + m.id + '"' + (isOshi ? ' class="is-oshi" data-color="' + SN.colorOf(m).ui + '"' : "") + ">" +
         '<span class="mem-photo"><img src="assets/img/' + m.img + '" alt="' + esc(m.name) + '"' + imgAttr(m.img) + ' loading="lazy"></span>' +
         '<span class="mem-body">' +
-        '<span class="mem-no">MEMBER ' + String(i + 1).padStart(2, "0") +
-        (isOshi ? '<span class="mem-oshi">♡ ' + esc(SNLang.t("oshi.isOshi")) + "</span>" : "") + "</span>" +
         '<span class="mem-name">' + esc(names.main) + "</span>" +
         '<span class="mem-kana">' + esc(names.sub) + "</span>" +
-        '<span class="mem-foot"><span class="mem-enter">' + esc(SNLang.t("solo.enter")) + "</span></span>" +
+        '<span class="mem-foot">' + (isOshi ? '<span class="mem-oshi">♡ ' + esc(SNLang.t("oshi.isOshi")) + "</span>" : "") +
+        '<span class="mem-enter">' + esc(SNLang.t("solo.enter")) + "</span></span>" +
         "</span></a></li>"
       );
     }).join("");
@@ -222,7 +221,6 @@
 
     document.title = names.main + " | SugarNote Official Website";
 
-    document.getElementById("solo-no").textContent = String(i + 1).padStart(2, "0");
     document.getElementById("solo-kana").textContent = names.sub;
     document.getElementById("solo-name").textContent = names.main;
     document.getElementById("solo-roman").textContent = m.romaji;
@@ -255,6 +253,8 @@
     }
 
     var age = SNLang.fmt("prof.age", { n: SN.ageOf(m) });
+    var skills = SN.pick(m.skills, lang) || [];
+    var memo = SN.pick(m.memo, lang) || [];
     var twinRow = "";
     if (m.twin) {
       var tw = SN.member(m.twin);
@@ -264,12 +264,10 @@
     document.getElementById("data-rows").innerHTML =
       '<li><span class="k">' + esc(SNLang.t("prof.birth")) + '</span><span class="v">' + dot(m.birth) + "（" + esc(age) + "）・" + esc(SN.pick(m.origin, lang)) + "</span></li>" +
       '<li><span class="k">MBTI</span><span class="v"><strong>' + esc(m.mbti) + "</strong>・" + esc(SN.pick(m.mbtiLabel, lang)) + "</span></li>" +
-      '<li><span class="k">LOVE TYPE</span><span class="v"><strong>' + esc(m.loveType) + "</strong>・" + esc(SN.pick(m.loveTypeLabel, lang)) + "</span></li>" +
-      '<li><span class="k">' + esc(SNLang.t("prof.exp")) + '</span><span class="v">' + esc(SN.pick(m.career, lang)) + "</span></li>" + twinRow;
+      (skills.length ? '<li><span class="k">' + esc(SNLang.t("prof.skills")) + '</span><span class="v">' + skills.map(esc).join("<br>") + "</span></li>" : "") + twinRow;
 
-    var topics = m.topics ? (m.topics[lang] || m.topics.ja) : [];
-    document.getElementById("memo-list").innerHTML = topics.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
-    document.querySelector(".solo-memo").hidden = topics.length === 0;
+    document.getElementById("memo-list").innerHTML = memo.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+    document.querySelector(".solo-memo").hidden = memo.length === 0;
 
     /* このメンバーのグッズ（goods-data.js から自動抽出・先頭4点） */
     var rows = GoodsUtil.productsFor(m.id);

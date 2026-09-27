@@ -182,19 +182,15 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 - public リポジトリだと実素材（写真）がネット上に置かれる。private リポジトリから Pages を出すには GitHub の有料プランが要る
 - 変更のたびに Playwright でコンソールエラー 0 を確認する
 
-## 移籍時に差し替える箇所（FLAP entertainment → LINDO）
+## 運営会社の表記（LINDO）
 
-次のコマンドで全部出ます（zsh では `--include` の値を引用符で囲む）。
-
-```bash
-grep -rn "FLAP\|flapinc\|渋谷区西原\|03-5308" --include="*.html" --include="*.js" .
-```
+2026-09 に FLAP entertainment → 株式会社LINDO へ差し替え済み。所在地・電話番号は LINDO の公式サイト（styledbylindo.com）の表記どおりで、旧表記と同じ。
 
 - `assets/js/data.js` … `SN.brand.company` / `companyUrl` / `contact.tel`
 - `legal.html` … 販売業者・代表責任者・所在地・電話番号
-- `terms.html` / `privacy.html` … 「FLAP entertainment（以下「当社」）」と連絡先住所
-- 6つの HTML のフッター … 運営会社リンク（`https://flapinc.jp/`）
-- Shopify 側の `policies/legal-notice` も同じ内容に揃える
+- `terms.html` / `privacy.html` … 「株式会社LINDO（以下「当社」）」と連絡先
+- 全 HTML のフッター … 運営会社リンク（`https://styledbylindo.com/`）。記事ページは `tools/build_news.py` のテンプレートを直して再生成する
+- Shopify 側の `policies/legal-notice` は Shopify 管理画面で別途揃える（サイトからは変えられない）
 
 ## 検証（2026-09-05）
 
