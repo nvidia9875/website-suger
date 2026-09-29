@@ -33,6 +33,15 @@ const SN = {
     },
   },
 
+  /* グッズ機能の公開スイッチ。false のあいだは GOODS への導線をオンラインストア（Shopify）へ向け、
+     goods.html / legal.html はストアへ転送する（?preview を付けると確認用に開ける）。
+     2026-11 のグッズ公開で true にする（手順は README「グッズの公開（2026-11）」） */
+  goodsLive: false,
+  store: {
+    url: "https://www.sugarnote.store/",
+    legal: "https://www.sugarnote.store/policies/legal-notice",
+  },
+
   /* メンバーカラー。hex = 本来の色（チップ用）、ui = 白背景で AA(4.5:1) を満たす濃色（文字・線用） */
   colors: {
     Pink:   { hex: "#F7A8C4", ui: "#C13F76" },

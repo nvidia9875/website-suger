@@ -63,6 +63,13 @@
   function renderGoodsPick() {
     var el = document.getElementById("goods-list");
     if (!el) return;
+    var more = document.querySelector("#goods .sec-more");
+    if (more) more.hidden = !SN.goodsLive;
+    if (!SN.goodsLive) {
+      el.innerHTML = '<li class="goods-store"><p>' + esc(SNLang.t("goods.storeLead")) + "</p>" +
+        '<a href="' + url(SN.store.url) + '" target="_blank" rel="noopener">' + esc(SNLang.t("goods.toStore")) + " →</a></li>";
+      return;
+    }
     el.innerHTML = GOODS.featured.map(function (id) {
       var p = GoodsUtil.product(id);
       return p ? SNSite.goodsCard(p, null, { href: "goods.html?p=" + p.id }) : "";
@@ -278,7 +285,7 @@
     var more = document.getElementById("her-goods-more");
     more.href = "goods.html?m=" + m.id;
     more.textContent = SNLang.fmt("solo.seeAllGoods", { name: names.main });
-    document.querySelector(".solo-goods").hidden = rows.length === 0;
+    document.querySelector(".solo-goods").hidden = rows.length === 0 || !SN.goodsLive;
 
     var prev = SN.members[(i + SN.members.length - 1) % SN.members.length];
     var next = SN.members[(i + 1) % SN.members.length];

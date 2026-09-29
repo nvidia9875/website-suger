@@ -47,6 +47,7 @@ const SN_I18N = {
       prev: "PREV", next: "NEXT",
     },
     goods: {
+      storeLead: "オフィシャルグッズはオンラインストアで販売しています。", toStore: "オンラインストアへ",
       lead: "SugarNote のオフィシャルグッズ。お支払いは Shopify の安全なチェックアウトで行われます。",
       jaOnly: "",
       shelf: "推しの棚", shelfHint: "推しを選ぶと、その子のグッズがここにまとまります（複数OK）",
@@ -112,6 +113,7 @@ const SN_I18N = {
       prev: "PREV", next: "NEXT",
     },
     goods: {
+      storeLead: "Official merchandise is available at our online store.", toStore: "Go to the online store",
       lead: "Official SugarNote merchandise. Payment is handled by Shopify's secure checkout.",
       jaOnly: "Product names and descriptions are in Japanese.",
       shelf: "Oshi shelves", shelfHint: "Pick your oshi and her goods gather here (pick as many as you like).",
@@ -177,6 +179,7 @@ const SN_I18N = {
       prev: "ก่อนหน้า", next: "ถัดไป",
     },
     goods: {
+      storeLead: "สินค้าออฟิเชียลวางจำหน่ายที่ร้านค้าออนไลน์", toStore: "ไปที่ร้านค้าออนไลน์",
       lead: "สินค้าออฟิเชียลของ SugarNote ชำระเงินผ่านระบบเช็กเอาต์ที่ปลอดภัยของ Shopify",
       jaOnly: "ชื่อและรายละเอียดสินค้าเป็นภาษาญี่ปุ่น",
       shelf: "ชั้นโอชิ", shelfHint: "เลือกโอชิแล้วสินค้าของเธอจะมารวมกันที่นี่ (เลือกได้หลายคน)",

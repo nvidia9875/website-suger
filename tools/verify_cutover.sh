@@ -10,6 +10,8 @@
 #
 #   BASE=https://nvidia9875.github.io/website-suger bash tools/verify_cutover.sh site
 #     … 切り替え前に確認用URLでページ群だけ試す（ドメイン固有の確認は飛ばす）
+#   GOODS_LIVE=yes bash tools/verify_cutover.sh final
+#     … グッズ公開（2026-11）後。goods.html / legal.html も noindex が外れていることを確認する
 #   CHALLENGE=（GitHub の検証 TXT の値） bash tools/verify_cutover.sh dns
 #     … 検証 TXT を値まで照合する（省略時は「値がある」ことだけ確認）
 #
@@ -146,7 +148,13 @@ check_site() {
   [ "${final}" = "yes" ] && main_ni=no || main_ni=any
   echo "== 新サイト（${BASE}）"
   check_page "" "${main_ni}" 'id="members-list"'
-  for p in member.html goods.html terms.html privacy.html legal.html; do check_page "${p}" "${main_ni}"; done
+  for p in member.html terms.html privacy.html; do check_page "${p}" "${main_ni}"; done
+  # goods.html / legal.html はグッズ公開（SN.goodsLive = true）までは noindex のまま。公開後は GOODS_LIVE=yes で実行する
+  if [ "${GOODS_LIVE:-no}" = "yes" ]; then
+    for p in goods.html legal.html; do check_page "${p}" "${main_ni}"; done
+  else
+    for p in goods.html legal.html; do check_page "${p}" yes; done
+  fi
   for lang in ja en th; do for p in ${UUIDS}; do check_page "${lang}/information/${p}/" "${main_ni}"; done; done
 
   echo "== 旧URLの転送ページ9つ（noindex のまま・転送先が正しい）"

@@ -111,9 +111,31 @@ const SNSite = (function () {
     });
   }
 
+  /* ---------- グッズ未公開のあいだ（SN.goodsLive = false）: GOODS と特商法の導線をオンラインストアへ ---------- */
+  function gateGoods() {
+    if (SN.goodsLive) return false;
+    var page = document.body.getAttribute("data-page");
+    if ((page === "goods" || page === "legal") && !/[?&]preview\b/.test(location.search)) {
+      location.replace(page === "goods" ? SN.store.url : SN.store.legal);
+      return true;
+    }
+    document.querySelectorAll('a[href$="goods.html"]').forEach(function (a) {
+      a.href = SN.store.url;
+      a.target = "_blank";
+      a.rel = "noopener";
+    });
+    document.querySelectorAll('a[href$="legal.html"]').forEach(function (a) {
+      a.href = SN.store.legal;
+      a.target = "_blank";
+      a.rel = "noopener";
+    });
+    return false;
+  }
+
   /* ---------- 起動: 保存言語の復元（SNLang.init）が sn:lang を発火するので先に購読する ---------- */
   function boot(renderAll, setup) {
     document.addEventListener("DOMContentLoaded", function () {
+      if (gateGoods()) return;
       renderFoot();
       setupMenu();
       /* const 宣言のグローバルは window のプロパティにならないので typeof で確認する */

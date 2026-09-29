@@ -140,6 +140,20 @@ Web3Forms を使うなら次のように設定すると本送信になります�
 contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_key: "（Web3Forms のキー）" } },
 ```
 
+## グッズの公開（2026-11）
+
+2026-10-01 はグッズ機能なしで公開した（`assets/js/data.js` の `SN.goodsLive = false`）。このあいだは GOODS メニュー・トップの GOODS 欄・フッターの特商法リンクがオンラインストア（sugarnote.store）へ飛び、`goods.html` / `legal.html` はストアへ転送される（`?preview` を付けると確認用に開ける。例: `goods.html?preview`）。メンバーページのグッズ欄は出ない。
+
+11月上旬にグッズを公開するときの手順:
+
+1. `goods.html?preview` で商品・価格・在庫が Shopify と合っているか確認し、`goods-data.js` を最新にする（Shopify から自動で読み込む作りにした場合は不要）
+2. `legal.html` の販売業者を確認する。Shopify の持ち主が LINDO に移っていれば LINDO のまま、まだなら FLAP の表記にする
+3. `data.js` の `goodsLive` を `true` にする
+4. `goods.html` と `legal.html` から `<meta name="robots" content="noindex">` とその上のコメント行を消す
+5. `data.js` を読み込んでいる全 HTML と `tools/build_news.py` の `data.js?v=` を上げ、`python3 tools/build_news.py` で記事ページを再生成して push
+6. 旧ストアのテーマに `docs/shopify/old-store-redirect.liquid` を貼る（旧ストアのページが新サイトへ移る）
+7. `GOODS_LIVE=yes bash tools/verify_cutover.sh final` が全部 OK、ブラウザでカート → Shopify の決済画面まで進めることを確認（支払いはしない）
+
 ## 公開（GitHub Pages）
 
 1. このディレクトリを GitHub リポジトリにして `main` に push
@@ -151,7 +165,7 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 
 公開当日の作業順は `docs/CUTOVER-2026-10-01.md` が正（切り替え → 動作確認 → 検索避け解除）。
 
-- [ ] （当日・切り替えと動作確認の後）`bash tools/go_live.sh` で本体6ページ・記事15ページの noindex を外し、`robots.txt` を `Allow` にする（転送ページ9つは noindex のまま）
+- [ ] （当日・切り替えと動作確認の後）`bash tools/go_live.sh` で本体4ページ・記事15ページの noindex を外し、`robots.txt` を `Allow` にする（転送ページ9つと goods.html・legal.html は noindex のまま）
 - [ ] `og:image` / `og:url` が本番 URL になっている（index.html / goods.html）
 - [ ] `SN.contactForm.endpoint` を設定してフォームを本送信にする。Web3Forms 側でドメイン制限（Allowed domains）を sugarnote.jp に設定する
 - [x] `SN.news[].url` を自サイトの記事 URL に置き換える（2026-09-19 済み。旧サイトと同じパスで移設）
