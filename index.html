@@ -36,7 +36,6 @@
     <a href="#news" data-i18n="nav.information">INFORMATION</a>
     <a href="#schedule" data-i18n="nav.schedule">SCHEDULE</a>
     <a href="goods.html" data-i18n="nav.goods">GOODS</a>
-    <a href="#contact" data-i18n="nav.contact">CONTACT</a>
   </nav>
   <div class="head-tools">
     <div class="lang" role="group" aria-label="Language">
@@ -125,68 +124,6 @@
       <a class="sec-more" href="goods.html" data-i18n="act.viewAll">VIEW ALL</a>
     </header>
     <ol class="goods" id="goods-list"></ol>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="sec sec-contact" id="contact" aria-labelledby="h-contact">
-    <header class="sec-head">
-      <h2 class="sec-title" id="h-contact">CONTACT<small data-i18n="sub.contact">お問い合わせ</small></h2>
-    </header>
-
-    <div class="contact-grid">
-      <div>
-        <form class="form" id="contact-form" novalidate>
-          <div class="ff">
-            <label for="f-name"><span data-i18n="form.name">お名前</span> <em class="req">*</em></label>
-            <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
-            <p class="ff-err" id="e-name"></p>
-          </div>
-          <div class="ff">
-            <label for="f-company" data-i18n="form.company">貴社名 / 法人名（任意）</label>
-            <input id="f-company" name="company" type="text" autocomplete="organization">
-          </div>
-          <div class="ff">
-            <label for="f-email"><span data-i18n="form.email">メールアドレス</span> <em class="req">*</em></label>
-            <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="e-email">
-            <p class="ff-err" id="e-email"></p>
-          </div>
-          <div class="ff">
-            <label for="f-type"><span data-i18n="form.type">お問い合わせ種別</span> <em class="req">*</em></label>
-            <select id="f-type" name="type" required aria-describedby="e-type"></select>
-            <p class="ff-err" id="e-type"></p>
-          </div>
-          <div class="ff">
-            <label for="f-message"><span data-i18n="form.message">お問い合わせ内容</span> <em class="req">*</em></label>
-            <textarea id="f-message" name="message" rows="6" required aria-describedby="e-message"></textarea>
-            <p class="ff-err" id="e-message"></p>
-          </div>
-          <div class="ff ff-agree">
-            <input id="f-agree" name="agree" type="checkbox" required aria-describedby="e-agree">
-            <label for="f-agree"><span data-i18n="form.agreePre"></span><a href="privacy.html" target="_blank" rel="noopener" data-i18n="form.agreeLink">プライバシーポリシー</a><span data-i18n="form.agreePost">に同意の上、送信してください。</span></label>
-            <p class="ff-err" id="e-agree"></p>
-          </div>
-          <div class="hp" aria-hidden="true"><label for="f-botcheck">Leave this empty</label><input id="f-botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off"></div>
-          <div class="ff-actions">
-            <button type="submit" class="btn" data-i18n="form.submit">送信内容を確認する</button>
-          </div>
-        </form>
-
-        <div class="form-confirm" id="form-confirm" hidden>
-          <h3 data-i18n="form.confirmTitle">送信内容の確認</h3>
-          <dl id="confirm-list"></dl>
-          <div class="ff-actions">
-            <button type="button" class="btn btn-ghost" id="btn-back" data-i18n="form.back">修正する</button>
-            <button type="button" class="btn" id="btn-send" data-i18n="form.send">送信する</button>
-          </div>
-        </div>
-        <div class="form-done" id="form-done" hidden>
-          <h3 data-i18n="form.doneTitle">送信が完了しました</h3>
-          <p data-i18n="form.doneBody">お問い合わせありがとうございます。</p>
-        </div>
-      </div>
-
-      <aside class="contact-info" id="contact-info" aria-label="連絡先"></aside>
-    </div>
   </section>
 </main>
 

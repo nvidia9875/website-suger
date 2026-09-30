@@ -118,18 +118,18 @@
   }
 
   /* ---------- お問い合わせフォーム
-     SN.contactForm.endpoint が空のあいだはデモ（送信しない）。設定方法は README「お問い合わせフォーム」 ---------- */
+     index.html にフォームがあり、SN.contactForm.endpoint が設定されているときだけ動く。
+     送信先が未設定なら CONTACT 欄ごと隠す（2026-10 時点はフォーム自体を外している）。設定方法は README「お問い合わせフォーム」 ---------- */
   function setupForm() {
     var form = document.getElementById("contact-form");
     if (!form) return;
     var confirmBox = document.getElementById("form-confirm");
     var doneBox = document.getElementById("form-done");
     var sendBtn = document.getElementById("btn-send");
-    var live = !!(SN.contactForm && SN.contactForm.endpoint);
-    if (!live) {
-      sendBtn.setAttribute("data-i18n", "form.sendDemo");
-      doneBox.querySelector("h3").setAttribute("data-i18n", "form.doneTitleDemo");
-      doneBox.querySelector("p").setAttribute("data-i18n", "form.doneBodyDemo");
+    if (!(SN.contactForm && SN.contactForm.endpoint)) {
+      var sec = document.getElementById("contact");
+      if (sec) sec.hidden = true;
+      return;
     }
 
     function err(id, key) {
@@ -193,7 +193,7 @@
     sendBtn.addEventListener("click", function () {
       /* ハニーポット: 人には見えないチェックボックスが入っていたら bot とみなし、送らずに完了画面だけ出す */
       var bot = document.getElementById("f-botcheck");
-      if (!live || (bot && bot.checked)) { confirmBox.hidden = true; doneBox.hidden = false; jump(); return; }
+      if (bot && bot.checked) { confirmBox.hidden = true; doneBox.hidden = false; jump(); return; }
       var v = values();
       var payload = Object.assign({}, SN.contactForm.fields || {}, {
         subject: "[SugarNote] " + v.type + " / " + v.name,

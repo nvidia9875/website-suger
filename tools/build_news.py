@@ -56,7 +56,6 @@ TPL = """<!DOCTYPE html>
     <a href="{up}index.html#news" data-i18n="nav.information">INFORMATION</a>
     <a href="{up}index.html#schedule" data-i18n="nav.schedule">SCHEDULE</a>
     <a href="{up}goods.html" data-i18n="nav.goods">GOODS</a>
-    <a href="{up}index.html#contact" data-i18n="nav.contact">CONTACT</a>
   </nav>
   <div class="head-tools">
     <div class="lang" role="group" aria-label="Language">

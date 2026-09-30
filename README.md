@@ -133,8 +133,8 @@ cp out/*.webp assets/img/goods/
 
 ### お問い合わせフォーム
 
-`data.js` の `SN.contactForm.endpoint` が空のあいだは **デモ動作**（送信しない・ボタンに「デモ」と出る）。
-Web3Forms を使うなら次のように設定すると本送信になります。
+**2026-10 時点はフォームを外している**（受信先のメールアドレスが未定のため。メニューの CONTACT とトップの CONTACT 欄も削除）。規約・プライバシー・特商法の問い合わせ先は info@sugarnote.jp。
+戻すときは、`git log -S 'id="contact-form"' -- index.html` でフォームを外す前のコミットを探して CONTACT 欄とメニューの CONTACT を戻し、`data.js` の `SN.contactForm` を設定する（未設定のままだと CONTACT 欄は表示されない）。Web3Forms を使う場合:
 
 ```js
 contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_key: "（Web3Forms のキー）" } },
@@ -167,7 +167,7 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 
 - [ ] （当日・切り替えと動作確認の後）`bash tools/go_live.sh` で本体4ページ・記事15ページの noindex を外し、`robots.txt` を `Allow` にする（転送ページ9つと goods.html・legal.html は noindex のまま）
 - [ ] `og:image` / `og:url` が本番 URL になっている（index.html / goods.html）
-- [ ] `SN.contactForm.endpoint` を設定してフォームを本送信にする。Web3Forms 側でドメイン制限（Allowed domains）を sugarnote.jp に設定する
+- [ ] （フォームを戻すとき）`SN.contactForm.endpoint` を設定する。Web3Forms 側でドメイン制限（Allowed domains）を sugarnote.jp に設定する
 - [x] `SN.news[].url` を自サイトの記事 URL に置き換える（2026-09-19 済み。旧サイトと同じパスで移設）
 - [ ] 特商法・利用規約・プライバシーの運営会社が正しい（下の「移籍時に差し替える箇所」）
 - [ ] Shopify 側: 旧ストアのトップに移行告知 → 落ち着いたら通常ページを非公開にして sugarnote.jp へ転送（チェックアウトは残す）。**ストアフロントをパスワードで閉じるとカートパーマリンクもパスワード画面に飛ぶ可能性がある**ので、閉じる前に `https://www.sugarnote.store/cart/47393203257580:1` が通ることを必ず確認する

@@ -183,7 +183,8 @@ const SN = {
     publicUrl: "https://timetreeapp.com/public_calendars/sugarnote_ofc",
   },
 
-  /* お問い合わせフォームの送信先。endpoint が空のあいだはデモ動作（送信しない）。
+  /* お問い合わせフォームの送信先。2026-10 時点はフォームを外している（受信先のメールアドレスが未定）。
+     フォームを戻すときは endpoint を設定する。未設定のままだと CONTACT 欄は表示されない。
      Web3Forms を使う場合: endpoint = "https://api.web3forms.com/submit", fields = { access_key: "…" } */
   contactForm: { endpoint: "", fields: {} },
 
