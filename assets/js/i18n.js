@@ -268,7 +268,14 @@ const SNLang = (function () {
     document.querySelectorAll("[data-lang-switch]").forEach(function (b) {
       b.addEventListener("click", function () { apply(b.getAttribute("data-lang-switch")); });
     });
-    let lang = new URLSearchParams(location.search).get("lang");
+    const params = new URLSearchParams(location.search);
+    let lang = params.get("lang");
+    if (params.has("lang")) {
+      /* ?lang= は初回の言語決定にだけ使う（apply で保存される）。URL に残すと、切り替え後の再読み込みや共有で古い言語に戻るので消す */
+      params.delete("lang");
+      const q = params.toString();
+      try { history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash); } catch (e) { /* 失敗しても表示には影響しない */ }
+    }
     if (LANGS.indexOf(lang) < 0) {
       lang = null;
       try { lang = localStorage.getItem(KEY); } catch (e) { /* private mode */ }

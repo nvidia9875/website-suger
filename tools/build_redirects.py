@@ -20,7 +20,7 @@ TPL = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta http-equiv="refresh" content="0; url={up}{target}?lang={lang}">
-<link rel="canonical" href="{up}{target}">
+<link rel="canonical" href="{canonical}">
 <!-- 転送用ページ。公開後も noindex のまま残す（本体ページと重複させないため） -->
 <meta name="robots" content="noindex">
 <title>移動しました | SugarNote Official Website</title>
@@ -48,6 +48,7 @@ for lang in LANGS:
         d = os.path.join(ROOT, lang, sub) if sub else os.path.join(ROOT, lang)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(
-            TPL.format(lang=lang, up="../" * depth, target=target))
+            TPL.format(lang=lang, up="../" * depth, target=target,
+                       canonical="https://sugarnote.jp/" + ("" if target == "index.html" else target)))
         n += 1
 print(f"転送ページ: {n} 件（{len(LANGS)} 言語 × {len(TARGETS)} パス）")
