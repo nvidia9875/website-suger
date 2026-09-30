@@ -159,9 +159,9 @@ check_site() {
 
   echo "== 旧URLの転送ページ9つ（noindex のまま・転送先が正しい）"
   for lang in ja en th; do
-    check_page "${lang}/" yes '<meta http-equiv="refresh" content="0; url=../index.html">'
-    check_page "${lang}/privacy/" yes '<meta http-equiv="refresh" content="0; url=../../privacy.html">'
-    check_page "${lang}/terms/" yes '<meta http-equiv="refresh" content="0; url=../../terms.html">'
+    check_page "${lang}/" yes "<meta http-equiv=\"refresh\" content=\"0; url=../index.html?lang=${lang}\">"
+    check_page "${lang}/privacy/" yes "<meta http-equiv=\"refresh\" content=\"0; url=../../privacy.html?lang=${lang}\">"
+    check_page "${lang}/terms/" yes "<meta http-equiv=\"refresh\" content=\"0; url=../../terms.html?lang=${lang}\">"
   done
 
   echo "== robots.txt"

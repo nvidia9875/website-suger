@@ -35,12 +35,20 @@ TPL = """<!DOCTYPE html>
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{title} | SugarNote Official Website</title>
 <meta name="description" content="{desc}">
+<link rel="canonical" href="https://sugarnote.jp/{lang}/information/{uu}/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SugarNote Official Website">
+<meta property="og:title" content="{title} | SugarNote Official Website">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="https://sugarnote.jp/{lang}/information/{uu}/">
+<meta property="og:image" content="https://sugarnote.jp/assets/img/news/{img}">
+<meta name="twitter:card" content="summary_large_image">
 <!-- 公開時に外す: 検索避け（README「公開前チェック」） -->
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F4F3F1">
 <link rel="icon" href="{up}assets/img/logo-heart.png">
 <link rel="stylesheet" href="{up}assets/css/fonts.css?v=1">
-<link rel="stylesheet" href="{up}assets/css/site.css?v=5">
+<link rel="stylesheet" href="{up}assets/css/site.css?v=6">
 </head>
 <body data-page="news">
 <a class="skip" href="#main">本文へスキップ</a>
@@ -55,7 +63,7 @@ TPL = """<!DOCTYPE html>
     <a href="{up}index.html#members" data-i18n="nav.member">MEMBER</a>
     <a href="{up}index.html#news" data-i18n="nav.information">INFORMATION</a>
     <a href="{up}index.html#schedule" data-i18n="nav.schedule">SCHEDULE</a>
-    <a href="{up}goods.html" data-i18n="nav.goods">GOODS</a>
+    <a href="https://www.sugarnote.store/" target="_blank" rel="noopener" data-goods-link data-i18n="nav.goods">GOODS</a>
   </nav>
   <div class="head-tools">
     <div class="lang" role="group" aria-label="Language">
@@ -88,7 +96,7 @@ TPL = """<!DOCTYPE html>
       <a href="{up}index.html" data-i18n="foot.backHome">トップへ戻る</a>
       <a href="{up}terms.html" data-i18n="foot.terms">利用規約</a>
       <a href="{up}privacy.html" data-i18n="foot.privacy">プライバシーポリシー</a>
-      <a href="{up}legal.html" data-i18n="foot.legal">特定商取引法に基づく表記</a>
+      <a href="https://www.sugarnote.store/policies/legal-notice" target="_blank" rel="noopener" data-legal-link data-i18n="foot.legal">特定商取引法に基づく表記</a>
       <a href="https://styledbylindo.com/" target="_blank" rel="noopener" data-i18n="foot.company">運営会社</a>
     </nav>
     <p class="foot-copy" data-i18n="foot.copyright">© 2026 SugarNote Official. All Rights Reserved.</p>
@@ -107,7 +115,7 @@ TPL = """<!DOCTYPE html>
 
 CATS = {}
 data_js = open(os.path.join(ROOT, "assets/js/data.js"), encoding="utf-8").read()
-for m in re.finditer(r'category: "([^"]+)", title: "[^"]*", url: "[^"]*information/([0-9a-f-]+)"', data_js):
+for m in re.finditer(r'category: "([^"]+)", title: "[^"]*", url: "[^"]*information/([0-9a-f-]+)/?"', data_js):
     CATS[m.group(2)] = m.group(1)
 
 from PIL import Image
@@ -122,7 +130,7 @@ for uu, langs in ART.items():
         d = os.path.join(ROOT, lang, "information", uu)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(TPL.format(
-            lang=lang, up=UP, title=html.escape(a["title"]), desc=desc, date=a["date"],
+            lang=lang, up=UP, uu=uu, title=html.escape(a["title"]), desc=desc, date=a["date"],
             date_dot=a["date"].replace("-", "."), cat=CATS.get(uu, "NEWS"),
             img=img, iw=iw, ih=ih, body=body))
         n += 1

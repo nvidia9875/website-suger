@@ -142,17 +142,21 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 
 ## グッズの公開（2026-11）
 
-2026-10-01 はグッズ機能なしで公開した（`assets/js/data.js` の `SN.goodsLive = false`）。このあいだは GOODS メニュー・トップの GOODS 欄・フッターの特商法リンクがオンラインストア（sugarnote.store）へ飛び、`goods.html` / `legal.html` はストアへ転送される（`?preview` を付けると確認用に開ける。例: `goods.html?preview`）。メンバーページのグッズ欄は出ない。
+2026-10-01 はグッズ機能なしで公開した（`assets/js/data.js` の `SN.goodsLive = false`）。このあいだは:
+- GOODS メニュー・トップの VIEW ALL・フッターの特商法リンクは、**HTML の時点で**オンラインストア（sugarnote.store）を向いている（`data-goods-link` / `data-legal-link` の付いたリンク。記事ページは `tools/build_news.py` のテンプレート）
+- トップの GOODS 欄は「オンラインストアへ」の案内だけ、メンバーページのグッズ欄は `hidden`
+- `goods.html` / `legal.html` は本文（`main[data-goods-gated]`）を `hidden` にしてあり、JS がストアへ転送する。`?preview` を付けると確認用に開ける（例: `goods.html?preview`）。JS が無いと `<noscript>` の案内だけが出る
 
-11月上旬にグッズを公開するときの手順:
+11月上旬にグッズを公開するときの手順（8つ）:
 
 1. `goods.html?preview` で商品・価格・在庫が Shopify と合っているか確認し、`goods-data.js` を最新にする（Shopify から自動で読み込む作りにした場合は不要）
 2. `legal.html` の販売業者を確認する。Shopify の持ち主が LINDO に移っていれば LINDO のまま、まだなら FLAP の表記にする
 3. `data.js` の `goodsLive` を `true` にする
-4. `goods.html` と `legal.html` から `<meta name="robots" content="noindex">` とその上のコメント行を消す
-5. `data.js` を読み込んでいる全 HTML と `tools/build_news.py` の `data.js?v=` を上げ、`python3 tools/build_news.py` で記事ページを再生成して push
-6. 旧ストアのテーマに `docs/shopify/old-store-redirect.liquid` を貼る（旧ストアのページが新サイトへ移る）
-7. `GOODS_LIVE=yes bash tools/verify_cutover.sh final` が全部 OK、ブラウザでカート → Shopify の決済画面まで進めることを確認（支払いはしない）
+4. リンクを内部ページに戻す: `data-goods-link` の付いたリンクを `goods.html`（記事テンプレートは `{up}goods.html`）へ、`data-legal-link` を `legal.html` へ。`target="_blank" rel="noopener"` も外す（`grep -rn "data-goods-link\|data-legal-link" --include="*.html" --include="*.py" .` で全部出る）
+5. `goods.html` と `legal.html` から `<noscript>…</noscript>`・その下のコメント行・`<meta name="robots" content="noindex">` とその上のコメント行を消し、`<main id="main" data-goods-gated hidden>` の `hidden` を外す
+6. `data.js` を読み込んでいる全 HTML と `tools/build_news.py` の `data.js?v=` を上げ、`python3 tools/build_news.py` で記事ページを再生成して push
+7. 旧ストアのテーマに `docs/shopify/old-store-redirect.liquid` を貼る（旧ストアのページが新サイトへ移る）
+8. `GOODS_LIVE=yes bash tools/verify_cutover.sh final` が全部 OK、ブラウザでカート → Shopify の決済画面まで進めることを確認（支払いはしない）
 
 ## 公開（GitHub Pages）
 

@@ -19,14 +19,14 @@ TPL = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
-<meta http-equiv="refresh" content="0; url={up}{target}">
+<meta http-equiv="refresh" content="0; url={up}{target}?lang={lang}">
 <link rel="canonical" href="{up}{target}">
 <!-- 転送用ページ。公開後も noindex のまま残す（本体ページと重複させないため） -->
 <meta name="robots" content="noindex">
 <title>移動しました | SugarNote Official Website</title>
 <link rel="icon" href="{up}assets/img/logo-heart.png">
 <link rel="stylesheet" href="{up}assets/css/fonts.css?v=1">
-<link rel="stylesheet" href="{up}assets/css/site.css?v=5">
+<link rel="stylesheet" href="{up}assets/css/site.css?v=6">
 </head>
 <body>
 <main id="main">
@@ -34,7 +34,7 @@ TPL = """<!DOCTYPE html>
     <div class="subpage-body">
       <p>ページの場所が変わりました。自動で移動します。</p>
       <p>The page has moved. Redirecting…</p>
-      <p><a href="{up}{target}">こちらをクリック / Click here</a></p>
+      <p><a href="{up}{target}?lang={lang}">こちらをクリック / Click here</a></p>
     </div>
   </section>
 </main>

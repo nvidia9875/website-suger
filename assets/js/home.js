@@ -315,11 +315,14 @@
       var names = SN.memberNames(m, SNLang.current);
       var text = names.main + " | SugarNote Official Website " + location.href + " " + SN.brand.hashtag;
       var done = document.getElementById("share-done");
-      function ok() {
-        done.textContent = SNLang.t("solo.shareCopied");
-        setTimeout(function () { done.textContent = ""; }, 2600);
+      function show(key, ms) {
+        done.textContent = SNLang.t(key);
+        setTimeout(function () { done.textContent = ""; }, ms);
       }
-      try { navigator.clipboard.writeText(text).then(ok, ok); } catch (e) { ok(); }
+      function ok() { show("solo.shareCopied", 2600); }
+      /* コピーできない環境（権限なし・非対応）では、成功と表示せずに手動コピーを案内する */
+      function ng() { show("solo.shareFailed", 6000); }
+      try { navigator.clipboard.writeText(text).then(ok, ng); } catch (e) { ng(); }
     });
   }
 

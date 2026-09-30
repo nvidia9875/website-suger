@@ -111,21 +111,20 @@ const SNSite = (function () {
     });
   }
 
-  /* ---------- グッズ未公開のあいだ（SN.goodsLive = false）: GOODS と特商法の導線をオンラインストアへ ---------- */
+  /* ---------- グッズ未公開のあいだ（SN.goodsLive = false）: GOODS と特商法の導線をオンラインストアへ。
+     本体ページのリンクは HTML の時点でストアを向いている（data-goods-link / data-legal-link）。
+     goods.html / legal.html は本文を hidden にしてあり、goodsLive か ?preview のときだけ出す ---------- */
   function gateGoods() {
-    if (SN.goodsLive) return false;
     var page = document.body.getAttribute("data-page");
-    if ((page === "goods" || page === "legal") && !/[?&]preview\b/.test(location.search)) {
+    var preview = new URLSearchParams(location.search).has("preview");
+    if (!SN.goodsLive && (page === "goods" || page === "legal") && !preview) {
       location.replace(page === "goods" ? SN.store.url : SN.store.legal);
       return true;
     }
-    document.querySelectorAll('a[href$="goods.html"]').forEach(function (a) {
-      a.href = SN.store.url;
-      a.target = "_blank";
-      a.rel = "noopener";
-    });
-    document.querySelectorAll('a[href$="legal.html"]').forEach(function (a) {
-      a.href = SN.store.legal;
+    document.querySelectorAll("[data-goods-gated]").forEach(function (el) { el.hidden = false; });
+    if (SN.goodsLive) return false;
+    document.querySelectorAll('a[href$="goods.html"], a[href$="legal.html"]').forEach(function (a) {
+      a.href = /legal\.html$/.test(a.getAttribute("href")) ? SN.store.legal : SN.store.url;
       a.target = "_blank";
       a.rel = "noopener";
     });

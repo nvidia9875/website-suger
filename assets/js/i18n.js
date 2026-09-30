@@ -39,7 +39,7 @@ const SN_I18N = {
       added: "{name}を推しに追加しました", removed: "{name}を推しから外しました", cleared: "推しを解除しました", close: "閉じる",
     },
     solo: {
-      share: "このページをシェア", shareCopied: "コピーしました！SNSに貼ってね",
+      share: "このページをシェア", shareCopied: "コピーしました！SNSに貼ってね", shareFailed: "コピーできませんでした。アドレスバーのURLをコピーしてシェアしてください",
       twins: "双子", enter: "詳しく見る →", allMembers: "全員を見る",
       herGoods: "GOODS", herGoodsLead: "{name}と一緒に楽しむオフィシャルグッズ。", seeAllGoods: "{name}のグッズをすべて見る →",
       prev: "PREV", next: "NEXT",
@@ -103,7 +103,7 @@ const SN_I18N = {
       added: "{name} added to your oshi", removed: "{name} removed from your oshi", cleared: "Oshi cleared", close: "Close",
     },
     solo: {
-      share: "Share this page", shareCopied: "Copied! Paste it on your SNS",
+      share: "Share this page", shareCopied: "Copied! Paste it on your SNS", shareFailed: "Couldn't copy. Please copy the URL from the address bar to share",
       twins: "Twins", enter: "VIEW PROFILE →", allMembers: "All members",
       herGoods: "GOODS", herGoodsLead: "Official goods to enjoy with {name}.", seeAllGoods: "See all goods for {name} →",
       prev: "PREV", next: "NEXT",
@@ -167,7 +167,7 @@ const SN_I18N = {
       added: "เพิ่ม {name} เป็นโอชิแล้ว", removed: "เอา {name} ออกจากโอชิแล้ว", cleared: "ยกเลิกโอชิแล้ว", close: "ปิด",
     },
     solo: {
-      share: "แชร์หน้านี้", shareCopied: "คัดลอกแล้ว! นำไปแปะบน SNS ได้เลย",
+      share: "แชร์หน้านี้", shareCopied: "คัดลอกแล้ว! นำไปแปะบน SNS ได้เลย", shareFailed: "คัดลอกไม่สำเร็จ กรุณาคัดลอก URL จากแถบที่อยู่เพื่อแชร์",
       twins: "ฝาแฝด", enter: "ดูโปรไฟล์ →", allMembers: "สมาชิกทั้งหมด",
       herGoods: "GOODS", herGoodsLead: "สินค้าออฟิเชียลของ {name}", seeAllGoods: "ดูสินค้าทั้งหมดของ {name} →",
       prev: "ก่อนหน้า", next: "ถัดไป",
@@ -262,14 +262,19 @@ const SNLang = (function () {
     });
   }
 
-  /** 言語切替ボタンの配線 + 保存済み言語の適用。DOMContentLoaded 後に呼ぶ */
+  /** 言語切替ボタンの配線 + 言語の決定。DOMContentLoaded 後に呼ぶ。
+   *  優先順: URL の ?lang=（旧サイトの /en/ /th/ からの転送で付く）→ 保存済みの言語 → ページの lang 属性（記事ページ）→ ja */
   function init() {
     document.querySelectorAll("[data-lang-switch]").forEach(function (b) {
       b.addEventListener("click", function () { apply(b.getAttribute("data-lang-switch")); });
     });
-    let saved = "ja";
-    try { saved = localStorage.getItem(KEY) || "ja"; } catch (e) { /* private mode */ }
-    apply(saved);
+    let lang = new URLSearchParams(location.search).get("lang");
+    if (LANGS.indexOf(lang) < 0) {
+      lang = null;
+      try { lang = localStorage.getItem(KEY); } catch (e) { /* private mode */ }
+    }
+    if (LANGS.indexOf(lang) < 0) lang = document.documentElement.lang;
+    apply(lang);
   }
 
   return {
