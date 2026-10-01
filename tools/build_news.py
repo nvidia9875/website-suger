@@ -43,8 +43,6 @@ TPL = """<!DOCTYPE html>
 <meta property="og:url" content="https://sugarnote.jp/{lang}/information/{uu}/">
 <meta property="og:image" content="https://sugarnote.jp/assets/img/news/{img}">
 <meta name="twitter:card" content="summary_large_image">
-<!-- 公開時に外す: 検索避け（README「公開前チェック」） -->
-<meta name="robots" content="noindex">
 <meta name="theme-color" content="#F4F3F1">
 <link rel="icon" href="{up}assets/img/logo-heart.png">
 <link rel="stylesheet" href="{up}assets/css/fonts.css?v=1">
