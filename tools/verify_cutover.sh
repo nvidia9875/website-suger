@@ -200,7 +200,7 @@ check_old() {
   check_redirect "https://www.${DOMAIN}/" "/ja" --resolve "www.${DOMAIN}:443:${OLD_WWW_IP}"
   local h
   for h in "${DOMAIN}:${OLD_APEX_IP}" "www.${DOMAIN}:${OLD_WWW_IP}"; do
-    info "${h%%:*} の旧証明書の期限: $(echo | openssl s_client -connect "${h##*:}:443" -servername "${h%%:*}" 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | sed 's/notAfter=//')"
+    info "${h%%:*} の旧証明書の期限: $(curl -sv --connect-timeout 10 --max-time 15 -o /dev/null --resolve "${h%%:*}:443:${h##*:}" "https://${h%%:*}/" 2>&1 | sed -n 's/.*expire date: *//p' | head -1)"
   done
 }
 
