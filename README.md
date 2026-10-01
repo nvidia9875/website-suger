@@ -204,6 +204,8 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 
 ## 運営会社の表記（LINDO）
 
+**2026-10-01 の公開時点は FLAP entertainment のまま**（先方指示「契約書が今日までに間に合わず、運営会社の部分だけ FLAP のままに」）。フッターの「運営会社」リンク（https://flapinc.jp/）・利用規約・プライバシーポリシー・`data.js` の `company` を FLAP に戻した。`legal.html`（10月は非表示）は LINDO / 伊藤麻衣 のまま。契約が済んだら、この戻しのコミットを `git revert` すれば LINDO の表記に戻る。
+
 2026-09 に FLAP entertainment → 株式会社LINDO へ差し替え済み。所在地・電話番号は LINDO の公式サイト（styledbylindo.com）の表記どおりで、旧表記と同じ。
 
 - `assets/js/data.js` … `SN.brand.company` / `companyUrl` / `contact.tel`

@@ -19,8 +19,8 @@ const SN = {
     },
     hashtag: "#SugarNote",
     /* 運営会社・連絡先（変更手順は README を参照） */
-    company: "株式会社LINDO",
-    companyUrl: "https://styledbylindo.com/",
+    company: "FLAP entertainment",
+    companyUrl: "https://flapinc.jp/",
     contact: {
       email: "info@sugarnote.jp",
       tel: "03-5308-5822",

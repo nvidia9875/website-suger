@@ -97,13 +97,13 @@ TPL = """<!DOCTYPE html>
       <a href="{up}terms.html" data-i18n="foot.terms">利用規約</a>
       <a href="{up}privacy.html" data-i18n="foot.privacy">プライバシーポリシー</a>
       <a href="https://www.sugarnote.store/policies/legal-notice" target="_blank" rel="noopener" data-legal-link data-i18n="foot.legal">特定商取引法に基づく表記</a>
-      <a href="https://styledbylindo.com/" target="_blank" rel="noopener" data-i18n="foot.company">運営会社</a>
+      <a href="https://flapinc.jp/" target="_blank" rel="noopener" data-i18n="foot.company">運営会社</a>
     </nav>
     <p class="foot-copy" data-i18n="foot.copyright">© 2026 SugarNote Official. All Rights Reserved.</p>
   </div>
 </footer>
 
-<script src="{up}assets/js/data.js?v=5" defer></script>
+<script src="{up}assets/js/data.js?v=6" defer></script>
 <script src="{up}assets/js/goods-data.js?v=6" defer></script>
 <script src="{up}assets/js/i18n.js?v=11" defer></script>
 <script src="{up}assets/js/site.js?v=4" defer></script>
