@@ -5,6 +5,7 @@
   - 決済（カート → チェックアウト）はテーマを通らないため、このコードの影響を受けません
   - 規約ページ（/policies/）・会員ページ（/account）・データ共有オプトアウト・テーマ編集画面は転送しません
   - 商品ページは公式サイトの同じ商品へ、それ以外のページはグッズ一覧へ転送します
+  - 公式サイトに載っていない商品のページ（送料の払い直し用の ¥0 商品など）は転送しません
 {%- endcomment -%}
 {%- liquid
   assign sn_skip = false
@@ -47,6 +48,9 @@
         assign sn_to = sn_base | append: '?p=hinafu-charm'
       when 'ひなふうらんどtシャツ'
         assign sn_to = sn_base | append: '?p=hinafu-tshirt'
+      else
+        # 公式サイトに載っていない商品（送料の払い直し用の ¥0 商品など、リンクを送って使うもの）は転送しない
+        assign sn_skip = true
     endcase
   endif
 -%}
