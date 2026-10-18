@@ -27,7 +27,7 @@
 
 - お問い合わせフォームは **デモ**（送信しない）。`SN.contactForm.endpoint` を設定すると本送信になる
 - お知らせの記事ページは旧サイトと同じ URL（`<lang>/information/<uuid>/`）に移設済み。3言語とも同じ内容で、記事本文は翻訳していない
-- 売り切れの自動反映は無い（商品データから外す運用）
+- 価格・売り切れは Shopify から自動で反映する（2026-10-18〜、`assets/js/shopify.js`。README「Shopify 連携の仕組み」）
 - 商品名・説明、法務ページは日本語のみ。UI 文言だけ3言語
 - 検索避け中（noindex + robots.txt Disallow）
 - 特商法の代表責任者は「代表取締役　伊藤麻衣」（2026-09-27 先方回答で確定）
@@ -48,10 +48,10 @@
 - 起動順序は `site.js` の `SNSite.boot()` に統一（先に `sn:lang` を購読 → 描画 → `SNLang.init()`）。順序を変えると保存言語の初回復元を取りこぼす
 
 ### Shopify 連携
-- カートはこのサイトの `localStorage`（`sn-cart`）。チェックアウトは **カートパーマリンク** `https://www.sugarnote.store/cart/<variantId>:<qty>,…` に飛ばすだけ
+- カートはこのサイトの `localStorage`（`sn-cart`）。チェックアウトは Storefront API（トークン不要）の `cartCreate` で Shopify にカートを作って移動。通信できないときは **カートパーマリンク** `https://www.sugarnote.store/cart/<variantId>:<qty>,…`
 - `goods-data.js` の `variants[].sid` が Shopify のバリアント ID。商品を作り直すと ID が変わるので、追加・変更のたびに反映が必要
 - 請求額は Shopify の価格。サイトの価格は表示用なので Shopify と揃える
-- 備考欄アプリ（月額）はパーマリンクの `note` / `attributes` で置き換えられる可能性がある（未検証）
+- 備考欄アプリ（月額）は `cartCreate` の商品ごとの `attributes` で置き換えられる（2026-10-18 に API で付くことを実測。入力欄は未実装、宛名欄が必要かは先方に確認中）
 
 ### 画像
 - 商品画像は 1080×1080 JPEG。`tools/run_build.py` で提供素材（透過 PNG・アー写）から生成する（Pillow が必要）
@@ -81,7 +81,7 @@
 
 ## 7. 未決事項（判断が要るもの）
 
-- **売り切れ表示**: Shopify Storefront API（公開トークン）で自動反映するか、手動運用のままにするか
+- ~~売り切れ表示~~ → 2026-10-18 に Storefront API（トークン不要）で自動反映にした
 - **グッズの3言語**: 海外購入者向けに商品名・説明の EN / TH を誰が用意するか。Shopify Markets の設定
 - **sugarnote.store ドメイン**: 登録者・更新期限。チェックアウト用に残す前提
 - **Shopify ストアの名義**: ストアオーナー・請求カード・入金口座が FLAP 名義なら LINDO へ移す手続き

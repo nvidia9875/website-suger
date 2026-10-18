@@ -79,7 +79,7 @@
       b.addEventListener("click", function () {
         var k = b.dataset.add.split(":");
         var p = GoodsUtil.product(k[0]), v = GoodsUtil.variant(k[0], k[1]);
-        if (!p || !v) return;
+        if (!p || !v || v.soldOut) return;
         cart.add(p.id, v.key, 1);
         toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + v.label + "）" : ""));
       });
@@ -129,8 +129,9 @@
     var pre = variantKey ? GoodsUtil.variant(id, variantKey) : null;
     /* 指定が無ければ、最後に選んだ推しのバリアントを初期選択 */
     var pick = SNOshi.get();
-    if (!pre && pick) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick); }) || null;
-    current = { product: p, variant: pre || p.variants[0], qty: 1, opener: opener || null };
+    if (!pre && pick) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick) && !v.soldOut; }) || null;
+    var firstOnSale = p.variants.find(function (v) { return !v.soldOut; });
+    current = { product: p, variant: pre || firstOnSale || p.variants[0], qty: 1, opener: opener || null };
     renderDialog();
     if (!dialog.open) dialog.showModal();
   }
@@ -154,23 +155,29 @@
   }
 
   function renderDialog() {
+    if (!current.product) return;
+    /* 価格・在庫の取り直し（sn:goods）で商品オブジェクトが新しくなるので、id から引き直す */
+    current.product = GoodsUtil.product(current.product.id) || current.product;
+    current.variant = GoodsUtil.variant(current.product.id, current.variant.key) || current.product.variants[0];
     var p = current.product, v = current.variant;
-    if (!p) return;
     var isPhoto = p.variantType === "member" || p.variantType === "member2";
     var chips = p.variants.map(function (vv) {
       var col = variantColor(vv);
       var style = col ? ' data-color="' + col + '"' : "";
       var pressed = ' aria-pressed="' + (vv.key === v.key) + '"';
+      var so = vv.soldOut ? " is-soldout" : "";
+      var soTag = vv.soldOut ? '<span class="pd-soldout-tag">' + esc(SNLang.t("goods.soldOut")) + "</span>" : "";
       if (isPhoto) {
         var sub = variantChipSub(p, vv);
-        return '<button type="button" class="pd-photo" data-variant="' + vv.key + '"' + pressed + style + ">" +
+        return '<button type="button" class="pd-photo' + so + '" data-variant="' + vv.key + '"' + pressed + style + ">" +
           '<img src="assets/img/goods/' + vv.img + '" alt=""' + imgAttr(vv.img) + ' loading="lazy">' +
           "<span>" + esc(variantChipLabel(p, vv)) + (sub ? "<small>" + esc(sub) + "</small>" : "") +
-          (col ? '<span class="vc" aria-hidden="true"></span>' : "") + "</span></button>";
+          (col ? '<span class="vc" aria-hidden="true"></span>' : "") + soTag + "</span></button>";
       }
-      return '<button type="button" class="pd-variant" data-variant="' + vv.key + '"' + pressed + style + ">" +
+      return '<button type="button" class="pd-variant' + so + '" data-variant="' + vv.key + '"' + pressed + style + ">" +
         (col ? '<span class="vc" aria-hidden="true"></span>' : "") + esc(vv.label) +
-        (vv.sub ? " <small>" + esc(vv.sub) + "</small>" : "") + "</button>";
+        (vv.sub ? " <small>" + esc(vv.sub) + "</small>" : "") +
+        (vv.soldOut ? " <small>" + esc(SNLang.t("goods.soldOut")) + "</small>" : "") + "</button>";
     }).join("");
 
     var top = p.priceMax && p.priceMax !== p.price ? p.variants.find(function (vv) { return vv.price === p.priceMax; }) : null;
@@ -193,7 +200,8 @@
       '<button type="button" id="pd-minus" aria-label="' + esc(SNLang.t("goods.qtyMinus")) + '">−</button>' +
       '<output id="pd-qty" aria-live="polite">' + current.qty + "</output>" +
       '<button type="button" id="pd-plus" aria-label="' + esc(SNLang.t("goods.qtyPlus")) + '">＋</button></div>' +
-      '<button type="button" class="btn" id="pd-add">' + esc(SNLang.t("goods.addCart")) + "</button></div>" +
+      '<button type="button" class="btn" id="pd-add"' + (v.soldOut ? " disabled" : "") + ">" +
+      esc(SNLang.t(v.soldOut ? "goods.soldOut" : "goods.addCart")) + "</button></div>" +
       "</div>";
     applyColors($("#pd-body"), "--vc");
 
@@ -206,6 +214,7 @@
     $("#pd-minus").addEventListener("click", function () { current.qty = Math.max(1, current.qty - 1); $("#pd-qty").textContent = current.qty; });
     $("#pd-plus").addEventListener("click", function () { current.qty = Math.min(99, current.qty + 1); $("#pd-qty").textContent = current.qty; });
     $("#pd-add").addEventListener("click", function () {
+      if (current.variant.soldOut) return;
       cart.add(p.id, current.variant.key, current.qty);
       dialog.close();
       toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + current.variant.label + "）" : ""));
@@ -243,9 +252,10 @@
     } else {
       list.innerHTML = entries.map(function (e) {
         var k = e.p + ":" + e.v;
-        return '<li class="cd-item"><img src="assets/img/goods/' + e.variant.img + '" alt=""' + imgAttr(e.variant.img) + ' loading="lazy">' +
+        return '<li class="cd-item' + (e.variant.soldOut ? " is-soldout" : "") + '"><img src="assets/img/goods/' + e.variant.img + '" alt=""' + imgAttr(e.variant.img) + ' loading="lazy">' +
           "<div>" +
           '<p class="cd-item-name">' + esc(e.product.name) + "</p>" +
+          (e.variant.soldOut ? '<p class="cd-item-soldout">' + esc(SNLang.t("goods.soldOutInCart")) + "</p>" : "") +
           '<p class="cd-item-variant">' + esc(e.variant.label) + (e.variant.sub ? "・" + esc(e.variant.sub) : "") +
           " / " + GoodsUtil.yen(e.variant.price) + " × " + e.qty + " = <b>" + GoodsUtil.yen(e.variant.price * e.qty) + "</b></p>" +
           '<div class="cd-item-row"><div class="qty">' +
@@ -301,8 +311,39 @@
     $("#cart-total-mini").textContent = GoodsUtil.yen(cart.total());
     var checkout = $("#btn-checkout");
     checkout.href = cart.checkoutUrl();
-    checkout.setAttribute("aria-disabled", cart.count() === 0 ? "true" : "false");
+    checkout.setAttribute("aria-disabled", cart.buyableCount() === 0 ? "true" : "false");
   }
+
+  /* 購入手続き: Shopify にカートを作らせて checkoutUrl へ。通信できなければ href（カートパーマリンク）で続ける */
+  var checkingOut = false;
+  function setCheckoutBusy(busy) {
+    var btn = $("#btn-checkout");
+    checkingOut = busy;
+    btn.setAttribute("aria-busy", busy ? "true" : "false");
+    btn.textContent = SNLang.t(busy ? "goods.checkoutBusy" : "goods.checkout");
+  }
+  $("#btn-checkout").addEventListener("click", function (e) {
+    if (typeof SNShop === "undefined") return;
+    e.preventDefault();
+    var lines = cart.lines();
+    if (checkingOut || !lines.length) return;
+    var sent = JSON.stringify(lines);
+    setCheckoutBusy(true);
+    /* 通信中に数量を変えたら、古い内容で決済に進まない（もう一度押してもらう） */
+    function unchanged() {
+      if (JSON.stringify(cart.lines()) === sent) return true;
+      setCheckoutBusy(false);
+      return false;
+    }
+    SNShop.checkout(lines).then(function (url) {
+      if (unchanged()) location.assign(url);
+    }).catch(function (err) {
+      console.warn("[SNShop] カートの作成に失敗しました。カートパーマリンクで続けます。", err);
+      if (unchanged()) location.assign(cart.checkoutUrl());
+    });
+  });
+  /* 戻るボタンで戻ってきたとき（bfcache）に「開いています…」のまま残らないように */
+  window.addEventListener("pageshow", function () { if (checkingOut) setCheckoutBusy(false); });
   cart.onChange(function () {
     syncHeaderCart();
     if (drawer.open) renderCart();

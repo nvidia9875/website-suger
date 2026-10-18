@@ -76,20 +76,24 @@ const SNSite = (function () {
     opts = opts || {};
     var img = variant ? variant.img : product.img;
     var note = opts.note != null ? opts.note : cardNote(product, variant);
+    var soldOut = variant ? variant.soldOut : product.soldOut;
     var inner =
-      '<span class="goods-img"><img src="' + (opts.root || "") + 'assets/img/goods/' + img + '" alt="' + esc(product.name) + '"' + imgAttr(img) + ' loading="lazy"></span>' +
+      '<span class="goods-img"><img src="' + (opts.root || "") + 'assets/img/goods/' + img + '" alt="' + esc(product.name) + '"' + imgAttr(img) + ' loading="lazy">' +
+      (soldOut ? '<span class="goods-soldout">' + esc(SNLang.t("goods.soldOut")) + "</span>" : "") + "</span>" +
       '<span class="goods-cat">' + esc(product.category) + "</span>" +
       '<span class="goods-name">' + esc(product.name) + "</span>" +
       (note ? '<span class="goods-note">' + esc(note) + "</span>" : "") +
       '<span class="goods-price">' + GoodsUtil.yen(variant ? variant.price : product.price) + (product.priceMax && !variant ? "〜" : "") + "</span>" +
       '<span class="goods-cta">' + esc(SNLang.t("goods.detail")) + "</span>";
-    if (opts.href) return '<li><a class="goods-card" href="' + url(opts.href) + '">' + inner + "</a></li>";
-    var btn = '<button type="button" class="goods-card" data-product="' + product.id + '"' +
+    var cls = "goods-card" + (soldOut ? " is-soldout" : "");
+    if (opts.href) return '<li><a class="' + cls + '" href="' + url(opts.href) + '">' + inner + "</a></li>";
+    var btn = '<button type="button" class="' + cls + '" data-product="' + product.id + '"' +
       (variant ? ' data-variant="' + variant.key + '"' : "") + ' aria-haspopup="dialog">' + inner + "</button>";
     /* quickAdd: 推しの棚用。カードの下に「カートへ」を兄弟要素として置く（button の入れ子を避ける） */
     if (opts.quickAdd && variant) {
       return '<li class="has-add">' + btn +
-        '<button type="button" class="goods-add" data-add="' + product.id + ":" + variant.key + '">' + esc(SNLang.t("goods.addCartShort")) + "</button></li>";
+        '<button type="button" class="goods-add" data-add="' + product.id + ":" + variant.key + '"' + (soldOut ? " disabled" : "") + ">" +
+        esc(SNLang.t(soldOut ? "goods.soldOut" : "goods.addCartShort")) + "</button></li>";
     }
     return "<li>" + btn + "</li>";
   }
@@ -142,6 +146,7 @@ const SNSite = (function () {
       if (setup) setup();
       document.addEventListener("sn:lang", renderAll);
       document.addEventListener("sn:oshi", renderAll);
+      document.addEventListener("sn:goods", renderAll); /* shopify.js が価格・在庫を取り直したとき */
       renderAll();
       SNLang.init();
     });

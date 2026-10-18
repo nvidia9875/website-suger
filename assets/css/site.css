@@ -168,7 +168,13 @@ html:lang(th) .sec-title small { font-family: var(--th); }
   transition: border-color var(--dur) var(--ease);
 }
 .goods-card:hover { border-color: var(--ink); }
-.goods-img { display: block; aspect-ratio: 1; overflow: hidden; background: var(--paper); }
+.goods-img { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--paper); }
+/* 売り切れ（shopify.js が Shopify の在庫から付ける）: 写真を薄くして左上に札 */
+.goods-soldout {
+  position: absolute; top: 8px; left: 8px; padding: 4px 9px;
+  background: var(--ink); color: var(--paper); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em;
+}
+.goods-card.is-soldout .goods-img img { opacity: 0.45; filter: grayscale(1); }
 .goods-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
 .goods-card:hover .goods-img img { transform: scale(1.04); }
 .goods-cat { font-family: var(--en); font-weight: 600; font-size: 10px; letter-spacing: 0.2em; color: var(--ink-soft); margin-top: 12px; }
@@ -191,6 +197,8 @@ html:lang(ja) .goods-cta, html:lang(th) .goods-cta { font-family: inherit; lette
   transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .goods-add:hover { background: var(--ink); color: var(--paper); }
+.goods-add:disabled { cursor: default; opacity: 0.4; }
+.goods-add:disabled:hover { background: transparent; color: var(--ink); }
 
 /* ---------- フッター ---------- */
 .foot { margin-top: clamp(64px, 9vw, 120px); border-top: 1px solid var(--hairline); }

@@ -1,8 +1,10 @@
 /* SNCart — カートのロジック（UIは goods.js が描画する）
  * ・localStorage に永続（キー sn-cart）
  * ・合計 / 点数 / まとめ買い特典（¥10,000 / ¥20,000）の進捗を算出
- * ・チェックアウトは Shopify のカートパーマリンク（checkoutUrl）で実決済へ
+ * ・購入手続きは lines() を SNShop.checkout（Shopify にカートを作らせる）へ渡す。
+ *   通信できないときの予備が Shopify のカートパーマリンク（checkoutUrl）
  *   例: https://www.sugarnote.store/cart/47393203257580:1,47393174913260:2
+ * ・売り切れ（variant.soldOut。shopify.js が反映）の行はカートに残すが、合計・購入手続きには含めない
  */
 function SNCart(storageKey) {
   "use strict";
@@ -34,6 +36,11 @@ function SNCart(storageKey) {
   }
   function emit() { save(); listeners.forEach(function (fn) { fn(api); }); }
   function find(p, v) { return items.find(function (it) { return it.p === p && it.v === v; }); }
+  function buyable(it) {
+    var v = GoodsUtil.variant(it.p, it.v);
+    return v && !v.soldOut ? v : null;
+  }
+  function sidOf(v) { return String(v.sid).replace(/\D/g, ""); }
 
   save(); /* 正規化した内容で保存し直す */
 
@@ -45,7 +52,8 @@ function SNCart(storageKey) {
       });
     },
     add: function (p, v, qty) {
-      if (!GoodsUtil.variant(p, v)) return;
+      var variant = GoodsUtil.variant(p, v);
+      if (!variant || variant.soldOut) return;
       qty = clampQty(qty) || 1;
       var hit = find(p, v);
       if (hit) hit.q = Math.min(hit.q + qty, 99);
@@ -62,19 +70,24 @@ function SNCart(storageKey) {
     remove: function (p, v) { items = items.filter(function (it) { return !(it.p === p && it.v === v); }); emit(); },
     clear: function () { items = []; emit(); },
     count: function () { return items.reduce(function (s, it) { return s + it.q; }, 0); },
+    /* 購入手続きに進める点数（売り切れを除く） */
+    buyableCount: function () { return items.reduce(function (s, it) { return s + (buyable(it) ? it.q : 0); }, 0); },
     total: function () {
       return items.reduce(function (s, it) {
-        var variant = GoodsUtil.variant(it.p, it.v);
+        var variant = buyable(it);
         return s + (variant ? variant.price * it.q : 0);
       }, 0);
     },
-    /* Shopify チェックアウトURL。空カート時はストアのカートページ */
-    checkoutUrl: function () {
-      var parts = items.map(function (it) {
-        var v = GoodsUtil.variant(it.p, it.v);
-        var sid = v && String(v.sid).replace(/\D/g, "");
-        return sid ? sid + ":" + clampQty(it.q) : null;
+    /* SNShop.checkout に渡す行（売り切れを除く） */
+    lines: function () {
+      return items.map(function (it) {
+        var v = buyable(it);
+        return v ? { sid: sidOf(v), qty: clampQty(it.q) } : null;
       }).filter(Boolean);
+    },
+    /* 予備の購入手続き URL（カートパーマリンク）。空カート時はストアのカートページ */
+    checkoutUrl: function () {
+      var parts = this.lines().map(function (l) { return l.sid + ":" + l.qty; });
       return parts.length ? GOODS.store.checkoutBase + "/cart/" + parts.join(",") : GOODS.store.checkoutBase + "/cart";
     },
     /* 特典進捗: 各ティアの獲得枚数と「次まであといくら」 */

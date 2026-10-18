@@ -26,7 +26,7 @@ TPL = """<!DOCTYPE html>
 <title>移動しました | SugarNote Official Website</title>
 <link rel="icon" href="{up}assets/img/logo-heart.png">
 <link rel="stylesheet" href="{up}assets/css/fonts.css?v=1">
-<link rel="stylesheet" href="{up}assets/css/site.css?v=6">
+<link rel="stylesheet" href="{up}assets/css/site.css?v=7">
 </head>
 <body>
 <main id="main">

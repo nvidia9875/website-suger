@@ -104,11 +104,13 @@ python3 -m http.server 8000
 1. Shopify 管理画面で商品を作る（価格・在庫・配送は Shopify が正）
 2. **バリアント ID** を控える。商品 → バリアントを開いたときの URL 末尾の数字（例 `47393203257580`）。まとめて見るなら `https://www.sugarnote.store/products.json`
 3. 商品画像を 1080×1080 の WebP にして `assets/img/goods/` に置く（下の「商品画像の書き出し」）
-4. `goods-data.js` の `products` に追記する。`variants[].sid` にバリアント ID、`price` は Shopify と同じ額
+4. `goods-data.js` の `products` に追記する。`variants[].sid` にバリアント ID。`price` は Shopify と同じ額（表示時に Shopify の額で上書きされるので、通信できないときの予備）
 5. トップの GOODS 欄に出したい商品は `featured` に id を並べる（4点）
 6. HTML の `goods-data.js?v=` を上げる
 
-売り切れ・販売終了は、現状は `products` から外す（または該当 `variants` を消す）ことで対応します。Shopify の在庫を自動で反映する仕組みはまだありません（[docs/HANDOVER.md](docs/HANDOVER.md) の未決事項）。
+**価格の変更と売り切れは Shopify 側だけで済む**（2026-10-18〜）。ページを開くたびに `assets/js/shopify.js` が全バリアントの価格・在庫を Shopify から取り直し、売り切れのバリアントには「売り切れ」を出してカートに入れられなくする。販売終了で Shopify から消した（非公開にした）バリアントも売り切れ扱いになる。
+
+サイトの更新が要るのは、**商品やバリアントを新しく足すとき**だけ（写真・説明・メンバーとの対応はサイト側で持っているため）。
 
 ### 商品画像の書き出し
 
@@ -127,9 +129,13 @@ cp out/*.webp assets/img/goods/
 ### Shopify 連携の仕組み
 
 - 一覧・詳細・カートはこのサイトが描画し、カートは `localStorage`（キー `sn-cart`）に保存
-- 「レジにすすむ」は Shopify の **カートパーマリンク** `https://www.sugarnote.store/cart/<バリアントID>:<数量>,…` に飛ばすだけ。支払い・送料計算・注文管理はすべて Shopify
-- 請求額は Shopify の価格で決まる。サイトの表示価格は見た目だけなので、ずれないように同じ額を書く
-- `checkoutBase` を変えるときは `goods-data.js` の `GOODS.store.checkoutBase`
+- **Storefront API をトークン無しで使っている**（`assets/js/shopify.js`、宛先 `https://1ufd2p-j3.myshopify.com/api/2025-10/graphql.json`）。Shopify の公開アクセスで、Headless アプリもトークンも要らない（2026-10-18 実測。CORS も `*`）
+  - 表示時: `nodes(ids)` で全バリアントの価格・`availableForSale` を取り、`GoodsUtil.applyLive` で反映 → `sn:goods` で描き直す。グッズ公開前（`goodsLive = false`）はグッズページの `?preview` でだけ取りにいく
+  - 「レジにすすむ」: `cartCreate` で Shopify にカートを作らせ、返ってきた `checkoutUrl`（`www.sugarnote.store` 等の許可したホストのみ）へ移動。売り切れの行は送らない
+  - 商品ごとの属性（宛名・ニックネームなど）は `cartCreate` の `lines[].attributes` で付けられる（実測済み。入力欄は未実装）
+- **通信できないとき**は `goods-data.js` の価格で表示し、購入は **カートパーマリンク** `https://www.sugarnote.store/cart/<バリアントID>:<数量>,…` で続ける（従来の方式）
+- 支払い・送料計算・注文管理はすべて Shopify。請求額は Shopify の価格で決まる
+- `checkoutBase` を変えるときは `goods-data.js` の `GOODS.store.checkoutBase`。API の宛先は `shopify.js` の `ENDPOINT`、CSP の `connect-src`（goods / index / member の3ページ）も合わせて変える
 
 ### お問い合わせフォーム
 
@@ -147,16 +153,27 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 - トップの GOODS 欄は「オンラインストアへ」の案内だけ、メンバーページのグッズ欄は `hidden`
 - `goods.html` / `legal.html` は本文（`main[data-goods-gated]`）を `hidden` にしてあり、JS がストアへ転送する。`?preview` を付けると確認用に開ける（例: `goods.html?preview`）。JS が無いと `<noscript>` の案内だけが出る
 
-11月上旬にグッズを公開するときの手順（8つ）:
+11月上旬にグッズを公開するときの手順。**旧ストアの転送（手順 7）は、新サイトの公開を本番で確かめてから**行う。
+順番を逆にすると、古い `data.js`（`goodsLive = false`）が残っている人は「旧ストア → goods.html → 旧ストア …」と転送が往復して開けなくなる。
 
-1. `goods.html?preview` で商品・価格・在庫が Shopify と合っているか確認し、`goods-data.js` を最新にする（Shopify から自動で読み込む作りにした場合は不要）
-2. `legal.html` の販売業者を確認する。Shopify の持ち主が LINDO に移っていれば LINDO のまま、まだなら FLAP の表記にする
+**新サイト側を公開する**
+
+1. `goods.html?preview` で商品・価格・在庫が Shopify と合っているか確認し、`goods-data.js` を最新にする（Shopify から自動で読み込む作りにした場合も、掲載する商品と除外する商品が意図どおりかは確認する）
+2. `legal.html` の販売業者を確認する（Shopify の持ち主は 2026-10-10 に LINDO へ移ったので LINDO のまま）
 3. `data.js` の `goodsLive` を `true` にする
 4. リンクを内部ページに戻す: `data-goods-link` の付いたリンクを `goods.html`（記事テンプレートは `{up}goods.html`）へ、`data-legal-link` を `legal.html` へ。`target="_blank" rel="noopener"` も外す（`grep -rn "data-goods-link\|data-legal-link" --include="*.html" --include="*.py" .` で全部出る）
 5. `goods.html` と `legal.html` から `<noscript>…</noscript>`・その下のコメント行・`<meta name="robots" content="noindex">` とその上のコメント行を消し、`<main id="main" data-goods-gated hidden>` の `hidden` を外す
 6. `data.js` を読み込んでいる全 HTML と `tools/build_news.py` の `data.js?v=` を上げ、`python3 tools/build_news.py` で記事ページを再生成して push
-7. 旧ストアのテーマに `docs/shopify/old-store-redirect.liquid` を貼る（旧ストアのページが新サイトへ移る）
-8. `GOODS_LIVE=yes bash tools/verify_cutover.sh final` が全部 OK、ブラウザでカート → Shopify の決済画面まで進めることを確認（支払いはしない）
+
+**本番で確かめてから、旧ストアを転送する**
+
+7. Actions のデプロイ完了を待ち、本番（https://sugarnote.jp）で確認する。ここで NG なら旧ストアには触らない
+   - `GOODS_LIVE=yes bash tools/verify_cutover.sh final` が全部 OK
+   - ブラウザ（シークレットウィンドウ）で `goods.html` が転送されずに開き、カート → Shopify の決済画面まで進める（支払いはしない）
+8. 旧ストアのテーマに `docs/shopify/old-store-redirect.liquid` を貼る（オンラインストア → テーマ → コードを編集 → `layout/theme.liquid` の `<head>` の直後）。貼る前にテーマを複製しておく
+9. 旧ストアの商品ページ（例: `https://sugarnote.store/products/メンバーカラーアクリルスタンド`）とトップを開き、新サイトの同じ商品・グッズ一覧へ移ることを確認する。`/policies/legal-notice` は転送されないこと
+
+**元に戻すとき**は逆の順番: 先に旧ストアのテーマから転送コードを外す（手順 8 で複製したテーマを公開に戻すのが早い）→ その後で `goodsLive` を `false` に戻して push。逆にすると転送が往復する。
 
 ## 公開（GitHub Pages）
 
@@ -184,7 +201,7 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
 **守っていること**
 
 - 外部スクリプトを一切読まない。フォントも自前ホスト。外部と通信するのは TimeTree と YouTube の埋め込みだけ
-- 全ページに CSP（`<meta http-equiv="Content-Security-Policy">`）。`default-src 'self'` / `script-src 'self'` / `style-src 'self'` / `frame-src` は youtube-nocookie と timetreeapp のみ / `connect-src` は self と Web3Forms / `object-src 'none'` / `base-uri 'self'` / `form-action 'self'`
+- 全ページに CSP（`<meta http-equiv="Content-Security-Policy">`）。`default-src 'self'` / `script-src 'self'` / `style-src 'self'` / `frame-src` は youtube-nocookie と timetreeapp のみ / `connect-src` は self と Web3Forms（goods / index / member の3ページは Shopify の Storefront API `https://1ufd2p-j3.myshopify.com` も） / `object-src 'none'` / `base-uri 'self'` / `form-action 'self'`
 - 描画はすべて `esc()` でエスケープし、`href` は `SNSite.url()` で http(s) / mailto / tel / サイト内相対だけ通す（`javascript:` は `#` になる）。URL パラメータ（`?m` `?c` `?p` `?v`）はデータに実在する値だけ受け付け、それ以外は無視
 - カート（localStorage）は読み込み時に正規化する。実在する商品・バリアントだけ、数量は 1〜99 の整数。チェックアウト URL のバリアント ID は数字以外を除去
 - 請求額は Shopify が決めるので、サイト側で価格や数量を書き換えても注文には影響しない

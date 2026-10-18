@@ -46,7 +46,7 @@ TPL = """<!DOCTYPE html>
 <meta name="theme-color" content="#F4F3F1">
 <link rel="icon" href="{up}assets/img/logo-heart.png">
 <link rel="stylesheet" href="{up}assets/css/fonts.css?v=1">
-<link rel="stylesheet" href="{up}assets/css/site.css?v=6">
+<link rel="stylesheet" href="{up}assets/css/site.css?v=7">
 </head>
 <body data-page="news">
 <a class="skip" href="#main">本文へスキップ</a>
@@ -102,9 +102,9 @@ TPL = """<!DOCTYPE html>
 </footer>
 
 <script src="{up}assets/js/data.js?v=6" defer></script>
-<script src="{up}assets/js/goods-data.js?v=6" defer></script>
-<script src="{up}assets/js/i18n.js?v=11" defer></script>
-<script src="{up}assets/js/site.js?v=4" defer></script>
+<script src="{up}assets/js/goods-data.js?v=7" defer></script>
+<script src="{up}assets/js/i18n.js?v=12" defer></script>
+<script src="{up}assets/js/site.js?v=5" defer></script>
 <script src="{up}assets/js/oshi.js?v=3" defer></script>
 <script src="{up}assets/js/page.js?v=1" defer></script>
 </body>

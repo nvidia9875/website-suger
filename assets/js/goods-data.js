@@ -5,7 +5,8 @@
  * 仕組み: 商品一覧・カートはこのサイトで描画し、決済だけ Shopify のチェックアウトへ渡す。
  *   variants[].sid = Shopify のバリアントID。カートパーマリンク
  *   https://www.sugarnote.store/cart/<sid>:<数量>,<sid>:<数量> で Shopify のチェックアウトが開く。
- *   請求額は Shopify 側の価格で決まる。ここに書く price は表示用なので Shopify と必ず揃えること。
+ *   請求額は Shopify 側の価格で決まる。表示時に shopify.js が Shopify の価格・在庫で上書きする（applyLive）。
+ *   ここに書く price は通信できないときの予備なので、Shopify と同じ額にしておく。
  *
  * メンバー情報（名前・色・顔写真）は data.js の SN.members を参照する。ここでは id だけを持つ。
  * 商品の追加・変更手順は README.md「グッズの更新」。
@@ -69,7 +70,6 @@ const GOODS = {
       contents: ["ランダムブロマイド 3枚入り", "各個人ブロマイド 6種 / ALLメンバーブロマイド 5種＝全41種"],
       notes: ["ランダム封入のため絵柄はお選びいただけません"],
       random: { label: "全41種" },
-      random: { label: "全35種" },
     },
     {
       id: "yukata-bromide",
@@ -292,6 +292,20 @@ const GoodsUtil = {
       if (p.shelfMembers && p.shelfMembers.includes(memberId)) return { product: p, variant: p.variants[0] };
       return null;
     }).filter(Boolean);
+  },
+  /* Shopify から取り直した価格・在庫（shopify.js）を反映する。live: { "<sid>": { price, available } }
+   *   バリアントに price（Shopify の額）と soldOut を、商品に price / priceMax（販売中の範囲）と soldOut（全部売り切れ）を付け直す */
+  applyLive(live) {
+    GOODS.products = GOODS.products.map((p) => {
+      const variants = p.variants.map((v) => {
+        const l = live[String(v.sid)];
+        return l ? Object.assign({}, v, { price: l.price != null ? l.price : v.price, soldOut: !l.available }) : v;
+      });
+      const onSale = variants.filter((v) => !v.soldOut);
+      const prices = (onSale.length ? onSale : variants).map((v) => v.price);
+      const min = Math.min(...prices), max = Math.max(...prices);
+      return Object.assign({}, p, { variants, price: min, priceMax: max > min ? max : undefined, soldOut: onSale.length === 0 });
+    });
   },
   /* カテゴリ絞り込み */
   byCategory(key) {
