@@ -132,8 +132,8 @@ cp out/*.webp assets/img/goods/
 - **Storefront API をトークン無しで使っている**（`assets/js/shopify.js`、宛先 `https://1ufd2p-j3.myshopify.com/api/2025-10/graphql.json`）。Shopify の公開アクセスで、Headless アプリもトークンも要らない（2026-10-18 実測。CORS も `*`）
   - 表示時: `nodes(ids)` で全バリアントの価格・`availableForSale` を取り、`GoodsUtil.applyLive` で反映 → `sn:goods` で描き直す。グッズ公開前（`goodsLive = false`）はグッズページの `?preview` でだけ取りにいく
   - 「レジにすすむ」: `cartCreate` で Shopify にカートを作らせ、返ってきた `checkoutUrl`（`www.sugarnote.store` 等の許可したホストのみ）へ移動。売り切れの行は送らない
-  - 商品ごとの属性（宛名・ニックネームなど）は `cartCreate` の `lines[].attributes` で付けられる（実測済み。入力欄は未実装）
-- **通信できないとき**は `goods-data.js` の価格で表示し、購入は **カートパーマリンク** `https://www.sugarnote.store/cart/<バリアントID>:<数量>,…` で続ける（従来の方式）
+  - **宛名・ニックネーム欄**: `goods-data.js` の商品に `nickname: { key: "宛名・ニックネーム", max: 20, required: false }` を書くと、その商品のダイアログに入力欄が出る（書かない商品には出ない。2026-10-20 時点ではどの商品にも設定していない）。入力は行ごとに `cartCreate` の `lines[].attributes`（項目名 = `key`）で Shopify の注文に載る。`key` は発送担当が見る名前なので、今のストアの備考欄アプリ（Infinite Options）の項目名と揃える
+- **通信できないとき**は `goods-data.js` の価格で表示し、購入は **カートパーマリンク** `https://www.sugarnote.store/cart/<バリアントID>:<数量>,…` で続ける（従来の方式）。**ただし宛名の入った行があるときは切り替えない**（パーマリンクでは宛名を渡せないため。カート内に「もう一度お試しください」を出す）。同じ理由で、宛名がある間は「レジにすすむ」の href を外している
 - 支払い・送料計算・注文管理はすべて Shopify。請求額は Shopify の価格で決まる
 - `checkoutBase` を変えるときは `goods-data.js` の `GOODS.store.checkoutBase`。API の宛先は `shopify.js` の `ENDPOINT`、CSP の `connect-src`（goods / index / member の3ページ）も合わせて変える
 

@@ -80,6 +80,8 @@
         var k = b.dataset.add.split(":");
         var p = GoodsUtil.product(k[0]), v = GoodsUtil.variant(k[0], k[1]);
         if (!p || !v || v.soldOut) return;
+        /* 宛名欄のある商品は、名前を書けるようにダイアログで入れてもらう */
+        if (GoodsUtil.nicknameOf(p)) { openProduct(p.id, v.key, b); return; }
         cart.add(p.id, v.key, 1);
         toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + v.label + "）" : ""));
       });
@@ -121,7 +123,7 @@
 
   /* ---------- 商品ダイアログ ---------- */
   var dialog = $("#product-dialog");
-  var current = { product: null, variant: null, qty: 1, opener: null };
+  var current = { product: null, variant: null, qty: 1, nickname: "", opener: null };
 
   function openProduct(id, variantKey, opener) {
     var p = GoodsUtil.product(id);
@@ -131,7 +133,7 @@
     var pick = SNOshi.get();
     if (!pre && pick) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick) && !v.soldOut; }) || null;
     var firstOnSale = p.variants.find(function (v) { return !v.soldOut; });
-    current = { product: p, variant: pre || firstOnSale || p.variants[0], qty: 1, opener: opener || null };
+    current = { product: p, variant: pre || firstOnSale || p.variants[0], qty: 1, nickname: "", opener: opener || null };
     renderDialog();
     if (!dialog.open) dialog.showModal();
   }
@@ -152,6 +154,19 @@
     if (m) return SN.colorOf(m).hex;
     if (v.members && v.members.length) return SN.colorOf(SN.member(v.members[0])).hex;
     return null;
+  }
+
+  /* 宛名欄（goods-data.js の nickname がある商品だけ）。入力値は current.nickname に持ち、描き直しでも消えない */
+  function nicknameField(p) {
+    var nick = GoodsUtil.nicknameOf(p);
+    if (!nick) return "";
+    var hint = SNLang.fmt(nick.required ? "goods.nicknameRequired" : "goods.nicknameOptional", { max: nick.max });
+    return '<div class="pd-nickname">' +
+      '<label for="pd-nickname">' + esc(SNLang.t("goods.nickname")) + " <small>（" + esc(hint) + "）</small></label>" +
+      '<input type="text" id="pd-nickname" autocomplete="off" placeholder="' + esc(SNLang.t("goods.nicknamePh")) + '"' +
+      ' value="' + esc(current.nickname) + '"' + (nick.required ? " required" : "") + ' aria-describedby="pd-nickname-error">' +
+      '<p class="pd-nickname-error" id="pd-nickname-error" role="alert" hidden>' + esc(SNLang.t("goods.nicknameMissing")) + "</p>" +
+      "</div>";
   }
 
   function renderDialog() {
@@ -196,6 +211,7 @@
       '<div class="pd-variants' + (isPhoto ? " is-photo" : "") + '">' + chips + "</div>" +
       '<ul class="pd-contents">' + p.contents.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("") + "</ul>" +
       (p.notes.length ? '<ul class="pd-notes">' + p.notes.map(function (n) { return "<li>※ " + esc(n) + "</li>"; }).join("") + "</ul>" : "") +
+      nicknameField(p) +
       '<div class="pd-buy"><div class="qty" role="group" aria-label="' + esc(SNLang.t("goods.qty")) + '">' +
       '<button type="button" id="pd-minus" aria-label="' + esc(SNLang.t("goods.qtyMinus")) + '">−</button>' +
       '<output id="pd-qty" aria-live="polite">' + current.qty + "</output>" +
@@ -213,11 +229,36 @@
     });
     $("#pd-minus").addEventListener("click", function () { current.qty = Math.max(1, current.qty - 1); $("#pd-qty").textContent = current.qty; });
     $("#pd-plus").addEventListener("click", function () { current.qty = Math.min(99, current.qty + 1); $("#pd-qty").textContent = current.qty; });
+    var nickInput = $("#pd-nickname");
+    if (nickInput) {
+      /* 文字数は絵文字も1文字で数える（HTML の maxlength は UTF-16 単位なので使わない）。IME 変換中は切らない */
+      var limit = function () {
+        var max = GoodsUtil.nicknameOf(p).max;
+        var chars = Array.from(nickInput.value);
+        if (chars.length > max) nickInput.value = chars.slice(0, max).join("");
+        current.nickname = nickInput.value;
+      };
+      nickInput.addEventListener("input", function (e) {
+        if (!e.isComposing) limit(); else current.nickname = nickInput.value;
+        nickInput.removeAttribute("aria-invalid");
+        $("#pd-nickname-error").hidden = true;
+      });
+      nickInput.addEventListener("compositionend", limit);
+    }
     $("#pd-add").addEventListener("click", function () {
       if (current.variant.soldOut) return;
-      cart.add(p.id, current.variant.key, current.qty);
+      var nick = GoodsUtil.nicknameOf(p);
+      var name = nick ? GoodsUtil.cleanNickname(current.nickname, nick.max) : "";
+      if (nick && nick.required && !name) {
+        nickInput.setAttribute("aria-invalid", "true");
+        $("#pd-nickname-error").hidden = false;
+        nickInput.focus();
+        return;
+      }
+      if (!cart.add(p.id, current.variant.key, current.qty, name)) return;
       dialog.close();
-      toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + current.variant.label + "）" : ""));
+      toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + current.variant.label + "）" : "") +
+        (name ? " / " + SNLang.t("goods.nicknameInCart") + ": " + name : ""));
     });
   }
 
@@ -251,11 +292,13 @@
       list.innerHTML = '<li class="cd-empty">' + esc(SNLang.t("goods.empty")) + "</li>";
     } else {
       list.innerHTML = entries.map(function (e) {
-        var k = e.p + ":" + e.v;
-        return '<li class="cd-item' + (e.variant.soldOut ? " is-soldout" : "") + '"><img src="assets/img/goods/' + e.variant.img + '" alt=""' + imgAttr(e.variant.img) + ' loading="lazy">' +
+        var k = String(e.index);
+        return '<li class="cd-item' + (e.variant.soldOut || e.needsNickname ? " is-soldout" : "") + '"><img src="assets/img/goods/' + e.variant.img + '" alt=""' + imgAttr(e.variant.img) + ' loading="lazy">' +
           "<div>" +
           '<p class="cd-item-name">' + esc(e.product.name) + "</p>" +
           (e.variant.soldOut ? '<p class="cd-item-soldout">' + esc(SNLang.t("goods.soldOutInCart")) + "</p>" : "") +
+          (e.nickname ? '<p class="cd-item-nickname">' + esc(SNLang.t("goods.nicknameInCart")) + ": " + esc(e.nickname) + "</p>" : "") +
+          (e.needsNickname ? '<p class="cd-item-soldout">' + esc(SNLang.t("goods.nicknameNeeded")) + "</p>" : "") +
           '<p class="cd-item-variant">' + esc(e.variant.label) + (e.variant.sub ? "・" + esc(e.variant.sub) : "") +
           " / " + GoodsUtil.yen(e.variant.price) + " × " + e.qty + " = <b>" + GoodsUtil.yen(e.variant.price * e.qty) + "</b></p>" +
           '<div class="cd-item-row"><div class="qty">' +
@@ -266,18 +309,15 @@
           "</div></div></li>";
       }).join("");
     }
-    function entryOf(key) {
-      var k = key.split(":");
-      return cart.entries().find(function (x) { return x.p === k[0] && x.v === k[1]; });
-    }
+    function entryOf(key) { return cart.entries()[Number(key)]; }
     list.querySelectorAll("[data-dec]").forEach(function (b) {
-      b.addEventListener("click", function () { var it = entryOf(b.dataset.dec); if (it) cart.setQty(it.p, it.v, it.qty - 1); });
+      b.addEventListener("click", function () { var it = entryOf(b.dataset.dec); if (it) cart.setQty(it.index, it.qty - 1); });
     });
     list.querySelectorAll("[data-inc]").forEach(function (b) {
-      b.addEventListener("click", function () { var it = entryOf(b.dataset.inc); if (it) cart.setQty(it.p, it.v, it.qty + 1); });
+      b.addEventListener("click", function () { var it = entryOf(b.dataset.inc); if (it) cart.setQty(it.index, it.qty + 1); });
     });
     list.querySelectorAll("[data-remove]").forEach(function (b) {
-      b.addEventListener("click", function () { var k = b.dataset.remove.split(":"); cart.remove(k[0], k[1]); });
+      b.addEventListener("click", function () { cart.remove(Number(b.dataset.remove)); });
     });
     renderMeter();
     $("#cd-total").textContent = GoodsUtil.yen(cart.total());
@@ -310,8 +350,31 @@
     $("#cart-count").textContent = cart.count();
     $("#cart-total-mini").textContent = GoodsUtil.yen(cart.total());
     var checkout = $("#btn-checkout");
-    checkout.href = cart.checkoutUrl();
+    /* 宛名がある間は href を外す（新しいタブ・中クリックで開くと、宛名を渡せないカートパーマリンクになるため） */
+    if (cart.hasNicknames()) {
+      checkout.removeAttribute("href");
+      checkout.setAttribute("role", "button");
+      checkout.setAttribute("tabindex", "0");
+    } else {
+      checkout.href = cart.checkoutUrl();
+      checkout.removeAttribute("role");
+      checkout.removeAttribute("tabindex");
+    }
     checkout.setAttribute("aria-disabled", cart.buyableCount() === 0 ? "true" : "false");
+  }
+
+  /* カート内のお知らせ（モーダルの外のトーストは読み上げられず、スマホではドロワーに隠れるため） */
+  function cartAlert(msg) {
+    var el = $("#cd-alert");
+    if (!el) {
+      el = document.createElement("p");
+      el.id = "cd-alert";
+      el.className = "cd-alert";
+      el.setAttribute("role", "alert");
+      $("#btn-checkout").insertAdjacentElement("beforebegin", el);
+    }
+    el.textContent = msg;
+    el.hidden = !msg;
   }
 
   /* 購入手続き: Shopify にカートを作らせて checkoutUrl へ。通信できなければ href（カートパーマリンク）で続ける */
@@ -322,8 +385,16 @@
     btn.setAttribute("aria-busy", busy ? "true" : "false");
     btn.textContent = SNLang.t(busy ? "goods.checkoutBusy" : "goods.checkout");
   }
+  $("#btn-checkout").addEventListener("keydown", function (e) {
+    /* href を外して role=button にしている間は、Enter / Space でも押せるようにする */
+    if (!this.hasAttribute("href") && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); this.click(); }
+  });
   $("#btn-checkout").addEventListener("click", function (e) {
-    if (typeof SNShop === "undefined") return;
+    cartAlert("");
+    if (typeof SNShop === "undefined") {
+      if (!this.hasAttribute("href")) cartAlert(SNLang.t("goods.checkoutFailed"));
+      return;
+    }
     e.preventDefault();
     var lines = cart.lines();
     if (checkingOut || !lines.length) return;
@@ -338,6 +409,13 @@
     SNShop.checkout(lines).then(function (url) {
       if (unchanged()) location.assign(url);
     }).catch(function (err) {
+      /* 宛名はカートパーマリンクでは渡せないので、宛名がある注文は予備に切り替えず、もう一度押してもらう */
+      if (cart.hasNicknames()) {
+        console.warn("[SNShop] カートの作成に失敗しました（宛名があるため予備の方法には切り替えません）。", err);
+        setCheckoutBusy(false);
+        cartAlert(SNLang.t("goods.checkoutFailed"));
+        return;
+      }
       console.warn("[SNShop] カートの作成に失敗しました。カートパーマリンクで続けます。", err);
       if (unchanged()) location.assign(cart.checkoutUrl());
     });

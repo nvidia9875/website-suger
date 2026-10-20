@@ -43,7 +43,11 @@ const GOODS = {
   /* 商品。img は assets/img/goods/ 配下。variantType: fixed | member | member2 | size
    *   member  … バリアント key がメンバー id（"pair" のような複数人バリアントは members[] を持つ）
    *   member2 … 衣装 × メンバー（variant.member でメンバーを指す）
-   *   size    … サイズ違い。shelfMembers があるものは特定メンバーの棚にも出す */
+   *   size    … サイズ違い。shelfMembers があるものは特定メンバーの棚にも出す
+   * nickname（任意）: 商品ごとの宛名・ニックネーム欄を出す。書かない商品には欄が出ない
+   *   nickname: { key: "宛名・ニックネーム", max: 20, required: false }
+   *   key … Shopify の注文に載る項目名（発送担当が見る名前。今のストアの備考欄アプリと揃える）
+   *   max … 最大文字数 / required … true なら空欄ではカートに入れられない（推しの棚の「カートへ」もダイアログを開く） */
   products: [
     {
       id: "seifuku-bromide",
@@ -306,6 +310,17 @@ const GoodsUtil = {
       const min = Math.min(...prices), max = Math.max(...prices);
       return Object.assign({}, p, { variants, price: min, priceMax: max > min ? max : undefined, soldOut: onSale.length === 0 });
     });
+  },
+  /* 宛名欄の設定（無ければ null）。key / max / required を既定値で補う */
+  nicknameOf(p) {
+    if (!p || !p.nickname) return null;
+    const n = p.nickname;
+    return { key: n.key || "宛名・ニックネーム", max: n.max > 0 ? n.max : 20, required: n.required === true };
+  },
+  /* 宛名の正規化: 制御文字を除き、空白を詰め、前後を切り、max 文字（絵文字も1文字）で切る */
+  cleanNickname(value, max) {
+    const s = String(value == null ? "" : value).replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim();
+    return Array.from(s).slice(0, max).join("");
   },
   /* カテゴリ絞り込み */
   byCategory(key) {
