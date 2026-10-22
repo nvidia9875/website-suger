@@ -179,8 +179,8 @@ const SN = {
   video: { id: "bKjkPWKCHgU", title: "【SugarNote】Anime Festival Asia Thailand 2026 Digest Movie", thumb: "video-afa.jpg" },
 
   timetree: {
-    embedBase: "https://timetreeapp.com/public_calendars/sugarnote_ofc/embed/monthly?calendar_name=true",
-    publicUrl: "https://timetreeapp.com/public_calendars/sugarnote_ofc",
+    embedBase: "https://timetreeapp.com/public_calendars/sugarnote_schedule/embed/monthly?calendar_name=true",
+    publicUrl: "https://timetreeapp.com/public_calendars/sugarnote_schedule",
   },
 
   /* お問い合わせフォームの送信先。2026-10 時点はフォームを外している（受信先のメールアドレスが未定）。

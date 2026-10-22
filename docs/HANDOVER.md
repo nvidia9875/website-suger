@@ -129,4 +129,4 @@
 - 現行ストア: https://www.sugarnote.store （Shopify。南さんが構築）
 - 公開サンプル: https://nvidia9875.github.io/web-sample/ （本体）/ https://nvidia9875.github.io/sugernote-goods/ （旧グッズ案）
 - 商品データの元: https://www.sugarnote.store/products.json
-- TimeTree: https://timetreeapp.com/public_calendars/sugarnote_ofc
+- TimeTree: https://timetreeapp.com/public_calendars/sugarnote_schedule
