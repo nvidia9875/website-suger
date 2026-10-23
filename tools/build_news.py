@@ -61,7 +61,7 @@ TPL = """<!DOCTYPE html>
     <a href="{up}index.html#members" data-i18n="nav.member">MEMBER</a>
     <a href="{up}index.html#news" data-i18n="nav.information">INFORMATION</a>
     <a href="{up}index.html#schedule" data-i18n="nav.schedule">SCHEDULE</a>
-    <a href="https://www.sugarnote.store/" target="_blank" rel="noopener" data-goods-link data-i18n="nav.goods">GOODS</a>
+    <a href="{up}goods.html" data-goods-link data-i18n="nav.goods">GOODS</a>
   </nav>
   <div class="head-tools">
     <div class="lang" role="group" aria-label="Language">
@@ -94,14 +94,14 @@ TPL = """<!DOCTYPE html>
       <a href="{up}index.html" data-i18n="foot.backHome">トップへ戻る</a>
       <a href="{up}terms.html" data-i18n="foot.terms">利用規約</a>
       <a href="{up}privacy.html" data-i18n="foot.privacy">プライバシーポリシー</a>
-      <a href="https://www.sugarnote.store/policies/legal-notice" target="_blank" rel="noopener" data-legal-link data-i18n="foot.legal">特定商取引法に基づく表記</a>
+      <a href="{up}legal.html" data-legal-link data-i18n="foot.legal">特定商取引法に基づく表記</a>
       <a href="https://flapinc.jp/" target="_blank" rel="noopener" data-i18n="foot.company">運営会社</a>
     </nav>
     <p class="foot-copy" data-i18n="foot.copyright">© 2026 SugarNote Official. All Rights Reserved.</p>
   </div>
 </footer>
 
-<script src="{up}assets/js/data.js?v=7" defer></script>
+<script src="{up}assets/js/data.js?v=8" defer></script>
 <script src="{up}assets/js/goods-data.js?v=8" defer></script>
 <script src="{up}assets/js/i18n.js?v=13" defer></script>
 <script src="{up}assets/js/site.js?v=5" defer></script>
