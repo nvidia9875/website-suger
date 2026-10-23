@@ -3,7 +3,7 @@
 2026-09-04 の MTG で「旧ストアに移行告知を出してから閉じる」と決定。2026-10-18 時点でストアに告知は出ていない（トップページを実測）。
 
 - 掲載するのは制作担当（コラボレーター権限が承認されたら）。承認前なら伊藤さんに依頼
-- 移る日が決まるまでは「11月上旬」と書く。日が決まったら日付に差し替える
+- 移る日は 11/1（2026-10-23 ユーザー確定）。文面はこの日付で書いてある
 - 決済は引き続き Shopify なので「ストアが無くなる」とは書かない。注文済みの発送・問い合わせ先が変わらないことを添える
 
 ## 1. アナウンスバー（ページ上部の帯）
@@ -13,15 +13,15 @@
 海外のお客様（シンガポール・タイ）が多いので3言語。アナウンスを3件にすると帯で切り替わって表示される。
 
 ```
-【お知らせ】11月上旬より、SugarNote のグッズは公式サイト（sugarnote.jp）でのお取り扱いに移ります
+【お知らせ】11月1日より、SugarNote のグッズは公式サイト（sugarnote.jp）でのお取り扱いに移ります
 ```
 
 ```
-Notice: From early November, SugarNote merchandise will be available on our official website (sugarnote.jp).
+Notice: From November 1, SugarNote merchandise will be available on our official website (sugarnote.jp).
 ```
 
 ```
-ประกาศ: ตั้งแต่ต้นเดือนพฤศจิกายน สินค้า SugarNote จะย้ายไปจำหน่ายที่เว็บไซต์ทางการ (sugarnote.jp)
+ประกาศ: ตั้งแต่วันที่ 1 พฤศจิกายน สินค้า SugarNote จะย้ายไปจำหน่ายที่เว็บไซต์ทางการ (sugarnote.jp)
 ```
 
 ## 2. 詳しい案内（トップのテキスト欄・SNS 用）
@@ -32,7 +32,7 @@ Notice: From early November, SugarNote merchandise will be available on our offi
 【グッズ販売の移行について】
 
 いつも SugarNote を応援いただきありがとうございます。
-11月上旬より、SugarNote のグッズは公式サイト（https://sugarnote.jp）でのお取り扱いに移ります。
+11月1日より、SugarNote のグッズは公式サイト（https://sugarnote.jp）でのお取り扱いに移ります。
 
 ・移行後も、お支払いはこれまでと同じ Shopify の決済画面で行います
 ・すでにご注文いただいた商品は、これまでどおり発送いたします
@@ -45,7 +45,7 @@ Notice: From early November, SugarNote merchandise will be available on our offi
 [Moving our online store]
 
 Thank you for always supporting SugarNote.
-From early November, SugarNote merchandise will be available on our official website (https://sugarnote.jp).
+From November 1, SugarNote merchandise will be available on our official website (https://sugarnote.jp).
 
 - Payment will still be handled through the same Shopify checkout.
 - Orders already placed will be shipped as usual.
@@ -58,7 +58,7 @@ Thank you for your continued support.
 [แจ้งย้ายร้านค้าออนไลน์]
 
 ขอบคุณที่สนับสนุน SugarNote เสมอมา
-ตั้งแต่ต้นเดือนพฤศจิกายน สินค้า SugarNote จะย้ายไปจำหน่ายที่เว็บไซต์ทางการ (https://sugarnote.jp)
+ตั้งแต่วันที่ 1 พฤศจิกายน สินค้า SugarNote จะย้ายไปจำหน่ายที่เว็บไซต์ทางการ (https://sugarnote.jp)
 
 ・การชำระเงินยังคงใช้หน้าชำระเงินของ Shopify เหมือนเดิม
 ・คำสั่งซื้อที่สั่งไว้แล้วจะจัดส่งตามปกติ

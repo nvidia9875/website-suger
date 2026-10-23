@@ -1,0 +1,136 @@
+{%- comment -%}
+  旧ストア（sugarnote.store、テーマ Rise）の商品ページに、宛名・メッセージ欄を出す snippet。
+  置き場所: snippets/sn-line-item-fields.liquid
+  呼び出し: 商品ページのテンプレートに「カスタム Liquid」ブロックを1つ足し（Infinite Options のブロックの下、購入ボタンの上）、中身を
+    {% render 'sn-line-item-fields', product: product, section_id: section.id %}
+  にする。手順は docs/shopify/line-item-fields.md。
+
+  ・欄を出す商品は product.id で指定する（ハンドルは日本語で変わりやすいので使わない）
+  ・入力値は properties[宛名] / properties[メッセージ] としてカートと注文に載る（空欄の項目は Shopify が載せない）
+  ・テーマの購入フォームは novalidate なので、必須チェックはこの snippet の script で行う
+  ・欄がある商品では「今すぐ購入」ボタンを隠す（入力チェックを通らずに決済へ進めるため）
+  ・トップのクイック追加でも同じ欄が出る（テーマが商品ページの中身をそのまま差し込み、id の接頭辞を付け替える）
+{%- endcomment -%}
+{%- liquid
+  # 欄の設定。南さん回答（2026-10-23）: デコチェキ＝宛名のみ／コメント付きチェキ・ブロマイド＝宛名とメッセージ
+  # 必須かどうか・文字数の上限は先方の回答待ちのため仮の値
+  assign sn_name_required = true
+  assign sn_name_max = 20
+  assign sn_message_required = false
+  assign sn_message_max = 50
+
+  assign sn_fields = ''
+  case product.id
+    when 15461215928556
+      # デコチェキ / レトロワンピース衣装(コメント付き)
+      assign sn_fields = 'name'
+    when 15461211668716, 15461128831212
+      # チェキ / 黒ゴシック衣装(コメント付き)、ランダムブロマイド / 黒ゴシック衣装（コメント付き）
+      assign sn_fields = 'name,message'
+  endcase
+  assign sn_form = 'product-form-' | append: section_id
+-%}
+{%- if sn_fields != blank -%}
+  <div class="sn-fields" data-sn-fields data-sn-form="{{ sn_form }}">
+    <div class="sn-field">
+      <label class="sn-field__label" for="SnName-{{ section_id }}">
+        宛名 <span class="sn-field__en">Name</span>
+        <span class="sn-field__hint">{% if sn_name_required %}必須{% else %}任意{% endif %}・{{ sn_name_max }}文字まで</span>
+      </label>
+      <input
+        class="sn-field__input"
+        type="text"
+        id="SnName-{{ section_id }}"
+        name="properties[宛名]"
+        form="{{ sn_form }}"
+        maxlength="{{ sn_name_max }}"
+        autocomplete="off"
+        placeholder="例：〇〇へ"
+        {% if sn_name_required %}data-sn-required aria-required="true"{% endif %}
+        aria-describedby="SnName-{{ section_id }}-error"
+      >
+      <p class="sn-field__error" id="SnName-{{ section_id }}-error" role="alert" hidden>宛名を入力してください / Please enter a name.</p>
+    </div>
+    {%- if sn_fields contains 'message' -%}
+      <div class="sn-field">
+        <label class="sn-field__label" for="SnMessage-{{ section_id }}">
+          メッセージ <span class="sn-field__en">Message</span>
+          <span class="sn-field__hint">{% if sn_message_required %}必須{% else %}任意{% endif %}・{{ sn_message_max }}文字まで</span>
+        </label>
+        <textarea
+          class="sn-field__input"
+          id="SnMessage-{{ section_id }}"
+          name="properties[メッセージ]"
+          form="{{ sn_form }}"
+          maxlength="{{ sn_message_max }}"
+          rows="3"
+          {% if sn_message_required %}data-sn-required aria-required="true"{% endif %}
+          aria-describedby="SnMessage-{{ section_id }}-error"
+        ></textarea>
+        <p class="sn-field__error" id="SnMessage-{{ section_id }}-error" role="alert" hidden>メッセージを入力してください / Please enter a message.</p>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <style>
+    .sn-fields { margin: 1.6rem 0 2rem; display: grid; gap: 1.4rem; max-width: 44rem; }
+    .sn-field { display: grid; gap: 0.6rem; }
+    .sn-field__label { font-size: 1.4rem; letter-spacing: 0.04rem; }
+    .sn-field__en, .sn-field__hint { font-size: 1.2rem; color: rgba(var(--color-foreground), 0.65); margin-left: 0.4rem; }
+    .sn-field__input {
+      width: 100%; box-sizing: border-box; padding: 1.1rem 1.4rem; font: inherit; font-size: 1.6rem;
+      color: rgb(var(--color-foreground)); background: rgb(var(--color-background));
+      border: var(--inputs-border-width, 1px) solid rgba(var(--color-foreground), 0.55); border-radius: var(--inputs-radius, 0);
+    }
+    .sn-field__input:focus-visible { outline: 0.2rem solid rgba(var(--color-foreground), 0.5); outline-offset: 0.2rem; }
+    .sn-field__input[aria-invalid="true"] { border-color: rgb(var(--color-error, 220 0 0)); }
+    .sn-field__error { margin: 0; font-size: 1.3rem; color: #c00; }
+    .product__info-container:has([data-sn-fields]) .shopify-payment-button { display: none !important; }
+  </style>
+
+  <script>
+    (function () {
+      /* 「今すぐ購入」ボタンを隠す（:has() が効かないブラウザ向けの保険） */
+      document.querySelectorAll('[data-sn-fields]').forEach(function (box) {
+        var info = box.closest('.product__info-container') || box.closest('section') || document;
+        info.querySelectorAll('.shopify-payment-button').forEach(function (b) { b.hidden = true; });
+      });
+
+      /* 必須チェックは document に1回だけ付ける（クイック追加を開くたびにこの script が再実行されるため） */
+      if (window.snLineItemFieldsBound) return;
+      window.snLineItemFieldsBound = true;
+
+      function showError(input, show) {
+        var err = document.getElementById(input.getAttribute('aria-describedby'));
+        if (err) err.hidden = !show;
+        if (show) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+      }
+
+      /* capture で受けて、テーマの product-form より先に止める */
+      document.addEventListener('submit', function (e) {
+        /* form.id は使わない（購入フォームには name="id" の input があり、form.id がその input を返す） */
+        var formId = e.target && e.target.getAttribute && e.target.getAttribute('id');
+        if (!formId) return;
+        var box = document.querySelector('[data-sn-fields][data-sn-form="' + formId + '"]');
+        if (!box) return;
+        var firstEmpty = null;
+        box.querySelectorAll('.sn-field__input').forEach(function (input) {
+          input.value = input.value.trim();
+          var empty = input.hasAttribute('data-sn-required') && input.value === '';
+          showError(input, empty);
+          if (empty && !firstEmpty) firstEmpty = input;
+        });
+        if (firstEmpty) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          firstEmpty.focus();
+        }
+      }, true);
+
+      document.addEventListener('input', function (e) {
+        var input = e.target;
+        if (input && input.classList && input.classList.contains('sn-field__input') && input.value.trim() !== '') showError(input, false);
+      });
+    })();
+  </script>
+{%- endif -%}
