@@ -13,11 +13,11 @@
 {%- endcomment -%}
 {%- liquid
   # 欄の設定。南さん回答（2026-10-23）: デコチェキ＝宛名のみ／コメント付きチェキ・ブロマイド＝宛名とメッセージ
-  # 必須かどうか・文字数の上限は先方の回答待ちのため仮の値
+  # 南さん回答（2026-10-23）: 宛名・メッセージとも必須、メッセージは100文字まで（宛名の上限は指定なしのため20文字）
   assign sn_name_required = true
   assign sn_name_max = 20
-  assign sn_message_required = false
-  assign sn_message_max = 50
+  assign sn_message_required = true
+  assign sn_message_max = 100
 
   assign sn_fields = ''
   case product.id
