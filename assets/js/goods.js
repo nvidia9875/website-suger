@@ -123,17 +123,21 @@
 
   /* ---------- 商品ダイアログ ---------- */
   var dialog = $("#product-dialog");
-  var current = { product: null, variant: null, qty: 1, nickname: "", opener: null };
+  /* picked: バリアントを指定して開いた・チップで選んだ（在庫の取り直しで売り切れと分かっても選び直さない） */
+  var current = { product: null, variant: null, picked: false, qty: 1, nickname: "", opener: null };
+
+  /* 指定が無いときの初期選択: 最後に選んだ推しのバリアント → 売り切れでない先頭 */
+  function defaultVariant(p) {
+    var pick = SNOshi.get();
+    var oshi = pick ? p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick) && !v.soldOut; }) : null;
+    return oshi || p.variants.find(function (v) { return !v.soldOut; }) || p.variants[0];
+  }
 
   function openProduct(id, variantKey, opener) {
     var p = GoodsUtil.product(id);
     if (!p) return;
     var pre = variantKey ? GoodsUtil.variant(id, variantKey) : null;
-    /* 指定が無ければ、最後に選んだ推しのバリアントを初期選択 */
-    var pick = SNOshi.get();
-    if (!pre && pick) pre = p.variants.find(function (v) { return GoodsUtil.variantHas(v, pick) && !v.soldOut; }) || null;
-    var firstOnSale = p.variants.find(function (v) { return !v.soldOut; });
-    current = { product: p, variant: pre || firstOnSale || p.variants[0], qty: 1, nickname: "", opener: opener || null };
+    current = { product: p, variant: pre || defaultVariant(p), picked: !!pre, qty: 1, nickname: "", opener: opener || null };
     renderDialog();
     if (!dialog.open) dialog.showModal();
   }
@@ -174,6 +178,8 @@
     /* 価格・在庫の取り直し（sn:goods）で商品オブジェクトが新しくなるので、id から引き直す */
     current.product = GoodsUtil.product(current.product.id) || current.product;
     current.variant = GoodsUtil.variant(current.product.id, current.variant.key) || current.product.variants[0];
+    /* 在庫が届く前に開いた（旧ストアからの転送の goods.html?p= など）とき、自動で選んだ子が売り切れだったら選び直す */
+    if (!current.picked && current.variant.soldOut) current.variant = defaultVariant(current.product);
     var p = current.product, v = current.variant;
     var isPhoto = p.variantType === "member" || p.variantType === "member2";
     var chips = p.variants.map(function (vv) {
@@ -224,6 +230,7 @@
     $("#pd-body").querySelectorAll("[data-variant]").forEach(function (chip) {
       chip.addEventListener("click", function () {
         current.variant = GoodsUtil.variant(p.id, chip.dataset.variant);
+        current.picked = true;
         renderDialog();
       });
     });
