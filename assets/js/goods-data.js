@@ -266,6 +266,74 @@ const GOODS = {
       contents: ["Tシャツ 1枚（M / L）"],
       notes: ["数量限定のため、無くなり次第終了となります。"],
     },
+    /* ---- 2026-11-01 公開予定（コメントなし版。下書き・まだ出さない） ----
+     * 10/26 特典会のコメント付き版とは別の商品として、11/1 に Shopify へアップされる予定（伊藤さん 2026-10-24）。
+     * 宛名・メッセージ欄は付けない。画像はコメント付き版の写真から作成済み（tools/run_build_1101.py）。
+     * 公開の手順:
+     *   1. Shopify に出たら products.json でバリアント ID を確かめ、sid: 0 を置き換える（メンバーとの対応は名前で突き合わせる）
+     *   2. 価格・商品名・説明を Shopify のコメントなし版に合わせる（下の文はコメント付き版から作った仮の文）
+     *   3. チェキ2点のため categories に { key: "cheki", cats: ["チェキ"] } を足す（i18n の goods.cat.cheki は追加済み）
+     *   4. このコメントを外し、HTML の goods-data.js?v= を上げる
+    {
+      id: "gothic-cheki",
+      name: "チェキ：黒ゴシック衣装",
+      deco: "チェキ 黒ゴシック衣装",
+      category: "チェキ", series: "gothic",
+      img: "gothic-cheki-main.webp", price: 2000,
+      variantType: "member",
+      variants: [
+        { key: "ririho", sid: 0, label: "白咲 里莉穂", price: 2000, img: "gothic-cheki-ririho.webp" },
+        { key: "nanako", sid: 0, label: "櫻井 那奈子", price: 2000, img: "gothic-cheki-nanako.webp" },
+        { key: "fuka",   sid: 0, label: "坂東 楓夏",   price: 2000, img: "gothic-cheki-fuka.webp" },
+        { key: "hinata", sid: 0, label: "坂東 日奈多", price: 2000, img: "gothic-cheki-hinata.webp" },
+        { key: "airi",   sid: 0, label: "西条 藍里",   price: 2000, img: "gothic-cheki-airi.webp" },
+        { key: "rana",   sid: 0, label: "月城 蘭花",   price: 2000, img: "gothic-cheki-rana.webp" },
+      ],
+      desc: "ここでしか手に入らない「黒ゴシック衣装チェキ」です。\n黒を基調としたゴシック衣装で、可愛く、ちょっぴりミステリアスに。\nいつもとはひと味違うSugarNoteの姿を、一枚のチェキに残してお届けします。",
+      contents: ["チェキ 1枚"],
+      notes: [],
+    },
+    {
+      id: "gothic-bromide",
+      name: "ランダムブロマイド：黒ゴシック衣装",
+      deco: "ランダムブロマイド 黒ゴシック衣装",
+      category: "ブロマイド", series: "gothic",
+      img: "gothic-brm-main.webp", price: 1500,
+      variantType: "member",
+      variants: [
+        { key: "ririho", sid: 0, label: "白咲 里莉穂", sub: "全6種", price: 1500, img: "gothic-brm-ririho.webp" },
+        { key: "nanako", sid: 0, label: "櫻井 那奈子", sub: "全6種", price: 1500, img: "gothic-brm-nanako.webp" },
+        { key: "fuka",   sid: 0, label: "坂東 楓夏",   sub: "全6種", price: 1500, img: "gothic-brm-fuka.webp" },
+        { key: "hinata", sid: 0, label: "坂東 日奈多", sub: "全6種", price: 1500, img: "gothic-brm-hinata.webp" },
+        { key: "airi",   sid: 0, label: "西条 藍里",   sub: "全6種", price: 1500, img: "gothic-brm-airi.webp" },
+        { key: "rana",   sid: 0, label: "月城 蘭花",   sub: "全6種", price: 1500, img: "gothic-brm-rana.webp" },
+        { key: "all",    sid: 0, label: "全員集合",    sub: "全5種", price: 5000, img: "gothic-brm-all.webp" },
+      ],
+      desc: "黒ゴシック衣装をまとったSugarNoteが、限定ブロマイドになって登場しました。\n可愛らしさの中に少しミステリアスな雰囲気を添えた、特別な姿をお届けします。\nどの一枚に出会えるか、届くまで楽しみにお待ちください。",
+      contents: ["ランダムブロマイド 1枚", "各メンバーブロマイド 全6種 / 全員集合ブロマイド 全5種"],
+      notes: ["ランダム封入のため絵柄はお選びいただけません"],
+      random: { label: "各全6種" },
+    },
+    {
+      id: "retro-deco",
+      name: "デコチェキ：レトロワンピース衣装",
+      deco: "デコチェキ レトロワンピース衣装",
+      category: "チェキ", series: "retro",
+      img: "retro-deco-main.webp", price: 4000,
+      variantType: "member",
+      variants: [
+        { key: "ririho", sid: 0, label: "白咲 里莉穂", price: 4000, img: "retro-deco-ririho.webp" },
+        { key: "nanako", sid: 0, label: "櫻井 那奈子", price: 4000, img: "retro-deco-nanako.webp" },
+        { key: "fuka",   sid: 0, label: "坂東 楓夏",   price: 4000, img: "retro-deco-fuka.webp" },
+        { key: "hinata", sid: 0, label: "坂東 日奈多", price: 4000, img: "retro-deco-hinata.webp" },
+        { key: "airi",   sid: 0, label: "西条 藍里",   price: 4000, img: "retro-deco-airi.webp" },
+        { key: "rana",   sid: 0, label: "月城 蘭花",   price: 4000, img: "retro-deco-rana.webp" },
+      ],
+      desc: "レトロワンピース衣装で撮影した特別なデコチェキです。\nメンバーが一枚一枚、心を込めてデコレーションしてお届けします。\nどこか懐かしく可愛らしい雰囲気を閉じ込めた、世界にたった一枚のチェキです。\nお気に入りのメンバーの特別な一枚をぜひお迎えしてください。",
+      contents: ["デコチェキ 1枚"],
+      notes: ["数量限定"],
+    },
+    ---- ここまで 2026-11-01 公開予定 ---- */
   ],
 };
 

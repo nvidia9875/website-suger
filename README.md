@@ -124,6 +124,7 @@ cp out/*.webp assets/img/goods/
 - `tools/build_images.py` が共通ヘルパー（背景合成・接地影・SAMPLE 透かし・保存）。保存形式は出力ファイル名の拡張子で決まる
 - `tools/run_build.py` は 2026-08「グッズまとめ」用の旧レシピ（アー写・顔写真はこちらで生成）
 - `tools/run_build_online.py` が現行レシピ。2026-09-09 提供「オンライン商品写真（改訂版）」に対応
+- `tools/run_build_1101.py` は 11/1 公開予定のコメントなし版3商品（黒ゴシック衣装チェキ・ブロマイド、レトロワンピースデコチェキ）。素材は Shopify の商品画像（`tools/src/shopify-2026-10`）
 - macOS のファイル名は濁点が分解された形（NFD）で返ることがある。名前で突き合わせるときは NFC に正規化する
 
 ### Shopify 連携の仕組み
