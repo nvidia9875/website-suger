@@ -1,6 +1,6 @@
 # SugarNote 公式サイト 引き継ぎ資料
 
-作成: 2026-09-05（酒井）
+作成: 2026-09-05（坂井）
 対象: `/Users/shun/Desktop/website/sugarnote/`（このディレクトリが今後の正）
 関連: 2026-09-04 伊藤さん MTG の整理 → `/Users/shun/Documents/AudioRec/2026-09-04_211107_9月4日_21-11_の録音/todo.md`
 
@@ -62,9 +62,9 @@
 | 誰が | 何を | どこで |
 |---|---|---|
 | 事務所（南さん） | 商品の追加・価格・在庫・注文・発送 | Shopify 管理画面 |
-| 事務所 or 酒井 | サイト側の商品一覧に反映（バリアント ID・画像・説明） | `goods-data.js` を編集して push |
-| 事務所 or 酒井 | お知らせ・メンバー・楽曲の更新 | `data.js` を編集して push |
-| 酒井 | 大きな改修・デザイン変更 | このディレクトリ |
+| 事務所 or 坂井 | サイト側の商品一覧に反映（バリアント ID・画像・説明） | `goods-data.js` を編集して push |
+| 事務所 or 坂井 | お知らせ・メンバー・楽曲の更新 | `data.js` を編集して push |
+| 坂井 | 大きな改修・デザイン変更 | このディレクトリ |
 
 将来的には LINDO サイトと同じ **microCMS × GitHub Actions × GitHub Pages** 構成に載せ、`data.js` / `goods-data.js` を microCMS から生成する想定（正典は `/Users/shun/Desktop/lindo/HANDOVER-DEV.md`）。その際の論点は 3言語・反映の遅延（最大10分）・記事の個別 URL の3つ。
 
