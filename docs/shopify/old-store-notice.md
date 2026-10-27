@@ -36,7 +36,7 @@ Notice: From November 1, SugarNote merchandise will be available on our official
 
 ・移行後も、お支払いはこれまでと同じ Shopify の決済画面で行います
 ・すでにご注文いただいた商品は、これまでどおり発送いたします
-・お問い合わせ先（info@sugarnote.jp）は変わりません
+・11月1日より、お問い合わせ先は contact@sugarnote.jp に変わります
 
 今後とも SugarNote をよろしくお願いいたします。
 ```
@@ -49,7 +49,7 @@ From November 1, SugarNote merchandise will be available on our official website
 
 - Payment will still be handled through the same Shopify checkout.
 - Orders already placed will be shipped as usual.
-- Our contact address (info@sugarnote.jp) stays the same.
+- From November 1, our contact address will be contact@sugarnote.jp.
 
 Thank you for your continued support.
 ```
@@ -62,7 +62,7 @@ Thank you for your continued support.
 
 ・การชำระเงินยังคงใช้หน้าชำระเงินของ Shopify เหมือนเดิม
 ・คำสั่งซื้อที่สั่งไว้แล้วจะจัดส่งตามปกติ
-・ช่องทางติดต่อ (info@sugarnote.jp) ยังคงเหมือนเดิม
+・ตั้งแต่วันที่ 1 พฤศจิกายน ช่องทางติดต่อจะเปลี่ยนเป็น contact@sugarnote.jp
 
 ขอบคุณที่ติดตาม SugarNote ต่อไป
 ```
