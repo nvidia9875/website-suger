@@ -2,7 +2,8 @@
   SugarNote 旧ストア → 公式サイト（sugarnote.jp）への転送
   貼り付け先: オンラインストア > テーマ > コードを編集 > layout/theme.liquid の <head> の直後
 
-  - 決済（カート → チェックアウト）はテーマを通らないため、このコードの影響を受けません
+  - チェックアウト（決済画面）はテーマを通らないため、このコードの影響を受けません
+  - カートページ（/cart）はテーマで描画されるので転送しません（¥0 商品などをカートに入れたお客様が決済へ進めるように）
   - 規約ページ（/policies/）・会員ページ（/account）・データ共有オプトアウト・テーマ編集画面は転送しません
   - 商品ページは公式サイトの同じ商品へ、それ以外のページはグッズ一覧へ転送します
   - 公式サイトに載っていない商品のページ（送料の払い直し用の ¥0 商品など）は転送しません
@@ -13,6 +14,9 @@
     assign sn_skip = true
   endif
   if request.path contains '/policies/' or request.path contains '/account' or request.path contains '/pages/data-sharing-opt-out' or request.path contains '/challenge'
+    assign sn_skip = true
+  endif
+  if template.name == 'cart'
     assign sn_skip = true
   endif
 

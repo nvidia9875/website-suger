@@ -171,9 +171,9 @@ contactForm: { endpoint: "https://api.web3forms.com/submit", fields: { access_ke
    - `GOODS_LIVE=yes bash tools/verify_cutover.sh final` が全部 OK
    - ブラウザ（シークレットウィンドウ）で `goods.html` が転送されずに開き、カート → Shopify の決済画面まで進める（支払いはしない）
 8. 旧ストアのテーマに `docs/shopify/old-store-redirect.liquid` を貼る（オンラインストア → テーマ → コードを編集 → `layout/theme.liquid` の `<head>` の直後）。貼る前にテーマを複製しておく
-9. 旧ストアの商品ページ（例: `https://sugarnote.store/products/メンバーカラーアクリルスタンド`）とトップを開き、新サイトの同じ商品・グッズ一覧へ移ることを確認する。`/policies/legal-notice` と、公式サイトに載せていない商品（送料の払い直し用の ¥0 商品 `https://sugarnote.store/products/送料無料を選択されたお客様へ` など）は転送されないこと
+9. 旧ストアの商品ページ（例: `https://sugarnote.store/products/メンバーカラーアクリルスタンド`）とトップを開き、新サイトの同じ商品・グッズ一覧へ移ることを確認する。`/policies/legal-notice` と、公式サイトに載せていない商品（送料の払い直し用の ¥0 商品 `https://sugarnote.store/products/送料無料を選択されたお客様へ` など）は転送されないこと。¥0 商品をカートに入れて `/cart` → 決済画面まで進めること（支払いはしない）
 
-**元に戻すとき**は逆の順番: 先に旧ストアのテーマから転送コードを外す（手順 8 で複製したテーマを公開に戻すのが早い）→ その後で `goodsLive` を `false` に戻して push。逆にすると転送が往復する。
+**元に戻すとき**は逆の順番: 先に旧ストアのテーマから転送コードを外す（手順 8 で複製したテーマを公開に戻すのが早い）→ 旧ストアの商品ページが転送されなくなったことを確かめる → その後で `goodsLive` を `false` に戻し、**全 HTML と `tools/build_news.py` の `data.js?v=` を上げて** `python3 tools/build_news.py` で記事を再生成して push（`?v=` を上げないと `goodsLive = true` の `data.js` がキャッシュに残った人に届かない）。逆の順番にすると転送が往復する。戻すのはグッズの公開だけで、LINDO 表記や問い合わせ先は戻さない。
 
 ## 公開（GitHub Pages）
 
