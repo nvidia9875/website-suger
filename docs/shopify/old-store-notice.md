@@ -12,16 +12,18 @@
 
 海外のお客様（シンガポール・タイ）が多いので3言語。アナウンスを3件にすると帯で切り替わって表示される。
 
+11/1 を過ぎてから出すので、「移ります」ではなく「お取り扱いしております」にした（2026-11-05 ユーザー指示「丁寧に」）。
+
 ```
-【お知らせ】11月1日より、SugarNote のグッズは公式サイト（sugarnote.jp）でのお取り扱いに移ります
+【お知らせ】11月1日より、SugarNote のオフィシャルグッズは公式サイト（sugarnote.jp）にてお取り扱いしております。
 ```
 
 ```
-Notice: From November 1, SugarNote merchandise will be available on our official website (sugarnote.jp).
+Notice: Since November 1, SugarNote official merchandise has been available on our official website (sugarnote.jp).
 ```
 
 ```
-ประกาศ: ตั้งแต่วันที่ 1 พฤศจิกายน สินค้า SugarNote จะย้ายไปจำหน่ายที่เว็บไซต์ทางการ (sugarnote.jp)
+ประกาศ: ตั้งแต่วันที่ 1 พฤศจิกายน สินค้าอย่างเป็นทางการของ SugarNote ได้ย้ายไปจำหน่ายที่เว็บไซต์ทางการ (sugarnote.jp) แล้ว
 ```
 
 ## 2. 詳しい案内（トップのテキスト欄・SNS 用）
