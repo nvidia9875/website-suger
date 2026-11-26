@@ -102,7 +102,7 @@ TPL = """<!DOCTYPE html>
 </footer>
 
 <script src="{up}assets/js/data.js?v=9" defer></script>
-<script src="{up}assets/js/goods-data.js?v=10" defer></script>
+<script src="{up}assets/js/goods-data.js?v=11" defer></script>
 <script src="{up}assets/js/i18n.js?v=14" defer></script>
 <script src="{up}assets/js/site.js?v=5" defer></script>
 <script src="{up}assets/js/oshi.js?v=3" defer></script>
