@@ -25,6 +25,7 @@ const GOODS = {
   /* カテゴリ絞り込み。label は i18n の goods.cat.<key> */
   categories: [
     { key: "all", cats: null },
+    { key: "cheki", cats: ["チェキ"] },
     { key: "bromide", cats: ["ブロマイド"] },
     { key: "tcard", cats: ["トレーディングカード"] },
     { key: "poster", cats: ["ポスター"] },
@@ -44,10 +45,12 @@ const GOODS = {
    *   member  … バリアント key がメンバー id（"pair" のような複数人バリアントは members[] を持つ）
    *   member2 … 衣装 × メンバー（variant.member でメンバーを指す）
    *   size    … サイズ違い。shelfMembers があるものは特定メンバーの棚にも出す
-   * nickname（任意）: 商品ごとの宛名・ニックネーム欄を出す。書かない商品には欄が出ない
-   *   nickname: { key: "宛名・ニックネーム", max: 20, required: false }
-   *   key … Shopify の注文に載る項目名（発送担当が見る名前。今のストアの備考欄アプリと揃える）
-   *   max … 最大文字数 / required … true なら空欄ではカートに入れられない（推しの棚の「カートへ」もダイアログを開く） */
+   * fields（任意）: 商品ごとの入力欄（宛名・希望コメントなど）。書かない商品には欄が出ない
+   *   fields: [{ id: "nickname", key: "ニックネーム", max: 20 }, { id: "comment", key: "希望コメント", max: 100, multiline: true }]
+   *   id … 画面の見出し（i18n の goods.field.<id>）と入力の置き場所 / key … Shopify の注文に載る項目名（発送担当が見る名前）
+   *   max … 最大文字数 / required … true なら空欄ではカートに入れられない / multiline … 複数行の欄にする
+   *   欄のある商品は、推しの棚の「カートへ」でもダイアログを開いて書いてもらう
+   *   （旧形式の nickname: { key, max, required } も宛名欄1つとして読める） */
   products: [
     {
       id: "seifuku-bromide",
@@ -266,6 +269,57 @@ const GOODS = {
       contents: ["Tシャツ 1枚（M / L）"],
       notes: ["数量限定のため、無くなり次第終了となります。"],
     },
+    /* ---- パジャマパーティー（コメント付き）: 2026-11-26 18:00 〜 11/29 14:30 の期間限定 ----
+     * 販売期間は Shopify の商品ステータスで決まる（下書きのあいだはこのサイトでも「売り切れ」表示）。
+     * 11/29 14:30 に Shopify で下書きに戻したら、この2商品をここから消して画像も外す。
+     * 画像は tools/run_build_1126.py（素材は Shopify の商品画像）。月城さんの分は無い。
+     * 宛名・希望コメントは旧ストアの入力欄アプリ（Infinite Options）と同じ項目名で注文に載せる（いずれも任意）。 */
+    {
+      id: "pajama-cheki",
+      name: "チェキ：パジャマパーティー（コメント付き）",
+      deco: "チェキ パジャマパーティー",
+      category: "チェキ", series: "pajama",
+      img: "pajama-cheki-main.webp", price: 2000,
+      variantType: "member",
+      variants: [
+        { key: "ririho", sid: 68488619393260, label: "白咲 里莉穂", price: 2000, img: "pajama-cheki-ririho.webp" },
+        { key: "nanako", sid: 68488619426028, label: "櫻井 那奈子", price: 2000, img: "pajama-cheki-nanako.webp" },
+        { key: "fuka",   sid: 68488619458796, label: "坂東 楓夏",   price: 2000, img: "pajama-cheki-fuka.webp" },
+        { key: "hinata", sid: 68488619491564, label: "坂東 日奈多", price: 2000, img: "pajama-cheki-hinata.webp" },
+        { key: "airi",   sid: 68488619524332, label: "西条 藍里",   price: 2000, img: "pajama-cheki-airi.webp" },
+      ],
+      desc: "【11/29(日) チェキ：パジャマパーティー】\nここでしか手に入らない「パジャマパーティーチェキ」です。\nカラフルなパジャマ姿のSugarNoteを、一枚のチェキに残してお届けします。\nさらに、メンバーからのコメント入り。特別な一枚を、ぜひお迎えしてください。",
+      contents: ["チェキ 1枚（コメント付き）"],
+      fields: [
+        { id: "nickname", key: "ニックネーム", max: 20 },
+        { id: "comment", key: "希望コメント", max: 100, multiline: true },
+      ],
+      notes: ["オンライン撮影会の際に、お名前を読み上げさせていただきます。", "販売期間: 11/26(木) 18:00 〜 11/29(日) 14:30"],
+    },
+    {
+      id: "pajama-bromide",
+      name: "ランダムブロマイド：パジャマパーティー（コメント付き）",
+      deco: "ランダムブロマイド パジャマパーティー",
+      category: "ブロマイド", series: "pajama",
+      img: "pajama-brm-main.webp", price: 1500,
+      variantType: "member",
+      variants: [
+        { key: "ririho", sid: 68488654782700, label: "白咲 里莉穂", sub: "全5種", price: 1500, img: "pajama-brm-ririho.webp" },
+        { key: "nanako", sid: 68488654815468, label: "櫻井 那奈子", sub: "全5種", price: 1500, img: "pajama-brm-nanako.webp" },
+        { key: "fuka",   sid: 68488654848236, label: "坂東 楓夏",   sub: "全5種", price: 1500, img: "pajama-brm-fuka.webp" },
+        { key: "hinata", sid: 68488654881004, label: "坂東 日奈多", sub: "全5種", price: 1500, img: "pajama-brm-hinata.webp" },
+        { key: "airi",   sid: 68488654913772, label: "西条 藍里",   sub: "全5種", price: 1500, img: "pajama-brm-airi.webp" },
+        { key: "all",    sid: 68488654979308, label: "全員集合",    sub: "全2種", price: 5000, img: "pajama-brm-all.webp" },
+      ],
+      desc: "【11/29(日) ランダムブロマイド：パジャマパーティー】\nカラフルなパジャマ姿のSugarNoteが、限定ブロマイドになって登場。\nポップで可愛らしい、ここでしか見られない特別な姿をお届けします。\nブロマイドには、メンバーからのコメントも。どの一枚に出会えるか、届くまで楽しみにお待ちください。",
+      contents: ["ランダムブロマイド 1枚（コメント付き）", "各メンバーブロマイド 全5種 / 全員集合ブロマイド 全2種"],
+      fields: [
+        { id: "nickname", key: "ニックネーム", max: 20 },
+        { id: "comment", key: "希望コメント", max: 100, multiline: true },
+      ],
+      notes: ["ランダム封入のため絵柄はお選びいただけません", "販売期間: 11/26(木) 18:00 〜 11/29(日) 14:30"],
+      random: { label: "各全5種" },
+    },
     /* ---- 11/6 ごろ公開予定（コメントなし版。下書き・まだ出さない） ----
      * 10/26 特典会のコメント付き版とは別の商品として、11/6 ごろ Shopify へアップされる予定（伊藤さん 2026-10-24。アップ後に連絡あり）。
      * 宛名・メッセージ欄は付けない。画像はコメント付き版の写真から作成済み（tools/run_build_1101.py）。
@@ -379,16 +433,33 @@ const GoodsUtil = {
       return Object.assign({}, p, { variants, price: min, priceMax: max > min ? max : undefined, soldOut: onSale.length === 0 });
     });
   },
-  /* 宛名欄の設定（無ければ null）。key / max / required を既定値で補う */
-  nicknameOf(p) {
-    if (!p || !p.nickname) return null;
-    const n = p.nickname;
-    return { key: n.key || "宛名・ニックネーム", max: n.max > 0 ? n.max : 20, required: n.required === true };
+  /* 入力欄の設定（無ければ []）。id / key / max / required / multiline を既定値で補う。
+   *   fields が無く nickname だけ書いた商品は、宛名欄1つとして扱う */
+  fieldsOf(p) {
+    if (!p) return [];
+    const list = Array.isArray(p.fields) ? p.fields : p.nickname ? [Object.assign({ id: "nickname" }, p.nickname)] : [];
+    return list.filter((f) => f && f.id).map((f) => ({
+      id: String(f.id), key: f.key || "宛名・ニックネーム", max: f.max > 0 ? f.max : 20,
+      required: f.required === true, multiline: f.multiline === true,
+    }));
   },
-  /* 宛名の正規化: 制御文字を除き、空白を詰め、前後を切り、max 文字（絵文字も1文字）で切る */
-  cleanNickname(value, max) {
-    const s = String(value == null ? "" : value).replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim();
-    return Array.from(s).slice(0, max).join("");
+  /* 入力の正規化: 制御文字を除き（複数行の欄だけ改行を残す）、空白を詰め、前後を切り、max 文字（絵文字も1文字）で切る */
+  cleanField(value, field) {
+    let s = String(value == null ? "" : value).replace(/\r\n?/g, "\n");
+    s = field && field.multiline
+      ? s.replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, "").split("\n").map((l) => l.replace(/\s+/g, " ").trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim()
+      : s.replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim();
+    return Array.from(s).slice(0, field ? field.max : 20).join("");
+  },
+  /* 商品の入力欄に合わせて値を整える。{ id: 値 } を欄の順に、空でないものだけ。全部空なら null */
+  cleanFields(p, values) {
+    const out = {};
+    let any = false;
+    this.fieldsOf(p).forEach((f) => {
+      const v = this.cleanField(values && values[f.id], f);
+      if (v) { out[f.id] = v; any = true; }
+    });
+    return any ? out : null;
   },
   /* カテゴリ絞り込み */
   byCategory(key) {

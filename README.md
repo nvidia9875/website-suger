@@ -133,8 +133,8 @@ cp out/*.webp assets/img/goods/
 - **Storefront API をトークン無しで使っている**（`assets/js/shopify.js`、宛先 `https://1ufd2p-j3.myshopify.com/api/2025-10/graphql.json`）。Shopify の公開アクセスで、Headless アプリもトークンも要らない（2026-10-18 実測。CORS も `*`）
   - 表示時: `nodes(ids)` で全バリアントの価格・`availableForSale` を取り、`GoodsUtil.applyLive` で反映 → `sn:goods` で描き直す。グッズ公開前（`goodsLive = false`）はグッズページの `?preview` でだけ取りにいく
   - 「レジにすすむ」: `cartCreate` で Shopify にカートを作らせ、返ってきた `checkoutUrl`（`www.sugarnote.store` 等の許可したホストのみ）へ移動。売り切れの行は送らない
-  - **宛名・ニックネーム欄**: `goods-data.js` の商品に `nickname: { key: "宛名・ニックネーム", max: 20, required: false }` を書くと、その商品のダイアログに入力欄が出る（書かない商品には出ない。2026-10-20 時点ではどの商品にも設定していない）。入力は行ごとに `cartCreate` の `lines[].attributes`（項目名 = `key`）で Shopify の注文に載る。`key` は発送担当が見る名前なので、今のストアの備考欄アプリ（Infinite Options）の項目名と揃える
-- **通信できないとき**は `goods-data.js` の価格で表示し、購入は **カートパーマリンク** `https://www.sugarnote.store/cart/<バリアントID>:<数量>,…` で続ける（従来の方式）。**ただし宛名の入った行があるときは切り替えない**（パーマリンクでは宛名を渡せないため。カート内に「もう一度お試しください」を出す）。同じ理由で、宛名がある間は「レジにすすむ」の href を外している
+  - **入力欄（宛名・希望コメントなど）**: `goods-data.js` の商品に `fields: [{ id: "nickname", key: "ニックネーム", max: 20 }, { id: "comment", key: "希望コメント", max: 100, multiline: true }]` のように書くと、その商品のダイアログに欄が出る（書かない商品には出ない。2026-11-26 にパジャマパーティー2商品で使い始めた）。見出しは i18n の `goods.field.<id>`。入力は行ごとに `cartCreate` の `lines[].attributes`（項目名 = `key`）で Shopify の注文に載る（2026-11-26 に改行入りで載ることを確認）。`key` は発送担当が見る名前なので、旧ストアの入力欄アプリ（Infinite Options）の項目名と揃える。旧形式の `nickname: { key, max, required }` も宛名欄1つとして読める
+- **通信できないとき**は `goods-data.js` の価格で表示し、購入は **カートパーマリンク** `https://www.sugarnote.store/cart/<バリアントID>:<数量>,…` で続ける（従来の方式）。**ただし入力欄の値（宛名など）が入った行があるときは切り替えない**（パーマリンクでは値を渡せないため。カート内に「もう一度お試しください」を出す）。同じ理由で、宛名がある間は「レジにすすむ」の href を外している
 - 支払い・送料計算・注文管理はすべて Shopify。請求額は Shopify の価格で決まる
 - `checkoutBase` を変えるときは `goods-data.js` の `GOODS.store.checkoutBase`。API の宛先は `shopify.js` の `ENDPOINT`、CSP の `connect-src`（goods / index / member の3ページ）も合わせて変える
 

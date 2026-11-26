@@ -5,8 +5,8 @@
  *   通信できないときの予備が Shopify のカートパーマリンク（checkoutUrl）
  *   例: https://www.sugarnote.store/cart/47393203257580:1,47393174913260:2
  * ・売り切れ（variant.soldOut。shopify.js が反映）の行はカートに残すが、合計・購入手続きには含めない
- * ・宛名（n。goods-data.js の nickname がある商品だけ）は行ごとに持つ。同じバリアントでも宛名が違えば別の行。
- *   Shopify には lines[].attributes で渡す（カートパーマリンクでは渡せない）
+ * ・入力欄の値（f = { id: 値 }。goods-data.js の fields がある商品だけ。宛名・希望コメントなど）は行ごとに持つ。
+ *   同じバリアントでも値が違えば別の行。Shopify には lines[].attributes（項目名 = 欄の key）で渡す（カートパーマリンクでは渡せない）
  * ・行の操作（setQty / remove）は entries() の index で指す
  */
 function SNCart(storageKey) {
@@ -29,9 +29,11 @@ function SNCart(storageKey) {
         if (!it || typeof it !== "object") return null;
         var p = String(it.p || ""), v = String(it.v || ""), q = clampQty(it.q);
         if (!GoodsUtil.variant(p, v) || !q) return null;
-        var nick = GoodsUtil.nicknameOf(GoodsUtil.product(p));
-        var n = nick ? GoodsUtil.cleanNickname(it.n, nick.max) : "";
-        return n ? { p: p, v: v, q: q, n: n } : { p: p, v: v, q: q };
+        var prod = GoodsUtil.product(p);
+        /* 旧形式（宛名だけを n に持っていた）は宛名欄の値として読む */
+        var raw = it.f && typeof it.f === "object" ? it.f : it.n ? { nickname: it.n } : null;
+        var f = GoodsUtil.cleanFields(prod, raw);
+        return f ? { p: p, v: v, q: q, f: f } : { p: p, v: v, q: q };
       }).filter(Boolean);
     } catch (e) {
       return [];
@@ -41,15 +43,18 @@ function SNCart(storageKey) {
     try { localStorage.setItem(storageKey, JSON.stringify(items)); } catch (e) { /* private mode 等では永続なしで続行 */ }
   }
   function emit() { save(); listeners.forEach(function (fn) { fn(api); }); }
-  function find(p, v, n) { return items.find(function (it) { return it.p === p && it.v === v && (it.n || "") === n; }); }
-  /* 宛名が必須の商品なのに宛名が無い行（あとから required にした等）。購入手続きには含めない */
-  function needsNickname(it) {
-    var nick = GoodsUtil.nicknameOf(GoodsUtil.product(it.p));
-    return !!(nick && nick.required && !it.n);
+  function fieldsKey(f) { return f ? JSON.stringify(f) : ""; }
+  function find(p, v, f) {
+    var k = fieldsKey(f);
+    return items.find(function (it) { return it.p === p && it.v === v && fieldsKey(it.f) === k; });
+  }
+  /* 必須の欄が空の行（あとから required にした等）。購入手続きには含めない */
+  function needsFields(it) {
+    return GoodsUtil.fieldsOf(GoodsUtil.product(it.p)).some(function (fd) { return fd.required && !(it.f && it.f[fd.id]); });
   }
   function buyable(it) {
     var v = GoodsUtil.variant(it.p, it.v);
-    return v && !v.soldOut && !needsNickname(it) ? v : null;
+    return v && !v.soldOut && !needsFields(it) ? v : null;
   }
   function sidOf(v) { return String(v.sid).replace(/\D/g, ""); }
 
@@ -59,21 +64,25 @@ function SNCart(storageKey) {
     onChange: function (fn) { listeners.push(fn); },
     entries: function () {
       return items.map(function (it, i) {
-        return { index: i, product: GoodsUtil.product(it.p), variant: GoodsUtil.variant(it.p, it.v), qty: it.q, p: it.p, v: it.v,
-          nickname: it.n || "", needsNickname: needsNickname(it) };
+        var prod = GoodsUtil.product(it.p);
+        /* fields: 入力のある欄だけ [{ id, value }]（欄の順） */
+        var fields = GoodsUtil.fieldsOf(prod).filter(function (fd) { return it.f && it.f[fd.id]; })
+          .map(function (fd) { return { id: fd.id, value: it.f[fd.id] }; });
+        return { index: i, product: prod, variant: GoodsUtil.variant(it.p, it.v), qty: it.q, p: it.p, v: it.v,
+          fields: fields, needsFields: needsFields(it) };
       });
     },
-    /* nickname: 宛名（nickname 設定の無い商品では無視）。required の商品で空なら入れない（false を返す） */
-    add: function (p, v, qty, nickname) {
+    /* values: { 欄の id: 値 }（欄の無い商品では無視）。必須の欄が空なら入れない（false を返す） */
+    add: function (p, v, qty, values) {
       var variant = GoodsUtil.variant(p, v);
       if (!variant || variant.soldOut) return false;
-      var nick = GoodsUtil.nicknameOf(GoodsUtil.product(p));
-      var n = nick ? GoodsUtil.cleanNickname(nickname, nick.max) : "";
-      if (nick && nick.required && !n) return false;
+      var prod = GoodsUtil.product(p);
+      var f = GoodsUtil.cleanFields(prod, values);
+      if (GoodsUtil.fieldsOf(prod).some(function (fd) { return fd.required && !(f && f[fd.id]); })) return false;
       qty = clampQty(qty) || 1;
-      var hit = find(p, v, n);
+      var hit = find(p, v, f);
       if (hit) hit.q = Math.min(hit.q + qty, 99);
-      else items.push(n ? { p: p, v: v, q: qty, n: n } : { p: p, v: v, q: qty });
+      else items.push(f ? { p: p, v: v, q: qty, f: f } : { p: p, v: v, q: qty });
       emit();
       return true;
     },
@@ -95,19 +104,21 @@ function SNCart(storageKey) {
         return s + (variant ? variant.price * it.q : 0);
       }, 0);
     },
-    /* SNShop.checkout に渡す行（売り切れを除く）。宛名は attributes に Shopify の項目名で入れる */
+    /* SNShop.checkout に渡す行（売り切れを除く）。入力欄の値は attributes に Shopify の項目名（欄の key）で入れる */
     lines: function () {
       return items.map(function (it) {
         var v = buyable(it);
         if (!v) return null;
         var line = { sid: sidOf(v), qty: clampQty(it.q) };
-        var nick = it.n && GoodsUtil.nicknameOf(GoodsUtil.product(it.p));
-        if (nick) line.attributes = [{ key: nick.key, value: it.n }];
+        var attrs = GoodsUtil.fieldsOf(GoodsUtil.product(it.p))
+          .filter(function (fd) { return it.f && it.f[fd.id]; })
+          .map(function (fd) { return { key: fd.key, value: it.f[fd.id] }; });
+        if (attrs.length) line.attributes = attrs;
         return line;
       }).filter(Boolean);
     },
-    /* 宛名の入った行があるか（あればカートパーマリンクでは代わりにならない） */
-    hasNicknames: function () { return this.lines().some(function (l) { return !!l.attributes; }); },
+    /* 入力欄の値が入った行があるか（あればカートパーマリンクでは代わりにならない） */
+    hasAttributes: function () { return this.lines().some(function (l) { return !!l.attributes; }); },
     /* 予備の購入手続き URL（カートパーマリンク）。空カート時はストアのカートページ */
     checkoutUrl: function () {
       var parts = this.lines().map(function (l) { return l.sid + ":" + l.qty; });

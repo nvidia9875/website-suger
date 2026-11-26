@@ -80,8 +80,8 @@
         var k = b.dataset.add.split(":");
         var p = GoodsUtil.product(k[0]), v = GoodsUtil.variant(k[0], k[1]);
         if (!p || !v || v.soldOut) return;
-        /* 宛名欄のある商品は、名前を書けるようにダイアログで入れてもらう */
-        if (GoodsUtil.nicknameOf(p)) { openProduct(p.id, v.key, b); return; }
+        /* 入力欄（宛名・希望コメントなど）のある商品は、書けるようにダイアログで入れてもらう */
+        if (GoodsUtil.fieldsOf(p).length) { openProduct(p.id, v.key, b); return; }
         cart.add(p.id, v.key, 1);
         toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + v.label + "）" : ""));
       });
@@ -124,7 +124,7 @@
   /* ---------- 商品ダイアログ ---------- */
   var dialog = $("#product-dialog");
   /* picked: バリアントを指定して開いた・チップで選んだ（在庫の取り直しで売り切れと分かっても選び直さない） */
-  var current = { product: null, variant: null, picked: false, qty: 1, nickname: "", opener: null };
+  var current = { product: null, variant: null, picked: false, qty: 1, fields: {}, opener: null };
 
   /* 指定が無いときの初期選択: 最後に選んだ推しのバリアント → 売り切れでない先頭 */
   function defaultVariant(p) {
@@ -137,7 +137,7 @@
     var p = GoodsUtil.product(id);
     if (!p) return;
     var pre = variantKey ? GoodsUtil.variant(id, variantKey) : null;
-    current = { product: p, variant: pre || defaultVariant(p), picked: !!pre, qty: 1, nickname: "", opener: opener || null };
+    current = { product: p, variant: pre || defaultVariant(p), picked: !!pre, qty: 1, fields: {}, opener: opener || null };
     renderDialog();
     if (!dialog.open) dialog.showModal();
   }
@@ -160,17 +160,29 @@
     return null;
   }
 
-  /* 宛名欄（goods-data.js の nickname がある商品だけ）。入力値は current.nickname に持ち、描き直しでも消えない */
-  function nicknameField(p) {
-    var nick = GoodsUtil.nicknameOf(p);
-    if (!nick) return "";
-    var hint = SNLang.fmt(nick.required ? "goods.nicknameRequired" : "goods.nicknameOptional", { max: nick.max });
-    return '<div class="pd-nickname">' +
-      '<label for="pd-nickname">' + esc(SNLang.t("goods.nickname")) + " <small>（" + esc(hint) + "）</small></label>" +
-      '<input type="text" id="pd-nickname" autocomplete="off" placeholder="' + esc(SNLang.t("goods.nicknamePh")) + '"' +
-      ' value="' + esc(current.nickname) + '"' + (nick.required ? " required" : "") + ' aria-describedby="pd-nickname-error">' +
-      '<p class="pd-nickname-error" id="pd-nickname-error" role="alert" hidden>' + esc(SNLang.t("goods.nicknameMissing")) + "</p>" +
-      "</div>";
+  /* 入力欄の見出し（i18n の goods.field.<id>。無ければ Shopify の項目名） */
+  function fieldLabel(fd) {
+    var k = "goods.field." + fd.id, s = SNLang.t(k);
+    return s === k ? fd.key : s;
+  }
+  function fieldPh(fd) {
+    var k = "goods.fieldPh." + fd.id, s = SNLang.t(k);
+    return s === k ? "" : s;
+  }
+  /* 入力欄（goods-data.js の fields がある商品だけ）。入力値は current.fields に持ち、描き直しでも消えない */
+  function inputFields(p) {
+    return GoodsUtil.fieldsOf(p).map(function (fd) {
+      var id = "pd-f-" + fd.id;
+      var hint = SNLang.fmt(fd.required ? "goods.fieldRequired" : "goods.fieldOptional", { max: fd.max });
+      var attrs = ' id="' + id + '" data-field="' + esc(fd.id) + '" autocomplete="off" placeholder="' + esc(fieldPh(fd)) + '"' +
+        (fd.required ? " required" : "") + ' aria-describedby="' + id + '-error"';
+      var val = esc(current.fields[fd.id] || "");
+      return '<div class="pd-field">' +
+        '<label for="' + id + '">' + esc(fieldLabel(fd)) + " <small>（" + esc(hint) + "）</small></label>" +
+        (fd.multiline ? "<textarea rows=\"3\"" + attrs + ">" + val + "</textarea>" : '<input type="text"' + attrs + ' value="' + val + '">') +
+        '<p class="pd-field-error" id="' + id + '-error" role="alert" hidden>' + esc(SNLang.fmt("goods.fieldMissing", { label: fieldLabel(fd) })) + "</p>" +
+        "</div>";
+    }).join("");
   }
 
   function renderDialog() {
@@ -217,7 +229,7 @@
       '<div class="pd-variants' + (isPhoto ? " is-photo" : "") + '">' + chips + "</div>" +
       '<ul class="pd-contents">' + p.contents.map(function (c) { return "<li>" + esc(c) + "</li>"; }).join("") + "</ul>" +
       (p.notes.length ? '<ul class="pd-notes">' + p.notes.map(function (n) { return "<li>※ " + esc(n) + "</li>"; }).join("") + "</ul>" : "") +
-      nicknameField(p) +
+      inputFields(p) +
       '<div class="pd-buy"><div class="qty" role="group" aria-label="' + esc(SNLang.t("goods.qty")) + '">' +
       '<button type="button" id="pd-minus" aria-label="' + esc(SNLang.t("goods.qtyMinus")) + '">−</button>' +
       '<output id="pd-qty" aria-live="polite">' + current.qty + "</output>" +
@@ -236,36 +248,38 @@
     });
     $("#pd-minus").addEventListener("click", function () { current.qty = Math.max(1, current.qty - 1); $("#pd-qty").textContent = current.qty; });
     $("#pd-plus").addEventListener("click", function () { current.qty = Math.min(99, current.qty + 1); $("#pd-qty").textContent = current.qty; });
-    var nickInput = $("#pd-nickname");
-    if (nickInput) {
+    var fieldDefs = GoodsUtil.fieldsOf(p);
+    fieldDefs.forEach(function (fd) {
+      var input = $("#pd-f-" + fd.id);
+      if (!input) return;
       /* 文字数は絵文字も1文字で数える（HTML の maxlength は UTF-16 単位なので使わない）。IME 変換中は切らない */
       var limit = function () {
-        var max = GoodsUtil.nicknameOf(p).max;
-        var chars = Array.from(nickInput.value);
-        if (chars.length > max) nickInput.value = chars.slice(0, max).join("");
-        current.nickname = nickInput.value;
+        var chars = Array.from(input.value);
+        if (chars.length > fd.max) input.value = chars.slice(0, fd.max).join("");
+        current.fields[fd.id] = input.value;
       };
-      nickInput.addEventListener("input", function (e) {
-        if (!e.isComposing) limit(); else current.nickname = nickInput.value;
-        nickInput.removeAttribute("aria-invalid");
-        $("#pd-nickname-error").hidden = true;
+      input.addEventListener("input", function (e) {
+        if (!e.isComposing) limit(); else current.fields[fd.id] = input.value;
+        input.removeAttribute("aria-invalid");
+        $("#pd-f-" + fd.id + "-error").hidden = true;
       });
-      nickInput.addEventListener("compositionend", limit);
-    }
+      input.addEventListener("compositionend", limit);
+    });
     $("#pd-add").addEventListener("click", function () {
       if (current.variant.soldOut) return;
-      var nick = GoodsUtil.nicknameOf(p);
-      var name = nick ? GoodsUtil.cleanNickname(current.nickname, nick.max) : "";
-      if (nick && nick.required && !name) {
-        nickInput.setAttribute("aria-invalid", "true");
-        $("#pd-nickname-error").hidden = false;
-        nickInput.focus();
+      var values = GoodsUtil.cleanFields(p, current.fields) || {};
+      var missing = fieldDefs.filter(function (fd) { return fd.required && !values[fd.id]; });
+      if (missing.length) {
+        missing.forEach(function (fd) {
+          $("#pd-f-" + fd.id).setAttribute("aria-invalid", "true");
+          $("#pd-f-" + fd.id + "-error").hidden = false;
+        });
+        $("#pd-f-" + missing[0].id).focus();
         return;
       }
-      if (!cart.add(p.id, current.variant.key, current.qty, name)) return;
+      if (!cart.add(p.id, current.variant.key, current.qty, values)) return;
       dialog.close();
-      toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + current.variant.label + "）" : "") +
-        (name ? " / " + SNLang.t("goods.nicknameInCart") + ": " + name : ""));
+      toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + current.variant.label + "）" : ""));
     });
   }
 
@@ -300,12 +314,15 @@
     } else {
       list.innerHTML = entries.map(function (e) {
         var k = String(e.index);
-        return '<li class="cd-item' + (e.variant.soldOut || e.needsNickname ? " is-soldout" : "") + '"><img src="assets/img/goods/' + e.variant.img + '" alt=""' + imgAttr(e.variant.img) + ' loading="lazy">' +
+        return '<li class="cd-item' + (e.variant.soldOut || e.needsFields ? " is-soldout" : "") + '"><img src="assets/img/goods/' + e.variant.img + '" alt=""' + imgAttr(e.variant.img) + ' loading="lazy">' +
           "<div>" +
           '<p class="cd-item-name">' + esc(e.product.name) + "</p>" +
           (e.variant.soldOut ? '<p class="cd-item-soldout">' + esc(SNLang.t("goods.soldOutInCart")) + "</p>" : "") +
-          (e.nickname ? '<p class="cd-item-nickname">' + esc(SNLang.t("goods.nicknameInCart")) + ": " + esc(e.nickname) + "</p>" : "") +
-          (e.needsNickname ? '<p class="cd-item-soldout">' + esc(SNLang.t("goods.nicknameNeeded")) + "</p>" : "") +
+          e.fields.map(function (f) {
+            var fd = GoodsUtil.fieldsOf(e.product).find(function (x) { return x.id === f.id; });
+            return '<p class="cd-item-field">' + esc(fd ? fieldLabel(fd) : f.id) + ": " + esc(f.value).replace(/\n/g, "<br>") + "</p>";
+          }).join("") +
+          (e.needsFields ? '<p class="cd-item-soldout">' + esc(SNLang.t("goods.fieldNeeded")) + "</p>" : "") +
           '<p class="cd-item-variant">' + esc(e.variant.label) + (e.variant.sub ? "・" + esc(e.variant.sub) : "") +
           " / " + GoodsUtil.yen(e.variant.price) + " × " + e.qty + " = <b>" + GoodsUtil.yen(e.variant.price * e.qty) + "</b></p>" +
           '<div class="cd-item-row"><div class="qty">' +
@@ -357,8 +374,8 @@
     $("#cart-count").textContent = cart.count();
     $("#cart-total-mini").textContent = GoodsUtil.yen(cart.total());
     var checkout = $("#btn-checkout");
-    /* 宛名がある間は href を外す（新しいタブ・中クリックで開くと、宛名を渡せないカートパーマリンクになるため） */
-    if (cart.hasNicknames()) {
+    /* 入力欄の値（宛名など）がある間は href を外す（新しいタブ・中クリックで開くと、値を渡せないカートパーマリンクになるため） */
+    if (cart.hasAttributes()) {
       checkout.removeAttribute("href");
       checkout.setAttribute("role", "button");
       checkout.setAttribute("tabindex", "0");
@@ -416,9 +433,9 @@
     SNShop.checkout(lines).then(function (url) {
       if (unchanged()) location.assign(url);
     }).catch(function (err) {
-      /* 宛名はカートパーマリンクでは渡せないので、宛名がある注文は予備に切り替えず、もう一度押してもらう */
-      if (cart.hasNicknames()) {
-        console.warn("[SNShop] カートの作成に失敗しました（宛名があるため予備の方法には切り替えません）。", err);
+      /* 入力欄の値はカートパーマリンクでは渡せないので、値がある注文は予備に切り替えず、もう一度押してもらう */
+      if (cart.hasAttributes()) {
+        console.warn("[SNShop] カートの作成に失敗しました（宛名などの入力があるため予備の方法には切り替えません）。", err);
         setCheckoutBusy(false);
         cartAlert(SNLang.t("goods.checkoutFailed"));
         return;
