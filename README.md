@@ -104,7 +104,7 @@ python3 -m http.server 8000
 1. Shopify 管理画面で商品を作る（価格・在庫・配送は Shopify が正）
 2. **バリアント ID** を控える。商品 → バリアントを開いたときの URL 末尾の数字（例 `47393203257580`）。まとめて見るなら `https://www.sugarnote.store/products.json`
 3. 商品画像を 1080×1080 の WebP にして `assets/img/goods/` に置く（下の「商品画像の書き出し」）
-4. `goods-data.js` の `products` に追記する。`variants[].sid` にバリアント ID。`price` は Shopify と同じ額（表示時に Shopify の額で上書きされるので、通信できないときの予備）
+4. `goods-data.js` の `products` の**先頭に**追加する（一覧は配列の順に出る。最新商品順にするため）。`variants[].sid` にバリアント ID。`price` は Shopify と同じ額（表示時に Shopify の額で上書きされるので、通信できないときの予備）
 5. トップの GOODS 欄に出したい商品は `featured` に id を並べる（4点）
 6. HTML の `goods-data.js?v=` を上げる
 
