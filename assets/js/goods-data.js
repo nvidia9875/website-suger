@@ -45,8 +45,8 @@ const GOODS = {
    *   member  … バリアント key がメンバー id（"pair" のような複数人バリアントは members[] を持つ）
    *   member2 … 衣装 × メンバー（variant.member でメンバーを指す）
    *   size    … サイズ違い。shelfMembers があるものは特定メンバーの棚にも出す
-   * fields（任意）: 商品ごとの入力欄（宛名・希望コメントなど）。書かない商品には欄が出ない
-   *   fields: [{ id: "nickname", key: "ニックネーム", max: 20 }, { id: "comment", key: "希望コメント", max: 100, multiline: true }]
+   * fields（任意）: 商品ごとの入力欄（宛名・コメントなど）。書かない商品には欄が出ない
+   *   fields: [{ id: "nickname", key: "ニックネーム", max: 20 }, { id: "comment", key: "コメント", max: 100, multiline: true }]
    *   id … 画面の見出し（i18n の goods.field.<id>）と入力の置き場所 / key … Shopify の注文に載る項目名（発送担当が見る名前）
    *   max … 最大文字数 / required … true なら空欄ではカートに入れられない / multiline … 複数行の欄にする
    *   欄のある商品は、推しの棚の「カートへ」でもダイアログを開いて書いてもらう
@@ -273,7 +273,7 @@ const GOODS = {
      * 販売期間は Shopify の商品ステータスで決まる（下書きのあいだはこのサイトでも「売り切れ」表示）。
      * 11/29 14:30 に Shopify で下書きに戻したら、この2商品をここから消して画像も外す。
      * 画像は tools/run_build_1126.py（素材は Shopify の商品画像）。月城さんの分は無い。
-     * 宛名・希望コメントは旧ストアの入力欄アプリ（Infinite Options）と同じ項目名で注文に載せる（いずれも任意）。 */
+     * 宛名・コメントは注文に「ニックネーム」「コメント」として載せる（いずれも任意。2026-11-26 伊藤さん依頼で「希望コメント」→「コメント」）。 */
     {
       id: "pajama-cheki",
       name: "チェキ：パジャマパーティー（コメント付き）",
@@ -292,7 +292,7 @@ const GOODS = {
       contents: ["チェキ 1枚（コメント付き）"],
       fields: [
         { id: "nickname", key: "ニックネーム", max: 20 },
-        { id: "comment", key: "希望コメント", max: 100, multiline: true },
+        { id: "comment", key: "コメント", max: 100, multiline: true },
       ],
       notes: ["オンライン撮影会の際に、お名前を読み上げさせていただきます。", "販売期間: 11/26(木) 19:00 〜 11/29(日) 14:30"],
     },
@@ -315,7 +315,7 @@ const GOODS = {
       contents: ["ランダムブロマイド 1枚（コメント付き）", "各メンバーブロマイド 全5種 / 全員集合ブロマイド 全2種"],
       fields: [
         { id: "nickname", key: "ニックネーム", max: 20 },
-        { id: "comment", key: "希望コメント", max: 100, multiline: true },
+        { id: "comment", key: "コメント", max: 100, multiline: true },
       ],
       notes: ["ランダム封入のため絵柄はお選びいただけません", "販売期間: 11/26(木) 19:00 〜 11/29(日) 14:30"],
       random: { label: "各全5種" },

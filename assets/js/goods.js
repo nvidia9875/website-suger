@@ -80,7 +80,7 @@
         var k = b.dataset.add.split(":");
         var p = GoodsUtil.product(k[0]), v = GoodsUtil.variant(k[0], k[1]);
         if (!p || !v || v.soldOut) return;
-        /* 入力欄（宛名・希望コメントなど）のある商品は、書けるようにダイアログで入れてもらう */
+        /* 入力欄（宛名・コメントなど）のある商品は、書けるようにダイアログで入れてもらう */
         if (GoodsUtil.fieldsOf(p).length) { openProduct(p.id, v.key, b); return; }
         cart.add(p.id, v.key, 1);
         toast(SNLang.t("goods.added") + " — " + p.name + (p.variants.length > 1 ? "（" + v.label + "）" : ""));

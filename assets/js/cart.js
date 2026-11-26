@@ -5,7 +5,7 @@
  *   通信できないときの予備が Shopify のカートパーマリンク（checkoutUrl）
  *   例: https://www.sugarnote.store/cart/47393203257580:1,47393174913260:2
  * ・売り切れ（variant.soldOut。shopify.js が反映）の行はカートに残すが、合計・購入手続きには含めない
- * ・入力欄の値（f = { id: 値 }。goods-data.js の fields がある商品だけ。宛名・希望コメントなど）は行ごとに持つ。
+ * ・入力欄の値（f = { id: 値 }。goods-data.js の fields がある商品だけ。宛名・コメントなど）は行ごとに持つ。
  *   同じバリアントでも値が違えば別の行。Shopify には lines[].attributes（項目名 = 欄の key）で渡す（カートパーマリンクでは渡せない）
  * ・行の操作（setQty / remove）は entries() の index で指す
  */
